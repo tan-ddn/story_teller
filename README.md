@@ -61,7 +61,15 @@ docs/              experiment write-ups and security docs
 
 ## Development
 
-Copy `.env.example` to `.env` for local settings, then run `pre-commit install` before your first commit.
+Requires [uv](https://docs.astral.sh/uv/) and Docker.
+
+```bash
+cp .env.example .env            # then set POSTGRES_PASSWORD
+uv sync
+pre-commit install
+docker compose -f infra/docker/compose.yaml --env-file .env up -d   # Postgres (pgvector) + MLflow
+uv run pytest
+```
 
 ## License
 
