@@ -1,40 +1,66 @@
 # story_teller
 
-A story-continuity engine for long-form fiction. It extracts a character/location/event graph from manuscripts and flags continuity errors. The extraction model is fine-tuned in-house and runs inside a full MLOps lifecycle: versioned data, tracked training, CI eval gates, serving, monitoring and drift-triggered retraining.
+Keep long stories consistent.
 
-See [ARCHITECTURE.md](ARCHITECTURE.md).
+story_teller reads a manuscript and builds a **Story Bible**: the characters, places, objects, events and relationships in the book, each linked to the sentence it came from and placed on the story's own timeline. It then flags continuity errors, such as a character whose eye colour changes, someone acting after their death, or two scenes that can't both be true. It understands flashbacks and dreams, so non-linear stories don't produce false alarms.
 
-## Layout
+On top of that, the **Writers' Room** lets one or more LLMs write a long novel (30+ chapters) from an outline, using the Story Bible as shared memory and the continuity checker as a quality gate.
+
+All content is family-friendly (children and teen ratings).
+
+## How it works
+
+| Component | What it does |
+|---|---|
+| **Archivist** | A fine-tuned open model that extracts Story Bible facts from each scene |
+| **Scripty** | Checks the Story Bible for contradictions, using story time rather than chapter order |
+| **Story Bible** | The story's knowledge graph, stored in Postgres with pgvector |
+| **Brainstormer** | Turns an outline into a chapter plan, a planned Story Bible and a style sheet |
+| **Showrunner** | Runs the writing loop: assigns chapters to writer models, then checks and revises each one |
+| **Context Builder** | Chooses what each writer model sees from the Story Bible and recent chapters |
+| **Editor** | Fixes flagged problems with targeted revisions |
+| **Censor** | Enforces the content rating on everything uploaded or generated |
+
+Archivist runs in a full MLOps lifecycle:
+- versioned data (DVC)
+- tracked training and a model registry (MLflow)
+- evaluation gates in CI
+- serving with vLLM or ONNX
+- monitoring with Prometheus, Grafana and Evidently
+- retraining when drift is detected
+
+Agents and LLM clients can query a Story Bible through an MCP server.
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for the full design: data model, training and label strategy, evaluation, guardrails, security and user journeys.
+
+## Repository layout
+
 ```
-data/            DVC-tracked: raw/ interim/ processed/ eval/ (gold set, frozen per version)
-pipelines/       Prefect flows: ingest, labeling (silver labels), contradictions (planted eval)
-training/        LoRA fine-tuning + configs/
-evaluation/      eval suites, champion-vs-challenger, promotion gate
+data/              DVC-tracked datasets: raw/ interim/ processed/ eval/
+pipelines/         ingest, labeling, contradictions (planted eval cases)
+training/          fine-tuning code and configs/
+evaluation/        eval suites and the promotion gate
 services/
-  api/           FastAPI: projects, chapters, graph queries
-  extractor/     Archivist: model inference (vLLM / ONNX), loads model@prod from MLflow
-  checker/       Scripty: continuity rules + model-scored contradictions
-  mcp/           MCP server exposing story-graph tools
-store/           GraphStore interface over Postgres + pgvector (Story Bible)
-writers_room/    phase 2: brainstormer/ showrunner/ context/ editor/
-security/        authN/Z, row-level security helpers, rate limits, audit log
-guardrails/      Censor: family-friendly only (children/teen); policies/*.yaml
-web/             thin UI (graph, timeline, flag review)
-monitoring/      prometheus/ grafana/ drift/ (Evidently)
-infra/           docker/ (compose), k8s/ (Helm), terraform/
-.github/workflows CI: lint, tests, tiny-model eval gate, image build
-tests/           unit/ integration/
-notebooks/       exploration only, nothing imported from here
-docs/            results, experiment write-ups; security/ (threat model, incident runbook)
+  api/             FastAPI: projects, chapters, Story Bible queries
+  extractor/       Archivist inference
+  checker/         Scripty
+  mcp/             MCP server
+store/             Story Bible storage (Postgres + pgvector)
+writers_room/      brainstormer/ showrunner/ context/ editor/
+guardrails/        Censor and content policies
+security/          auth, access control, rate limits, audit log
+web/               UI: Story Bible, timeline, flag review
+monitoring/        Prometheus, Grafana, drift reports
+infra/             Docker Compose, Kubernetes, Terraform
+tests/             unit/ integration/
+notebooks/         exploration only
+docs/              experiment write-ups and security docs
 ```
 
-## Security
-Content is family-friendly only (children/teen ratings). User manuscripts are used for training
-only with per-project opt-in. See ARCHITECTURE.md §11 (guardrails) and §12 (security and privacy).
+## Development
 
-- Never commit secrets. Local config goes in `.env`, which is git-ignored. Copy `.env.example`.
-- Install the pre-commit hooks (gitleaks, ruff) before your first commit: `pre-commit install`.
-- Model weights: `safetensors` only, pinned revisions, no `trust_remote_code`.
+Copy `.env.example` to `.env` for local settings, then run `pre-commit install` before your first commit.
 
 ## License
+
 MIT. See [LICENSE](LICENSE).

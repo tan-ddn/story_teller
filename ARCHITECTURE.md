@@ -26,7 +26,7 @@ A story-continuity engine for long-form fiction, plus a multi-LLM writing scaffo
 
 ## 2. Codenames
 
-The code uses plain names. Codenames are used in docs and the demo. The theme is the film/TV writers' room.
+The code uses plain names. Codenames are used in docs and the UI. The theme is the film/TV writers' room.
 
 | Codename | Code module | Role |
 |---|---|---|
@@ -325,7 +325,7 @@ and never use user text for training without opt-in consent.
 4. The dashboard shows progress, cost so far, open flags, and plan drift ("ch. 18 betrayal not written yet").
 5. Export with auto-generated content warnings.
 
-## 14. Key experiments (CV numbers)
+## 14. Key experiments
 
 - Archivist fine-tuned 8B vs. a large API model: F1, cost per 1k scenes, p95 latency.
 - CPU (ONNX, quantised) vs. GPU (vLLM) serving: throughput and cost curve.
@@ -358,5 +358,5 @@ and never use user text for training without opt-in consent.
 
 - Archivist base model: Qwen/Llama ~8B vs. DeBERTa for NER + LLM for relations/time.
 - Training compute: local GPU vs. rented (Modal/RunPod).
-- Orchestrator: Prefect vs. Airflow (pick whichever target job ads mention more).
+- Orchestrator: Prefect vs. Airflow (Prefect is lighter, Airflow is more widely deployed).
 - Showrunner: LangGraph vs. a plain state machine.
