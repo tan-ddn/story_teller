@@ -44,14 +44,14 @@ The code uses plain names. Codenames are used in docs and the UI. The theme is t
 ```
             ┌──────────────────────── OFFLINE (training plane) ─────────────────────────┐
  Gutenberg  │ ingest ─► clean ─► scene split ─► silver labels ─► human gold ─► datasets │
- + LitBank ─┤ (Prefect)                       (large LLM)     (Label Studio)   (DVC)    │
+ + LitBank ─┤ (Airflow)                       (large LLM)     (Label Studio)   (DVC)    │
             │                                                                   │       │
             │        train Archivist (LoRA) / Scripty scorer ─► evaluate ─► MLflow reg. │
             │                                    CI eval gate ─┘     (staging → prod)   │
             └──────────────────────────────────────────────────────────────┬────────────┘
                                                                            │ promote
             ┌──────────────────────── ONLINE (serving plane) ──────────────▼────────────┐
- Web UI ───►│ API (FastAPI) ──► Archivist (vLLM / ONNX) ──► Story Bible (Postgres+pgvector)
+ Web UI ───►│ API (FastAPI) ──► Archivist (llama.cpp/vLLM) ► Story Bible (Postgres+pgvector)
  MCP client►│      │                                              │                     │
             │      └──► Scripty ◄─────────────────────────────────┘                     │
             │      └──► Censor (family-friendly rating, input and output)               │
@@ -76,13 +76,13 @@ The code uses plain names. Codenames are used in docs and the UI. The theme is t
 
 | Component | Responsibility | Tech |
 |---|---|---|
-| `pipelines/ingest` | Download, clean, split into chapters and **scenes** | Prefect, Python |
+| `pipelines/ingest` | Download, clean, split into chapters and **scenes** | Airflow (thin DAGs over plain Python) |
 | `pipelines/labeling` | Silver labels from a large LLM, review sampling, LitBank import | Anthropic API, Label Studio |
 | `pipelines/contradictions` | Plant synthetic contradictions (incl. flashback traps) for evaluation | Python |
-| `training/` | LoRA fine-tune of Archivist (~8B open model); train the Scripty scorer | HF Transformers, PEFT |
+| `training/` | LoRA fine-tune of Archivist (~8B open model); train the Scripty scorer | Two backends, one interface: MLX (Apple Silicon), HF Transformers + PEFT (CUDA) |
 | `evaluation/` | Extraction F1, temporal ordering accuracy, contradiction P/R, latency, cost | pytest-style suites, MLflow |
 | Model registry | Versions, stages, lineage to data version and git SHA | MLflow |
-| `services/extractor` | Archivist inference, batching, schema-validated JSON | vLLM (GPU) / ONNX Runtime (CPU) |
+| `services/extractor` | Archivist inference, batching, schema-validated JSON | llama.cpp (quantised, CPU/Metal) by default; vLLM on CUDA GPUs |
 | `services/checker` | Scripty: story-time-aware rules + learned contradiction scorer | Python, small NLI-style classifier |
 | `services/api` | Projects, chapters, Bible queries, flags, feedback | FastAPI, SQLAlchemy |
 | `services/mcp` | Story Bible tools for agents and writer LLMs | MCP Python SDK |
@@ -151,7 +151,7 @@ by default**. It is only included in explicit experiments, so the model does not
 ## 8. ML lifecycle
 
 1. **Data.** Ingest, scene split, labels. Datasets and eval sets are versioned in DVC.
-2. **Train.** Archivist with LoRA. Each run logs params, data hash and git SHA to MLflow.
+2. **Train.** Archivist with LoRA, on either backend. Both export the same Hugging Face safetensors format, so the registry, evaluation and serving don't depend on where a model was trained. Each run logs params, data hash, git SHA and hardware to MLflow.
 3. **Evaluate.** A fixed suite compares every candidate with the `prod` model and the API baseline.
 4. **Gate (CI).** Promote to `staging` only if all of these hold:
    - entity F1 ≥ prod − 0.5pt
@@ -328,7 +328,8 @@ and never use user text for training without opt-in consent.
 ## 14. Key experiments
 
 - Archivist fine-tuned 8B vs. a large API model: F1, cost per 1k scenes, p95 latency.
-- CPU (ONNX, quantised) vs. GPU (vLLM) serving: throughput and cost curve.
+- Quantised llama.cpp (CPU/Metal) vs. vLLM on a rented CUDA GPU: throughput, latency and cost curve.
+- MLX vs. CUDA training: time and cost per run for the same config and data.
 - Scripty rules-only vs. rules + scorer: P/R on planted contradictions, with flashback traps reported separately.
 - Drift: train on 19th-century novels, serve modern fiction or biographies. Measure detection and recovery after retraining.
 - Writers' Room: contradictions per 10k words over 30 chapters, with and without Story Bible memory, for one model vs. mixed models.
@@ -337,9 +338,10 @@ and never use user text for training without opt-in consent.
 
 ## 15. Environments
 
-- **local:** `docker compose up` (Postgres, MLflow, Langfuse, API, extractor on CPU, Grafana).
+- **local:** `docker compose up` (Postgres, MLflow, Airflow, Langfuse, API, extractor on CPU, Grafana).
+- **training:** Apple Silicon with MLX (64 GB unified memory: LoRA on ~8B models). Runs are reproducible from git, DVC and MLflow alone.
 - **ci:** GitHub Actions: lint, unit tests, eval on a tiny model, Censor eval, security jobs (§12.7), image build.
-- **cloud (optional):** kind/k3s or a single GPU VM, with Terraform for the VM and storage bucket (DVC remote, MLflow artifacts).
+- **cloud:** a rented CUDA GPU for short benchmark runs (vLLM serving, PEFT training); kind/k3s or a single VM for deployment, with Terraform for the VM and storage bucket (DVC remote, MLflow artifacts).
 
 ## 16. Milestones
 
@@ -354,9 +356,13 @@ and never use user text for training without opt-in consent.
 | 11 | Multi-model writers, Editor, style/voice check, plan-drift diff |
 | 12 | Writers' Room experiments, journey B demo, final write-up |
 
-## 17. Open decisions
+## 17. Decisions
+
+**Made**
+- Orchestrator: Airflow. DAGs stay thin; pipeline logic is plain, testable Python.
+- Training compute: MLX on Apple Silicon for development and training; rented CUDA GPU for vLLM and PEFT benchmarks.
+
+**Open**
 
 - Archivist base model: Qwen/Llama ~8B vs. DeBERTa for NER + LLM for relations/time.
-- Training compute: local GPU vs. rented (Modal/RunPod).
-- Orchestrator: Prefect vs. Airflow (Prefect is lighter, Airflow is more widely deployed).
 - Showrunner: LangGraph vs. a plain state machine.

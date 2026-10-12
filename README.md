@@ -25,7 +25,9 @@ Archivist runs in a full MLOps lifecycle:
 - versioned data (DVC)
 - tracked training and a model registry (MLflow)
 - evaluation gates in CI
-- serving with vLLM or ONNX
+- training on Apple Silicon (MLX) or CUDA (PEFT)
+- orchestration with Airflow
+- serving with llama.cpp or vLLM
 - monitoring with Prometheus, Grafana and Evidently
 - retraining when drift is detected
 
