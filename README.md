@@ -67,9 +67,19 @@ Requires [uv](https://docs.astral.sh/uv/) and Docker.
 cp .env.example .env            # then set POSTGRES_PASSWORD
 uv sync
 pre-commit install
-docker compose -f infra/docker/compose.yaml --env-file .env up -d   # Postgres (pgvector) + MLflow
+docker compose -f infra/docker/compose.yaml --env-file .env up -d   # Postgres, MLflow, Airflow
 uv run pytest
 ```
+
+Ingest the starter corpus (27 public-domain novels from Project Gutenberg) into scenes:
+
+```bash
+uv run python -m pipelines.ingest.run      # or trigger the ingest_gutenberg DAG in Airflow (localhost:8080)
+uv run dvc add data/raw/gutenberg data/processed && uv run dvc push
+```
+
+No shared DVC remote is configured yet. Set your own before pushing or pulling data, e.g.
+`uv run dvc remote add --local -d storage /path/to/dvc-storage`.
 
 ## License
 

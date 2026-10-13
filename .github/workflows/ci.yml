@@ -32,7 +32,9 @@ jobs:
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
       - run: uv sync --locked
       - run: uv run bandit -c pyproject.toml -r .
-      - run: uv export --format requirements-txt --no-hashes > /tmp/requirements.txt && uv run pip-audit -r /tmp/requirements.txt
+      # PYSEC-2026-2447: diskcache (via dvc, dev only) unpickles its cache directory. No fix exists;
+      # exploiting it needs write access to the local DVC cache, which already means code execution.
+      - run: uv export --format requirements-txt --no-hashes > /tmp/requirements.txt && uv run pip-audit -r /tmp/requirements.txt --ignore-vuln PYSEC-2026-2447
       - uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           scan-type: fs

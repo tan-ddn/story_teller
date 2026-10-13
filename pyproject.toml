@@ -12,6 +12,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "bandit>=1.7",
+    "dvc>=3.67.1",
     "mypy>=1.13",
     "pip-audit>=2.7",
     "pytest>=8.3",
@@ -34,6 +35,14 @@ select = ["E", "F", "I", "B", "UP", "S"]
 [tool.mypy]
 python_version = "3.12"
 strict = true
+
+[[tool.mypy.overrides]]
+module = ["airflow.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["pipelines.dags.*"]
+disallow_untyped_decorators = false
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

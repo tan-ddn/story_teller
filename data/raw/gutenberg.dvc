@@ -1,0 +1,6 @@
+outs:
+- md5: 00274e183c60dc3ef897cfacabf18598.dir
+  size: 10838411
+  nfiles: 27
+  hash: md5
+  path: gutenberg

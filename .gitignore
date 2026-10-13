@@ -6,6 +6,8 @@ mlruns/
 /data/raw/*
 /data/interim/*
 /data/processed/*
+!/data/raw/*.dvc
+!/data/processed/*.dvc
 !data/**/.gitkeep
 .env.*
 !.env.example
@@ -20,4 +22,3 @@ credentials*.json
 *.bin
 *.ckpt
 *.pt
-CLAUDE.md
