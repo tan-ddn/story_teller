@@ -16,7 +16,7 @@ dev = [
     "mypy>=1.13",
     "pip-audit>=2.7",
     "pytest>=8.3",
-    "ruff>=0.7",
+    "ruff>=0.16.10",
 ]
 
 [tool.uv]
