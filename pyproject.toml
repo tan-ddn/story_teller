@@ -11,7 +11,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "bandit>=1.7",
+    "bandit>=1.9.4",
     "dvc>=3.67.1",
     "mypy>=1.13",
     "pip-audit>=2.7",
