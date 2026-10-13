@@ -181,6 +181,7 @@ def main() -> None:
     group.add_argument("--pilot", action="store_true", help="only the manual-pilot scenes")
     group.add_argument("--litbank", action="store_true", help="the LitBank excerpts")
     parser.add_argument("--workers", type=int, default=6)
+    parser.add_argument("--tag", default="", help="suffix for a separate output file")
     args = parser.parse_args()
     load_dotenv(".env")
 
@@ -197,7 +198,8 @@ def main() -> None:
         pilot = [json.loads(line)["scene_id"] for line in PILOT.open(encoding="utf-8")]
         scenes = {sid: scenes[sid] for sid in pilot}
     for model in args.models:
-        run_model(model, scenes, args.workers, ".litbank" if args.litbank else "")
+        suffix = (".litbank" if args.litbank else "") + (f".{args.tag}" if args.tag else "")
+        run_model(model, scenes, args.workers, suffix)
 
 
 if __name__ == "__main__":
