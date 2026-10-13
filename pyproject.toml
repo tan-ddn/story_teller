@@ -14,7 +14,7 @@ dev = [
     "bandit>=1.7",
     "dvc>=3.67.1",
     "mypy>=1.13",
-    "pip-audit>=2.7",
+    "pip-audit>=2.10.1",
     "pytest>=8.3",
     "ruff>=0.7",
 ]
