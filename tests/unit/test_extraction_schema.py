@@ -41,7 +41,12 @@ def extraction(**overrides: Any) -> dict[str, Any]:
             }
         ],
         "relations": [],
-        "time": {"mode": "main", "relative": "three days later", "evidence": "Three days later"},
+        "time": {
+            "mode": "main",
+            "cues": [
+                {"kind": "relative", "value": "three days later", "evidence": "Three days later"}
+            ],
+        },
     }
     data.update(overrides)
     return data
@@ -61,17 +66,27 @@ def test_invented_evidence_is_reported() -> None:
 @pytest.mark.parametrize(
     "overrides",
     [
-        {"relations": [{"src": "e1", "dst": "e9", "type": "knows", "evidence": "x"}]},
+        {"relations": [{"src": "e1", "dst": "e9", "type": "friend_of", "evidence": "x"}]},
         {"attributes": [{"entity": "e1", "key": "Eye Color", "value": "grey", "evidence": "x"}]},
         {
             "events": [
                 {"description": "d", "participants": ["e1"], "location": "e3", "evidence": "x"}
             ]
         },
+        {"relations": [{"src": "e1", "dst": "e3", "type": "knows", "evidence": "x"}]},
+        {"attributes": [{"entity": "e3", "key": "life_status", "value": "dying", "evidence": "x"}]},
         {"time": {"mode": "daydream"}},
         {"extra_field": 1},
     ],
-    ids=["unknown-id", "key-not-snake-case", "location-not-a-place", "bad-mode", "extra-field"],
+    ids=[
+        "unknown-id",
+        "key-not-snake-case",
+        "location-not-a-place",
+        "relation-not-in-vocabulary",
+        "life-status-not-in-vocabulary",
+        "bad-mode",
+        "extra-field",
+    ],
 )
 def test_invalid_extractions_are_rejected(overrides: dict[str, Any]) -> None:
     with pytest.raises(ValidationError):
@@ -88,3 +103,15 @@ def test_json_schema_exports() -> None:
     schema = SceneExtraction.model_json_schema()
     assert schema["additionalProperties"] is False
     assert set(schema["required"]) == {"entities", "attributes", "events", "relations", "time"}
+
+
+def test_vehicle_can_be_event_location() -> None:
+    data = extraction()
+    data["entities"][1]["type"] = "vehicle"
+    SceneExtraction.model_validate(data)
+
+
+def test_time_cue_evidence_is_checked() -> None:
+    cue = {"kind": "absolute", "value": "midnight", "evidence": "at midnight"}
+    parsed = SceneExtraction.model_validate(extraction(time={"mode": "main", "cues": [cue]}))
+    assert check_evidence(parsed, SCENE) == ["at midnight"]

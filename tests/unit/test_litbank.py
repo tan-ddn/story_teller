@@ -25,7 +25,7 @@ def test_clusters_become_entities() -> None:
     assert summary == [
         ("e1", "character", "Sir Walter Elliot", []),  # pronoun is not an alias
         ("e2", "location", "Kellynch Hall", ["Kellynch"]),
-        ("e3", "object", "The ship", []),  # unclustered mention is a singleton
+        ("e3", "vehicle", "The ship", []),  # unclustered mention is a singleton
     ]
 
 

@@ -87,7 +87,7 @@ ENTITY_TYPES = {
     "FAC": "location",
     "GPE": "location",
     "LOC": "location",
-    "VEH": "object",
+    "VEH": "vehicle",
     "ORG": "org",
 }
 
