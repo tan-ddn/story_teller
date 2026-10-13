@@ -1,0 +1,63 @@
+{
+  "entities": [
+    {"id": "e1", "type": "character", "name": "the white kitten", "aliases": [], "known_id": null,
+     "evidence": "the white kitten had been having its face washed by the old cat for the last quarter of an hour"},
+    {"id": "e2", "type": "character", "name": "the black kitten", "aliases": ["Kitty"], "known_id": null,
+     "evidence": "it was the black kitten's fault entirely"},
+    {"id": "e3", "type": "character", "name": "Dinah", "aliases": ["the old cat"], "known_id": null,
+     "evidence": "The way Dinah washed her children's faces was this"},
+    {"id": "e4", "type": "character", "name": "Alice", "aliases": [], "known_id": null,
+     "evidence": "Alice was sitting curled up in a corner of the great arm-chair"},
+    {"id": "e5", "type": "object", "name": "the ball of worsted", "aliases": [], "known_id": null,
+     "evidence": "the ball of worsted Alice had been trying to wind up"},
+    {"id": "e6", "type": "character", "name": "Snowdrop", "aliases": [], "known_id": null,
+     "evidence": "you pulled Snowdrop away by the tail just as I had put down the saucer of milk before her"},
+    {"id": "e7", "type": "character", "name": "Alice's sister", "aliases": ["her sister"], "known_id": null,
+     "evidence": "She had had quite a long argument with her sister only the day before"},
+    {"id": "e8", "type": "character", "name": "the old nurse", "aliases": [], "known_id": null,
+     "evidence": "once she had really frightened her old nurse by shouting suddenly in her ear"}
+  ],
+  "attributes": [
+    {"entity": "e1", "key": "appearance", "value": "white", "hedged": false, "mode": null,
+     "evidence": "the white kitten had been having its face washed by the old cat"},
+    {"entity": "e2", "key": "appearance", "value": "black", "hedged": false, "mode": null,
+     "evidence": "it was the black kitten's fault entirely"},
+    {"entity": "e3", "key": "species", "value": "cat", "hedged": false, "mode": null,
+     "evidence": "she added, looking reproachfully at the old cat"},
+    {"entity": "e7", "key": "trait", "value": "very exact", "hedged": false, "mode": null,
+     "evidence": "her sister, who liked being very exact"},
+    {"entity": "e8", "key": "occupation", "value": "nurse", "hedged": false, "mode": null,
+     "evidence": "she had really frightened her old nurse"}
+  ],
+  "events": [
+    {"description": "The black kitten unwinds the ball of worsted while Alice dozes in the arm-chair.",
+     "participants": ["e2", "e5", "e4"], "location": null, "hedged": false, "mode": null,
+     "evidence": "the kitten had been having a grand game of romps with the ball of worsted Alice had been trying to wind up"},
+    {"description": "Alice scolds the kitten, lists its three faults and starts winding the worsted up again.",
+     "participants": ["e4", "e2", "e5"], "location": null, "hedged": false, "mode": null,
+     "evidence": "cried Alice, catching up the kitten, and giving it a little kiss to make it understand that it was in disgrace"},
+    {"description": "Alice has a long argument with her sister about pretending to be kings and queens.",
+     "participants": ["e4", "e7"], "location": null, "hedged": false, "mode": "flashback",
+     "evidence": "She had had quite a long argument with her sister only the day before"},
+    {"description": "Alice frightens her old nurse by shouting in her ear.",
+     "participants": ["e4", "e8"], "location": null, "hedged": false, "mode": "flashback",
+     "evidence": "once she had really frightened her old nurse by shouting suddenly in her ear"}
+  ],
+  "relations": [
+    {"src": "e3", "dst": "e1", "type": "parent_of", "hedged": false, "mode": null,
+     "evidence": "The way Dinah washed her children's faces was this"},
+    {"src": "e3", "dst": "e2", "type": "parent_of", "hedged": false, "mode": null,
+     "evidence": "The way Dinah washed her children's faces was this"},
+    {"src": "e4", "dst": "e7", "type": "sibling_of", "hedged": false, "mode": null,
+     "evidence": "She had had quite a long argument with her sister only the day before"}
+  ],
+  "time": {
+    "mode": "main",
+    "cues": [
+      {"kind": "relative", "value": "earlier in the afternoon", "mode": null,
+       "evidence": "But the black kitten had been finished with earlier in the afternoon"},
+      {"kind": "relative", "value": "only the day before", "mode": "flashback",
+       "evidence": "She had had quite a long argument with her sister only the day before"}
+    ]
+  }
+}
