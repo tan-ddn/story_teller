@@ -84,3 +84,7 @@ No shared DVC remote is configured yet. Set your own before pushing or pulling d
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+Gold entity labels come from [LitBank](https://github.com/dbamman/litbank) (Bamman et al., 2019–2020),
+licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Novel texts are from Project Gutenberg
+and are in the public domain.

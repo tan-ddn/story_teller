@@ -1,0 +1,6 @@
+outs:
+- md5: 16588fc6772567a7ac5b1de63124c545.dir
+  size: 1667362
+  nfiles: 107
+  hash: md5
+  path: litbank
