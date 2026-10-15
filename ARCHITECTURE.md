@@ -87,9 +87,10 @@ The code uses plain names. Codenames are used in docs and the UI. The theme is t
 | `services/api` | Projects, chapters, Bible queries, flags, feedback | FastAPI, SQLAlchemy |
 | `services/mcp` | Story Bible tools for agents and writer LLMs | MCP Python SDK |
 | `store/` | `GraphStore` interface over Postgres; pgvector for matching aliases to entities | Postgres, pgvector |
-| `writers_room/` | Brainstormer, Showrunner, Context Builder, Editor, style/voice check | LangGraph or a plain state machine |
+| `writers_room/` | Brainstormer, Showrunner, Context Builder, Editor, style/voice check | LangGraph |
 | `security/` (cross-cutting) | AuthN/Z, row-level security, rate limits, audit log | OIDC, JWT, Postgres RLS |
-| `guardrails/` | Censor: rating classifier, hard bans, content warnings | Moderation model + rules |
+| `guardrails/` | Censor: rating classifier, hard bans, content warnings | Rubric-prompted LLM (o3 for now; a fine-tuned local model later) + rules |
+| `services/llm.py` | One interface to API LLMs: provider by model ID, one price table, Langfuse tracing | Anthropic, OpenAI, Google SDKs |
 | `web/` | Upload, Story Bible pages, timeline, flag review, approval gates | Minimal React or HTMX |
 | `monitoring/` | Dashboards, drift reports, alerts | Prometheus, Grafana, Evidently, Langfuse |
 | `infra/` | Local compose, k8s, cloud IaC | Docker Compose, Helm/kind, Terraform |
@@ -168,10 +169,15 @@ by default**. It is only included in explicit experiments, so the model does not
 - **Brainstormer.** Turns an outline or premise into a *story layout* (acts, chapter beats, POV per chapter,
   story-time anchor per beat) and a *planned Story Bible* (characters, places, world rules, planned arcs) plus a
   *style sheet* (tense, POV rules, tone, voice notes per character). **Human gate:** the user approves or edits the plan.
-- **Showrunner.** A deterministic workflow (state machine), not a free-roaming agent. It:
+- **Showrunner.** A deterministic LangGraph state machine, not a free-roaming agent. It:
   - assigns chapters/POVs to writer models according to the user's spec ("model A writes Kael's POV, model B the antagonist")
   - runs the loop: write → Censor → Archivist → Scripty → Editor → accept
+  - splits each chapter into scenes with the ingest scene splitter, because chapters usually hold several
+    scenes and Archivist is trained on scene-sized text; Archivist and Scripty work scene by scene
   - enforces retry limits, a cost budget per novel, and escalation to the human
+  - puts chapter text into graph state only after Censor allowed it, so rejected text is never checkpointed
+  - implements the optional chapter gate as a LangGraph interrupt that the author resumes with accept or reject
+  - appends one record per chapter attempt (status, revisions, flags, tokens, cost; no story text) to a run ledger
 - **Context Builder.** Assembles each writer prompt within a token budget: the beat, relevant Bible entries
   (entities in the scene, their current story-time state), the last scenes, style-sheet excerpts. Context strategies are
   versioned and compared experimentally.
@@ -180,6 +186,9 @@ by default**. It is only included in explicit experiments, so the model does not
 - **Style/voice check.** Scores tense, POV and per-character dialogue voice against the style sheet, for example by embedding distance from earlier dialogue.
 - **Quality judge.** An LLM judge plus a small human-rated sample. Reported next to the hard consistency metrics.
 - **Human gates.** Plan approval is required. Chapter approval is optional, per project.
+- **LLM calls.** Every provider call goes through `services/llm.py`. Cost is computed there from one price table
+  at call time, because budgets need it before Langfuse has ingested anything; the same numbers are sent to
+  Langfuse as `cost_details`, so the run ledger and the dashboard agree. Prompts and outputs are not traced.
 
 ## 10. Scope: non-fiction
 
@@ -201,8 +210,21 @@ tier, no age verification and no way to switch either on. Anything above the `te
 
 **Content categories.** Each scene gets a score from 0 to 3 for: violence, sexual content, profanity,
 substance use, self-harm, horror/disturbing themes, hate/discrimination.
-- `children` and `teen` set a maximum per category, kept in `guardrails/policies/*.yaml` and versioned like code.
-- Sexual content is capped at 0 for both ratings. Romance is limited to non-explicit (e.g. a kiss for `teen`).
+- `children` and `teen` set two levels per category in `guardrails/policies/*.yaml`, versioned like code. A score
+  above `warn` is allowed with a warning tag; a score above `block` is rejected. Warning tags and block reasons are
+  plain sentences for the author, with a short quote from the text.
+- Sexual content is a hard ban at both ratings. Courtship, love and a non-explicit kiss score 0.
+
+**Rubric.** Scores come from `guardrails/rubric.md`, applied by an LLM. Its principles:
+- Judge a scene as a whole and by its purpose in the story, as an experienced children's and YA editor would.
+  Only for sexual content and the hard bans does "when unsure, pick the higher score" apply.
+- Reporting is not endorsing: news, history, quoted documents and recovery stories score 3 for hate or
+  self-harm only if the text itself takes that side.
+- Older stories are read in their time: dated terms and attitudes, period drinking, deaths that are only
+  reported and brief graphic details that serve the story are scored below the block levels, unless the story
+  dwells on them for their own sake or is built on contempt for a group.
+- The rubric was tuned to agree with an independent judge on real fiction (see "Evaluation" below), not on
+  social-media text, which carries no author intent.
 
 **Enforcement points.**
 - **Writers' Room input.** The rating and its limits are added to every writer prompt, and Brainstormer refuses plan beats that exceed the rating.
@@ -217,7 +239,9 @@ substance use, self-harm, horror/disturbing themes, hate/discrimination.
 **Data.**
 - Training and eval corpora are filtered through Censor. Only scenes within `teen` limits enter DVC.
 - Gutenberg and LitBank sources are screened at ingest, and rejected scenes are dropped and logged by ID.
-- Censor's own eval set contains only short, non-graphic boundary cases (e.g. mild vs. strong peril, censored profanity) labelled for the `children`/`teen` line. Labelled examples of clearly over-limit content are never committed. If needed, they come from a public moderation benchmark downloaded at eval time.
+- Censor's own committed eval data contains only short, non-graphic boundary cases, IDs of public-domain scenes
+  and IDs/labels of public benchmark samples. Over-limit text is never committed: it comes from public
+  moderation datasets (OpenAI moderation eval, Aegis 2.0) downloaded from pinned revisions at eval time.
 
 **Hard bans.** These are always rejected, independent of rating:
 - Any sexual content.
@@ -230,7 +254,21 @@ substance use, self-harm, horror/disturbing themes, hate/discrimination.
 - No verbatim imitation of living authors ("in the style of" is limited to general traits).
 - Users own their text.
 - Guardrail decisions are logged in the run ledger for audit.
-- Censor has a CI gate. Recall on over-`teen` content is the release-blocking metric.
+
+**Evaluation.** `uv run python -m evaluation.censor_check` runs every check and must pass before a change to the
+rubric, policies, model or Censor code is merged. Scores are cached per model, rubric and text, so only changed
+inputs cost money. It is a local check, not a CI job: Censor will move to a fine-tuned local model, and a paid
+API eval per push adds cost without catching what matters most.
+- **Fiction** (`evaluation/censor_fiction.py`): 200 Gutenberg scenes, three quarters picked for content near the
+  children/teen line. An independent model from another vendor (claude-opus-5) decides allow/warn/block per
+  rating without seeing the rubric; Censor must agree with it (children ≥ 75%, teen ≥ 90%) and rarely block
+  what it accepts (children ≤ 5%, teen ≤ 2%).
+- **Hard bans** (`evaluation/censor_bans.py`): harmful-instruction samples from Aegis 2.0, handwritten attacks
+  on named private people, and hard-ban samples wrapped in prompt-injection text. Recall ≥ 90% each, and no
+  false hard-ban flags on fiction, public-figure criticism or safety advice.
+- **Sexual hard ban** (`evaluation/censor.py`): the OpenAI moderation eval set (1,680 samples), relabelled for
+  `teen` because its labels follow an adult policy. Recall on sexual content ≥ 95% on a fixed 300-sample subset,
+  plus agreement ≥ 80% on the boundary passages. Its other numbers are for reference only.
 
 ## 12. Security and privacy
 
@@ -340,7 +378,8 @@ and never use user text for training without opt-in consent.
 
 - **local:** `docker compose up` (Postgres, MLflow, Airflow, Langfuse, API, extractor on CPU, Grafana).
 - **training:** Apple Silicon with MLX (64 GB unified memory: LoRA on ~8B models). Runs are reproducible from git, DVC and MLflow alone.
-- **ci:** GitHub Actions: lint, unit tests, eval on a tiny model, Censor eval, security jobs (§12.7), image build.
+- **ci:** GitHub Actions: lint, unit tests, eval on a tiny model, security jobs (§12.7), image build. The Censor
+  evals run locally (§11).
 - **cloud:** a rented CUDA GPU for short benchmark runs (vLLM serving, PEFT training); kind/k3s or a single VM for deployment, with Terraform for the VM and storage bucket (DVC remote, MLflow artifacts).
 
 ## 16. Milestones
@@ -361,8 +400,13 @@ and never use user text for training without opt-in consent.
 **Made**
 - Orchestrator: Airflow. DAGs stay thin; pipeline logic is plain, testable Python.
 - Training compute: MLX on Apple Silicon for development and training; rented CUDA GPU for vLLM and PEFT benchmarks.
+- Showrunner: LangGraph, for its checkpointing and interrupts (the chapter gate).
+- LLM cost: one price table in `services/llm.py`, computed at call time and mirrored to Langfuse.
+- Censor: an LLM applies a rubric, and versioned policies turn its scores into allow/warn/block. o3 for now;
+  a fine-tuned local model is planned. Evaluated locally on fiction against an independent judge, with public
+  moderation benchmarks used only for the hard bans.
 
 **Open**
 
 - Archivist base model: Qwen/Llama ~8B vs. DeBERTa for NER + LLM for relations/time.
-- Showrunner: LangGraph vs. a plain state machine.
+- Censor local model: base model, and whether to distil from the o3 + rubric labels on fiction.

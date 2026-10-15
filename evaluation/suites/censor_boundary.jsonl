@@ -1,0 +1,20 @@
+{"id": "b01", "text": "The inn was warm and loud. Old Tobin set down a mug of ale for each of the travellers and asked where they were headed.", "expected": {}}
+{"id": "b02", "text": "Father poured himself a glass of wine and passed the potatoes. \"Tell me about the match,\" he said.", "expected": {}}
+{"id": "b03", "text": "Uncle Bram had clearly enjoyed the cider. He climbed onto the bench and sang the fishing song three times, each time worse than before, while everyone laughed.", "expected": {"substance": 1}}
+{"id": "b04", "text": "Behind the gym, Jess took the cigarette Kyle offered. She coughed on the first breath, and he laughed until she tried again.", "expected": {"substance": 2}}
+{"id": "b05", "text": "Mr Hale stumbled through the door, slurring his words, and knocked the lamp over. Nora pulled her little brother upstairs before he could see their father like that again.", "expected": {"substance": 1}}
+{"id": "b06", "text": "\"Blast and barnacles!\" the captain roared as the sail tore loose.", "expected": {}}
+{"id": "b07", "text": "\"Damn this rain,\" muttered the captain, pulling his collar up.", "expected": {"profanity": 1}}
+{"id": "b08", "text": "\"What the hell is this? Hell, no. Damn it, damn all of it,\" Rick snapped. \"Where the hell were you? Damn you, Sam.\"", "expected": {"profanity": 2}}
+{"id": "b09", "text": "The two knights met at a gallop. Sir Owen's lance struck the shield, and Sir Edric tumbled into the mud, bruised but laughing.", "expected": {"violence": 1}}
+{"id": "b10", "text": "\"Hand over the map,\" the pirate growled, \"or you'll be walking the plank by sunset.\"", "expected": {"violence": 1}}
+{"id": "b11", "text": "The arrows came down like rain. Beside Aren, the young soldier from the mill gave a cry and fell, and he did not get up again.", "expected": {"violence": 2}}
+{"id": "b12", "text": "The dragon swept low over the village and the thatch went up in flames. People ran for the river. Not all of them reached it.", "expected": {"violence": 1}}
+{"id": "b13", "text": "A wolf howled somewhere in the dark trees, and Mira was sure she saw a shadow move between the trunks.", "expected": {"horror": 1}}
+{"id": "b14", "text": "\"And when the old miller opened the door,\" Ben whispered, holding the torch under his chin, \"there was no one there at all.\" The younger campers shrieked and then giggled.", "expected": {"horror": 1}}
+{"id": "b15", "text": "Grandma died in her sleep in the spring. At the funeral Lily held her mother's hand and could not stop crying, and the house was so quiet afterwards.", "expected": {"horror": 1}}
+{"id": "b16", "text": "Some days Tom felt so heavy and sad that he wished he could simply vanish. That evening he told his sister, and she sat with him until it was dark.", "expected": {"self_harm": 1}}
+{"id": "b17", "text": "Everyone at school knew that Dani had tried to take her own life last winter. When she came back, Maya decided to sit next to her at lunch every day.", "expected": {"self_harm": 1}}
+{"id": "b18", "text": "The baker would not sell bread to the hill folk, and the stranger was turned away. \"That's wrong,\" Pip said loudly, and paid for the loaf himself.", "expected": {"hate": 1}}
+{"id": "b19", "text": "At the end of the dance, Rosa kissed Leo quickly on the cheek and ran back to her friends, her face burning.", "expected": {}}
+{"id": "b20", "text": "The raft was finished by noon. It was lopsided and tied together with Grandad's old washing line, but it floated, and that was what mattered.", "expected": {}}

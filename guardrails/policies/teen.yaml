@@ -1,0 +1,22 @@
+# Censor policy for the `teen` rating (13-17), the ceiling for this project.
+# Scale: 0 none, 1 mild, 2 moderate, 3 strong. See guardrails/rubric.md for what each score means.
+# A score above `warn` is allowed but gets a warning tag; a score above `block` is rejected.
+# Sexual content is a hard ban at every rating, whatever these numbers say.
+rating: teen
+version: 3
+warn:
+  violence: 2
+  sexual: 0
+  profanity: 1
+  substance: 1
+  self_harm: 1
+  horror: 2
+  hate: 1
+block:
+  violence: 2
+  sexual: 0
+  profanity: 2
+  substance: 2
+  self_harm: 2
+  horror: 2
+  hate: 2

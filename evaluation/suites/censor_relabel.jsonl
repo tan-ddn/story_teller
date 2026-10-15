@@ -1,0 +1,1680 @@
+{"id": "oai-0", "teen": "block", "why": "self_harm: method detail"}
+{"id": "oai-1", "teen": "allow"}
+{"id": "oai-2", "teen": "allow"}
+{"id": "oai-3", "teen": "unsure", "why": "self_harm: alternatives"}
+{"id": "oai-4", "teen": "block", "why": "self_harm: burn method detail"}
+{"id": "oai-5", "teen": "block", "why": "violence: threat to trans person"}
+{"id": "oai-6", "teen": "allow"}
+{"id": "oai-7", "teen": "allow"}
+{"id": "oai-8", "teen": "allow"}
+{"id": "oai-9", "teen": "unsure", "why": "self_harm: alternatives"}
+{"id": "oai-10", "teen": "allow"}
+{"id": "oai-11", "teen": "allow"}
+{"id": "oai-12", "teen": "unsure", "why": "self_harm: location advice"}
+{"id": "oai-13", "teen": "allow"}
+{"id": "oai-14", "teen": "allow"}
+{"id": "oai-15", "teen": "allow"}
+{"id": "oai-16", "teen": "block", "why": "self_harm: presented as solution"}
+{"id": "oai-17", "teen": "allow"}
+{"id": "oai-18", "teen": "allow"}
+{"id": "oai-19", "teen": "unsure", "why": "self_harm: names a method, no detail"}
+{"id": "oai-20", "teen": "allow"}
+{"id": "oai-21", "teen": "block", "why": "self_harm: glamorised as coping"}
+{"id": "oai-22", "teen": "allow"}
+{"id": "oai-23", "teen": "allow"}
+{"id": "oai-24", "teen": "allow"}
+{"id": "oai-25", "teen": "allow"}
+{"id": "oai-26", "teen": "unsure", "why": "self_harm: ambiguous fantasy"}
+{"id": "oai-27", "teen": "allow"}
+{"id": "oai-28", "teen": "allow"}
+{"id": "oai-29", "teen": "unsure", "why": "self_harm?: self-suturing context"}
+{"id": "oai-30", "teen": "allow"}
+{"id": "oai-31", "teen": "allow"}
+{"id": "oai-32", "teen": "block", "why": "sexual: sex/masturbation as SH"}
+{"id": "oai-33", "teen": "allow"}
+{"id": "oai-34", "teen": "allow"}
+{"id": "oai-35", "teen": "allow"}
+{"id": "oai-36", "teen": "allow"}
+{"id": "oai-37", "teen": "allow"}
+{"id": "oai-38", "teen": "allow"}
+{"id": "oai-39", "teen": "allow"}
+{"id": "oai-40", "teen": "allow"}
+{"id": "oai-41", "teen": "allow"}
+{"id": "oai-42", "teen": "allow"}
+{"id": "oai-43", "teen": "block", "why": "self_harm: cutting glamorised"}
+{"id": "oai-44", "teen": "allow"}
+{"id": "oai-45", "teen": "allow"}
+{"id": "oai-46", "teen": "allow"}
+{"id": "oai-47", "teen": "allow"}
+{"id": "oai-48", "teen": "block", "why": "profanity: homophobic slur"}
+{"id": "oai-49", "teen": "allow"}
+{"id": "oai-50", "teen": "allow"}
+{"id": "oai-51", "teen": "allow"}
+{"id": "oai-52", "teen": "allow"}
+{"id": "oai-53", "teen": "allow"}
+{"id": "oai-54", "teen": "allow"}
+{"id": "oai-55", "teen": "block", "why": "hate: calls to kill groups"}
+{"id": "oai-56", "teen": "allow"}
+{"id": "oai-57", "teen": "allow"}
+{"id": "oai-58", "teen": "block", "why": "sexual: masturbation joke"}
+{"id": "oai-59", "teen": "allow"}
+{"id": "oai-60", "teen": "allow"}
+{"id": "oai-61", "teen": "allow"}
+{"id": "oai-62", "teen": "allow"}
+{"id": "oai-63", "teen": "allow"}
+{"id": "oai-64", "teen": "allow"}
+{"id": "oai-65", "teen": "allow"}
+{"id": "oai-66", "teen": "block", "why": "hate: incitement to mass killing"}
+{"id": "oai-67", "teen": "allow"}
+{"id": "oai-68", "teen": "allow"}
+{"id": "oai-69", "teen": "allow"}
+{"id": "oai-70", "teen": "allow"}
+{"id": "oai-71", "teen": "allow"}
+{"id": "oai-72", "teen": "allow"}
+{"id": "oai-73", "teen": "allow"}
+{"id": "oai-74", "teen": "block", "why": "sexual: explicit nudity"}
+{"id": "oai-75", "teen": "block", "why": "violence: incitement to kill"}
+{"id": "oai-76", "teen": "allow"}
+{"id": "oai-77", "teen": "allow"}
+{"id": "oai-78", "teen": "unsure", "why": "self_harm: ambiguous poisoning"}
+{"id": "oai-79", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-80", "teen": "unsure", "why": "hate: anti-immigrant borderline"}
+{"id": "oai-81", "teen": "allow"}
+{"id": "oai-82", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-83", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-84", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-85", "teen": "allow"}
+{"id": "oai-86", "teen": "block", "why": "hate: kill Sikhs"}
+{"id": "oai-87", "teen": "allow"}
+{"id": "oai-88", "teen": "block", "why": "hate: dehumanising Muslims"}
+{"id": "oai-89", "teen": "block", "why": "sexual: innuendo"}
+{"id": "oai-90", "teen": "allow"}
+{"id": "oai-91", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-92", "teen": "allow"}
+{"id": "oai-93", "teen": "allow"}
+{"id": "oai-94", "teen": "block", "why": "hate: kill homosexuals"}
+{"id": "oai-95", "teen": "allow"}
+{"id": "oai-96", "teen": "allow"}
+{"id": "oai-97", "teen": "allow"}
+{"id": "oai-98", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-99", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-100", "teen": "allow"}
+{"id": "oai-101", "teen": "allow"}
+{"id": "oai-102", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-103", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-104", "teen": "allow"}
+{"id": "oai-105", "teen": "allow"}
+{"id": "oai-106", "teen": "block", "why": "sexual: explicit"}
+{"id": "oai-107", "teen": "allow"}
+{"id": "oai-108", "teen": "block", "why": "sexual: hookup slang"}
+{"id": "oai-109", "teen": "allow"}
+{"id": "oai-110", "teen": "block", "why": "sexual: explicit incest story"}
+{"id": "oai-111", "teen": "allow"}
+{"id": "oai-112", "teen": "block", "why": "sexual: explicit incest"}
+{"id": "oai-113", "teen": "block", "why": "sexual: adult site spam"}
+{"id": "oai-114", "teen": "unsure", "why": "sexual?: 'fetishes' in passing"}
+{"id": "oai-115", "teen": "block", "why": "hate: racial inferiority"}
+{"id": "oai-116", "teen": "allow"}
+{"id": "oai-117", "teen": "allow"}
+{"id": "oai-118", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-119", "teen": "block", "why": "hate: violence against Muslims"}
+{"id": "oai-120", "teen": "allow"}
+{"id": "oai-121", "teen": "allow"}
+{"id": "oai-122", "teen": "allow"}
+{"id": "oai-123", "teen": "allow"}
+{"id": "oai-124", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-125", "teen": "block", "why": "sexual: explicit"}
+{"id": "oai-126", "teen": "allow"}
+{"id": "oai-127", "teen": "allow"}
+{"id": "oai-128", "teen": "block", "why": "sexual: explicit"}
+{"id": "oai-129", "teen": "allow"}
+{"id": "oai-130", "teen": "block", "why": "sexual: penis joke"}
+{"id": "oai-131", "teen": "allow"}
+{"id": "oai-132", "teen": "allow"}
+{"id": "oai-133", "teen": "allow"}
+{"id": "oai-134", "teen": "allow"}
+{"id": "oai-135", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-136", "teen": "block", "why": "hate: kill Muslims"}
+{"id": "oai-137", "teen": "allow"}
+{"id": "oai-138", "teen": "block", "why": "sexual: assault described"}
+{"id": "oai-139", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-140", "teen": "allow"}
+{"id": "oai-141", "teen": "unsure", "why": "self_harm: context-free fragment"}
+{"id": "oai-142", "teen": "block", "why": "sexual: involving minors"}
+{"id": "oai-143", "teen": "allow"}
+{"id": "oai-144", "teen": "allow"}
+{"id": "oai-145", "teen": "unsure", "why": "violence: political purge threat"}
+{"id": "oai-146", "teen": "block", "why": "violence: advocacy vs men"}
+{"id": "oai-147", "teen": "block", "why": "sexual: child abuse case"}
+{"id": "oai-148", "teen": "allow"}
+{"id": "oai-149", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-150", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-151", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-152", "teen": "allow"}
+{"id": "oai-153", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-154", "teen": "allow"}
+{"id": "oai-155", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-156", "teen": "allow"}
+{"id": "oai-157", "teen": "allow"}
+{"id": "oai-158", "teen": "allow"}
+{"id": "oai-159", "teen": "unsure", "why": "sexual: incestuous abuse named"}
+{"id": "oai-160", "teen": "block", "why": "sexual: porn spam incl minors"}
+{"id": "oai-161", "teen": "block", "why": "sexual: porn spam incl minors"}
+{"id": "oai-162", "teen": "allow"}
+{"id": "oai-163", "teen": "block", "why": "hate: racial slur"}
+{"id": "oai-164", "teen": "allow"}
+{"id": "oai-165", "teen": "allow"}
+{"id": "oai-166", "teen": "allow"}
+{"id": "oai-167", "teen": "allow"}
+{"id": "oai-168", "teen": "block", "why": "sexual: explicit incest"}
+{"id": "oai-169", "teen": "allow"}
+{"id": "oai-170", "teen": "block", "why": "violence: gore and rape list"}
+{"id": "oai-171", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-172", "teen": "block", "why": "sexual: escort spam"}
+{"id": "oai-173", "teen": "allow"}
+{"id": "oai-174", "teen": "block", "why": "hate: Muslim extermination"}
+{"id": "oai-175", "teen": "allow"}
+{"id": "oai-176", "teen": "block", "why": "violence: incitement to slaughter"}
+{"id": "oai-177", "teen": "block", "why": "violence: graphic killing methods"}
+{"id": "oai-178", "teen": "allow"}
+{"id": "oai-179", "teen": "block", "why": "hate: kill Muslims"}
+{"id": "oai-180", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-181", "teen": "allow"}
+{"id": "oai-182", "teen": "block", "why": "sexual: rape/incest stories"}
+{"id": "oai-183", "teen": "allow"}
+{"id": "oai-184", "teen": "block", "why": "profanity: slur; drug reference"}
+{"id": "oai-185", "teen": "block", "why": "sexual: explicit"}
+{"id": "oai-186", "teen": "block", "why": "sexual: explicit incest"}
+{"id": "oai-187", "teen": "block", "why": "sexual: explicit"}
+{"id": "oai-188", "teen": "allow"}
+{"id": "oai-189", "teen": "block", "why": "sexual: sex slavery torture"}
+{"id": "oai-190", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-191", "teen": "allow"}
+{"id": "oai-192", "teen": "allow"}
+{"id": "oai-193", "teen": "unsure", "why": "violence: bloody assault, borderline graphic"}
+{"id": "oai-194", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-195", "teen": "allow"}
+{"id": "oai-196", "teen": "block", "why": "profanity: homophobic slur"}
+{"id": "oai-197", "teen": "allow"}
+{"id": "oai-198", "teen": "block", "why": "sexual: cam site spam"}
+{"id": "oai-199", "teen": "allow"}
+{"id": "oai-200", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-201", "teen": "unsure", "why": "sexual: rape named"}
+{"id": "oai-202", "teen": "allow"}
+{"id": "oai-203", "teen": "allow"}
+{"id": "oai-204", "teen": "allow"}
+{"id": "oai-205", "teen": "allow"}
+{"id": "oai-206", "teen": "block", "why": "sexual: drugged assault"}
+{"id": "oai-207", "teen": "allow"}
+{"id": "oai-208", "teen": "block", "why": "sexual: discussion of sex and trauma"}
+{"id": "oai-209", "teen": "allow"}
+{"id": "oai-210", "teen": "block", "why": "sexual: explicit"}
+{"id": "oai-211", "teen": "block", "why": "sexual: spanking fetish"}
+{"id": "oai-212", "teen": "allow"}
+{"id": "oai-213", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-214", "teen": "allow"}
+{"id": "oai-215", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-216", "teen": "block", "why": "sexual: explicit incest"}
+{"id": "oai-217", "teen": "allow"}
+{"id": "oai-218", "teen": "allow"}
+{"id": "oai-219", "teen": "block", "why": "profanity: ableist slur"}
+{"id": "oai-220", "teen": "allow"}
+{"id": "oai-221", "teen": "allow"}
+{"id": "oai-222", "teen": "unsure", "why": "sexual: passing mention"}
+{"id": "oai-223", "teen": "block", "why": "sexual: porn synopses"}
+{"id": "oai-224", "teen": "allow"}
+{"id": "oai-225", "teen": "allow"}
+{"id": "oai-226", "teen": "allow"}
+{"id": "oai-227", "teen": "allow"}
+{"id": "oai-228", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-229", "teen": "unsure", "why": "sexual: possible innuendo"}
+{"id": "oai-230", "teen": "allow"}
+{"id": "oai-231", "teen": "allow"}
+{"id": "oai-232", "teen": "block", "why": "profanity: slurs and abuse"}
+{"id": "oai-233", "teen": "allow"}
+{"id": "oai-234", "teen": "allow"}
+{"id": "oai-235", "teen": "allow"}
+{"id": "oai-236", "teen": "allow"}
+{"id": "oai-237", "teen": "block", "why": "sexual: hentai spam"}
+{"id": "oai-238", "teen": "unsure", "why": "hate: generalising race"}
+{"id": "oai-239", "teen": "block", "why": "profanity: slur and f-words"}
+{"id": "oai-240", "teen": "block", "why": "hate: racial slur, kill youth"}
+{"id": "oai-241", "teen": "allow"}
+{"id": "oai-242", "teen": "block", "why": "hate: racist narrative"}
+{"id": "oai-243", "teen": "allow"}
+{"id": "oai-244", "teen": "block", "why": "sexual: obscene insults"}
+{"id": "oai-245", "teen": "allow"}
+{"id": "oai-246", "teen": "allow"}
+{"id": "oai-247", "teen": "block", "why": "hate: dehumanising, removal"}
+{"id": "oai-248", "teen": "allow"}
+{"id": "oai-249", "teen": "allow"}
+{"id": "oai-250", "teen": "unsure", "why": "hate: ambiguous"}
+{"id": "oai-251", "teen": "block", "why": "sexual: dildo content"}
+{"id": "oai-252", "teen": "allow"}
+{"id": "oai-253", "teen": "unsure", "why": "violence: fragment kill call"}
+{"id": "oai-254", "teen": "allow"}
+{"id": "oai-255", "teen": "block", "why": "hate: kill Muslims"}
+{"id": "oai-256", "teen": "block", "why": "hate: slurs, hang them"}
+{"id": "oai-257", "teen": "allow"}
+{"id": "oai-258", "teen": "unsure", "why": "hate: anti-Muslim framing"}
+{"id": "oai-259", "teen": "unsure", "why": "sexual: rape named"}
+{"id": "oai-260", "teen": "unsure", "why": "violence: cull of people"}
+{"id": "oai-261", "teen": "block", "why": "sexual: explicit"}
+{"id": "oai-262", "teen": "allow"}
+{"id": "oai-263", "teen": "allow"}
+{"id": "oai-264", "teen": "block", "why": "violence: torture detail"}
+{"id": "oai-265", "teen": "block", "why": "sexual: explicit coercion"}
+{"id": "oai-266", "teen": "allow"}
+{"id": "oai-267", "teen": "allow"}
+{"id": "oai-268", "teen": "allow"}
+{"id": "oai-269", "teen": "unsure", "why": "violence?: 'spay or neuter your liberals'"}
+{"id": "oai-270", "teen": "block", "why": "sexual: escort ad"}
+{"id": "oai-271", "teen": "block", "why": "sexual: oral sex"}
+{"id": "oai-272", "teen": "block", "why": "sexual: enhancement spam"}
+{"id": "oai-273", "teen": "block", "why": "hate: religious death wish"}
+{"id": "oai-274", "teen": "block", "why": "sexual: explicit anatomy and sex words"}
+{"id": "oai-275", "teen": "block", "why": "sexual: attempted rape described"}
+{"id": "oai-276", "teen": "allow"}
+{"id": "oai-277", "teen": "block", "why": "sexual: kink spam"}
+{"id": "oai-278", "teen": "allow"}
+{"id": "oai-279", "teen": "allow"}
+{"id": "oai-280", "teen": "allow"}
+{"id": "oai-281", "teen": "allow"}
+{"id": "oai-282", "teen": "block", "why": "sexual: porn"}
+{"id": "oai-283", "teen": "block", "why": "profanity: sustained f-words"}
+{"id": "oai-284", "teen": "allow"}
+{"id": "oai-285", "teen": "unsure", "why": "violence: mob burning, one line"}
+{"id": "oai-286", "teen": "block", "why": "hate: antisemitic"}
+{"id": "oai-287", "teen": "allow"}
+{"id": "oai-288", "teen": "block", "why": "violence: lynching advocacy"}
+{"id": "oai-289", "teen": "unsure", "why": "sexual?: 'I am wearing nothing', no context"}
+{"id": "oai-290", "teen": "block", "why": "hate: antisemitic"}
+{"id": "oai-291", "teen": "allow"}
+{"id": "oai-292", "teen": "block", "why": "sexual: spanking fetish"}
+{"id": "oai-293", "teen": "unsure", "why": "hate: ambiguous framing"}
+{"id": "oai-294", "teen": "allow"}
+{"id": "oai-295", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-296", "teen": "block", "why": "violence: castration gore"}
+{"id": "oai-297", "teen": "allow"}
+{"id": "oai-298", "teen": "allow"}
+{"id": "oai-299", "teen": "allow"}
+{"id": "oai-300", "teen": "block", "why": "sexual: explicit"}
+{"id": "oai-301", "teen": "allow"}
+{"id": "oai-302", "teen": "block", "why": "sexual: porn and nudity scene"}
+{"id": "oai-303", "teen": "block", "why": "hate: white supremacist"}
+{"id": "oai-304", "teen": "allow"}
+{"id": "oai-305", "teen": "allow"}
+{"id": "oai-306", "teen": "block", "why": "sexual: escort, nudity"}
+{"id": "oai-307", "teen": "unsure", "why": "sexual: rape named"}
+{"id": "oai-308", "teen": "allow"}
+{"id": "oai-309", "teen": "block", "why": "sexual: porn"}
+{"id": "oai-310", "teen": "allow"}
+{"id": "oai-311", "teen": "allow"}
+{"id": "oai-312", "teen": "allow"}
+{"id": "oai-313", "teen": "block", "why": "sexual: suggestive"}
+{"id": "oai-314", "teen": "block", "why": "sexual: explicit"}
+{"id": "oai-315", "teen": "allow"}
+{"id": "oai-316", "teen": "block", "why": "sexual: humiliation fetish"}
+{"id": "oai-317", "teen": "allow"}
+{"id": "oai-318", "teen": "unsure", "why": "hate: borderline slur"}
+{"id": "oai-319", "teen": "block", "why": "sexual: porn spam incest"}
+{"id": "oai-320", "teen": "allow"}
+{"id": "oai-321", "teen": "unsure", "why": "sexual: rapists named"}
+{"id": "oai-322", "teen": "allow"}
+{"id": "oai-323", "teen": "unsure", "why": "sexual?: orientation pun"}
+{"id": "oai-324", "teen": "allow"}
+{"id": "oai-325", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-326", "teen": "allow"}
+{"id": "oai-327", "teen": "allow"}
+{"id": "oai-328", "teen": "allow"}
+{"id": "oai-329", "teen": "allow"}
+{"id": "oai-330", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-331", "teen": "allow"}
+{"id": "oai-332", "teen": "allow"}
+{"id": "oai-333", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-334", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-335", "teen": "allow"}
+{"id": "oai-336", "teen": "block", "why": "sexual: sexual assault scene"}
+{"id": "oai-337", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-338", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-339", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-340", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-341", "teen": "allow"}
+{"id": "oai-342", "teen": "unsure", "why": "profanity?: 'autistics' as insult"}
+{"id": "oai-343", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-344", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-345", "teen": "allow"}
+{"id": "oai-346", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-347", "teen": "block", "why": "sexual: crude sexual remark"}
+{"id": "oai-348", "teen": "block", "why": "sexual: child sexual abuse described"}
+{"id": "oai-349", "teen": "allow"}
+{"id": "oai-350", "teen": "block", "why": "sexual: 'get laid', hookups"}
+{"id": "oai-351", "teen": "allow"}
+{"id": "oai-352", "teen": "unsure", "why": "sexual: ED drug spam, not explicit"}
+{"id": "oai-353", "teen": "allow"}
+{"id": "oai-354", "teen": "unsure", "why": "sexual: rape named in passing"}
+{"id": "oai-355", "teen": "allow"}
+{"id": "oai-356", "teen": "allow"}
+{"id": "oai-357", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-358", "teen": "unsure", "why": "violence: threat may or may not be serious"}
+{"id": "oai-359", "teen": "allow"}
+{"id": "oai-360", "teen": "allow"}
+{"id": "oai-361", "teen": "block", "why": "sexual: explicit sexual narrative"}
+{"id": "oai-362", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-363", "teen": "allow"}
+{"id": "oai-364", "teen": "block", "why": "profanity: sustained strong profanity"}
+{"id": "oai-365", "teen": "allow"}
+{"id": "oai-366", "teen": "block", "why": "violence: incitement to kill"}
+{"id": "oai-367", "teen": "allow"}
+{"id": "oai-368", "teen": "block", "why": "sexual: crude sexual remark"}
+{"id": "oai-369", "teen": "block", "why": "sexual: crude sexual remark"}
+{"id": "oai-370", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-371", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-372", "teen": "allow"}
+{"id": "oai-373", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-374", "teen": "allow"}
+{"id": "oai-375", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-376", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-377", "teen": "allow"}
+{"id": "oai-378", "teen": "allow"}
+{"id": "oai-379", "teen": "allow"}
+{"id": "oai-380", "teen": "allow"}
+{"id": "oai-381", "teen": "block", "why": "sexual: crude sexual remark"}
+{"id": "oai-382", "teen": "unsure", "why": "hate: possibly satirical dehumanising"}
+{"id": "oai-383", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-384", "teen": "allow"}
+{"id": "oai-385", "teen": "allow"}
+{"id": "oai-386", "teen": "unsure", "why": "sexual: child sexual activity referenced, not described"}
+{"id": "oai-387", "teen": "block", "why": "sexual: crude sexual remark"}
+{"id": "oai-388", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-389", "teen": "block", "why": "profanity: slurs"}
+{"id": "oai-390", "teen": "allow"}
+{"id": "oai-391", "teen": "allow"}
+{"id": "oai-392", "teen": "allow"}
+{"id": "oai-393", "teen": "allow"}
+{"id": "oai-394", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-395", "teen": "allow"}
+{"id": "oai-396", "teen": "allow"}
+{"id": "oai-397", "teen": "allow"}
+{"id": "oai-398", "teen": "unsure", "why": "sexual: rape named in passing"}
+{"id": "oai-399", "teen": "allow"}
+{"id": "oai-400", "teen": "allow"}
+{"id": "oai-401", "teen": "allow"}
+{"id": "oai-402", "teen": "unsure", "why": "sexual: 'my rapist' in passing"}
+{"id": "oai-403", "teen": "allow"}
+{"id": "oai-404", "teen": "allow"}
+{"id": "oai-405", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-406", "teen": "allow"}
+{"id": "oai-407", "teen": "allow"}
+{"id": "oai-408", "teen": "block", "why": "profanity: slurs"}
+{"id": "oai-409", "teen": "allow"}
+{"id": "oai-410", "teen": "block", "why": "sexual: child sexual abuse described"}
+{"id": "oai-411", "teen": "allow"}
+{"id": "oai-412", "teen": "unsure", "why": "violence: gore fragment, context-free"}
+{"id": "oai-413", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-414", "teen": "block", "why": "sexual: explicit sexual narrative"}
+{"id": "oai-415", "teen": "allow"}
+{"id": "oai-416", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-417", "teen": "block", "why": "sexual: crude sexual remark"}
+{"id": "oai-418", "teen": "allow"}
+{"id": "oai-419", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-420", "teen": "allow"}
+{"id": "oai-421", "teen": "allow"}
+{"id": "oai-422", "teen": "allow"}
+{"id": "oai-423", "teen": "allow"}
+{"id": "oai-424", "teen": "allow"}
+{"id": "oai-425", "teen": "allow"}
+{"id": "oai-426", "teen": "allow"}
+{"id": "oai-427", "teen": "allow"}
+{"id": "oai-428", "teen": "allow"}
+{"id": "oai-429", "teen": "allow"}
+{"id": "oai-430", "teen": "allow"}
+{"id": "oai-431", "teen": "allow"}
+{"id": "oai-432", "teen": "allow"}
+{"id": "oai-433", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-434", "teen": "block", "why": "sexual: crude sexual remark"}
+{"id": "oai-435", "teen": "block", "why": "sexual: explicit sexual narrative"}
+{"id": "oai-436", "teen": "allow"}
+{"id": "oai-437", "teen": "allow"}
+{"id": "oai-438", "teen": "allow"}
+{"id": "oai-439", "teen": "allow"}
+{"id": "oai-440", "teen": "allow"}
+{"id": "oai-441", "teen": "allow"}
+{"id": "oai-442", "teen": "block", "why": "sexual: explicit sexual narrative"}
+{"id": "oai-443", "teen": "unsure", "why": "sexual: rape named in passing"}
+{"id": "oai-444", "teen": "block", "why": "sexual: crude sexual remark"}
+{"id": "oai-445", "teen": "allow"}
+{"id": "oai-446", "teen": "block", "why": "sexual: crude sexual remark"}
+{"id": "oai-447", "teen": "block", "why": "sexual: crude sexual remark"}
+{"id": "oai-448", "teen": "block", "why": "sexual: intercourse and consent described"}
+{"id": "oai-449", "teen": "allow"}
+{"id": "oai-450", "teen": "allow"}
+{"id": "oai-451", "teen": "allow"}
+{"id": "oai-452", "teen": "allow"}
+{"id": "oai-453", "teen": "allow"}
+{"id": "oai-454", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-455", "teen": "allow"}
+{"id": "oai-456", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-457", "teen": "allow"}
+{"id": "oai-458", "teen": "allow"}
+{"id": "oai-459", "teen": "block", "why": "profanity: slurs"}
+{"id": "oai-460", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-461", "teen": "block", "why": "sexual: sexual term in hostile text"}
+{"id": "oai-462", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-463", "teen": "allow"}
+{"id": "oai-464", "teen": "block", "why": "sexual: crude sexual remark"}
+{"id": "oai-465", "teen": "allow"}
+{"id": "oai-466", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-467", "teen": "allow"}
+{"id": "oai-468", "teen": "allow"}
+{"id": "oai-469", "teen": "block", "why": "sexual: explicit sexual narrative"}
+{"id": "oai-470", "teen": "allow"}
+{"id": "oai-471", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-472", "teen": "allow"}
+{"id": "oai-473", "teen": "allow"}
+{"id": "oai-474", "teen": "allow"}
+{"id": "oai-475", "teen": "block", "why": "sexual: explicit sexual narrative"}
+{"id": "oai-476", "teen": "unsure", "why": "sexual: assault while drunk named"}
+{"id": "oai-477", "teen": "allow"}
+{"id": "oai-478", "teen": "unsure", "why": "hate: anti-immigrant with rape allegation"}
+{"id": "oai-479", "teen": "allow"}
+{"id": "oai-480", "teen": "allow"}
+{"id": "oai-481", "teen": "allow"}
+{"id": "oai-482", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-483", "teen": "allow"}
+{"id": "oai-484", "teen": "allow"}
+{"id": "oai-485", "teen": "allow"}
+{"id": "oai-486", "teen": "allow"}
+{"id": "oai-487", "teen": "allow"}
+{"id": "oai-488", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-489", "teen": "block", "why": "sexual: child sexual abuse described"}
+{"id": "oai-490", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-491", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-492", "teen": "allow"}
+{"id": "oai-493", "teen": "allow"}
+{"id": "oai-494", "teen": "allow"}
+{"id": "oai-495", "teen": "unsure", "why": "profanity: borderline misogynist slur"}
+{"id": "oai-496", "teen": "allow"}
+{"id": "oai-497", "teen": "allow"}
+{"id": "oai-498", "teen": "block", "why": "sexual: explicit sexual narrative"}
+{"id": "oai-499", "teen": "allow"}
+{"id": "oai-500", "teen": "allow"}
+{"id": "oai-501", "teen": "allow"}
+{"id": "oai-502", "teen": "unsure", "why": "sexual: sex work discussed"}
+{"id": "oai-503", "teen": "allow"}
+{"id": "oai-504", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-505", "teen": "allow"}
+{"id": "oai-506", "teen": "unsure", "why": "sexual: rape named in passing"}
+{"id": "oai-507", "teen": "allow"}
+{"id": "oai-508", "teen": "allow"}
+{"id": "oai-509", "teen": "allow"}
+{"id": "oai-510", "teen": "allow"}
+{"id": "oai-511", "teen": "allow"}
+{"id": "oai-512", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-513", "teen": "allow"}
+{"id": "oai-514", "teen": "allow"}
+{"id": "oai-515", "teen": "allow"}
+{"id": "oai-516", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-517", "teen": "allow"}
+{"id": "oai-518", "teen": "allow"}
+{"id": "oai-519", "teen": "allow"}
+{"id": "oai-520", "teen": "allow"}
+{"id": "oai-521", "teen": "block", "why": "sexual: child sexual abuse described"}
+{"id": "oai-522", "teen": "allow"}
+{"id": "oai-523", "teen": "allow"}
+{"id": "oai-524", "teen": "allow"}
+{"id": "oai-525", "teen": "allow"}
+{"id": "oai-526", "teen": "unsure", "why": "sexual: passing sexual-toy reference"}
+{"id": "oai-527", "teen": "allow"}
+{"id": "oai-528", "teen": "allow"}
+{"id": "oai-529", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-530", "teen": "block", "why": "violence: incitement to kill"}
+{"id": "oai-531", "teen": "allow"}
+{"id": "oai-532", "teen": "allow"}
+{"id": "oai-533", "teen": "allow"}
+{"id": "oai-534", "teen": "allow"}
+{"id": "oai-535", "teen": "allow"}
+{"id": "oai-536", "teen": "allow"}
+{"id": "oai-537", "teen": "allow"}
+{"id": "oai-538", "teen": "block", "why": "sexual: crude sexual remark"}
+{"id": "oai-539", "teen": "allow"}
+{"id": "oai-540", "teen": "allow"}
+{"id": "oai-541", "teen": "allow"}
+{"id": "oai-542", "teen": "allow"}
+{"id": "oai-543", "teen": "allow"}
+{"id": "oai-544", "teen": "allow"}
+{"id": "oai-545", "teen": "block", "why": "sexual: crude sexual remark"}
+{"id": "oai-546", "teen": "allow"}
+{"id": "oai-547", "teen": "allow"}
+{"id": "oai-548", "teen": "allow"}
+{"id": "oai-549", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-550", "teen": "block", "why": "hate: Holocaust denial"}
+{"id": "oai-551", "teen": "unsure", "why": "profanity: borderline misogynist slur"}
+{"id": "oai-552", "teen": "allow"}
+{"id": "oai-553", "teen": "allow"}
+{"id": "oai-554", "teen": "allow"}
+{"id": "oai-555", "teen": "unsure", "why": "sexual: rape named in passing"}
+{"id": "oai-556", "teen": "allow"}
+{"id": "oai-557", "teen": "block", "why": "sexual: explicit sexual narrative"}
+{"id": "oai-558", "teen": "block", "why": "sexual: explicit sexual narrative"}
+{"id": "oai-559", "teen": "allow"}
+{"id": "oai-560", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-561", "teen": "block", "why": "sexual: nudity reference"}
+{"id": "oai-562", "teen": "allow"}
+{"id": "oai-563", "teen": "allow"}
+{"id": "oai-564", "teen": "allow"}
+{"id": "oai-565", "teen": "allow"}
+{"id": "oai-566", "teen": "allow"}
+{"id": "oai-567", "teen": "allow"}
+{"id": "oai-568", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-569", "teen": "block", "why": "sexual: sex slang; sustained strong profanity"}
+{"id": "oai-570", "teen": "unsure", "why": "hate: call for end of a state"}
+{"id": "oai-571", "teen": "unsure", "why": "sexual: rape named in passing"}
+{"id": "oai-572", "teen": "allow"}
+{"id": "oai-573", "teen": "allow"}
+{"id": "oai-574", "teen": "allow"}
+{"id": "oai-575", "teen": "allow"}
+{"id": "oai-576", "teen": "allow"}
+{"id": "oai-577", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-578", "teen": "allow"}
+{"id": "oai-579", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-580", "teen": "allow"}
+{"id": "oai-581", "teen": "allow"}
+{"id": "oai-582", "teen": "block", "why": "sexual: porn, rapes, gore listing"}
+{"id": "oai-583", "teen": "allow"}
+{"id": "oai-584", "teen": "allow"}
+{"id": "oai-585", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-586", "teen": "allow"}
+{"id": "oai-587", "teen": "allow"}
+{"id": "oai-588", "teen": "allow"}
+{"id": "oai-589", "teen": "allow"}
+{"id": "oai-590", "teen": "allow"}
+{"id": "oai-591", "teen": "allow"}
+{"id": "oai-592", "teen": "allow"}
+{"id": "oai-593", "teen": "allow"}
+{"id": "oai-594", "teen": "allow"}
+{"id": "oai-595", "teen": "block", "why": "sexual: explicit sexual narrative"}
+{"id": "oai-596", "teen": "block", "why": "hate: endorses racial-nationalist struggle"}
+{"id": "oai-597", "teen": "allow"}
+{"id": "oai-598", "teen": "allow"}
+{"id": "oai-599", "teen": "allow"}
+{"id": "oai-600", "teen": "allow"}
+{"id": "oai-601", "teen": "allow"}
+{"id": "oai-602", "teen": "allow"}
+{"id": "oai-603", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-604", "teen": "allow"}
+{"id": "oai-605", "teen": "allow"}
+{"id": "oai-606", "teen": "allow"}
+{"id": "oai-607", "teen": "block", "why": "sexual: rape mechanics described"}
+{"id": "oai-608", "teen": "allow"}
+{"id": "oai-609", "teen": "allow"}
+{"id": "oai-610", "teen": "allow"}
+{"id": "oai-611", "teen": "allow"}
+{"id": "oai-612", "teen": "allow"}
+{"id": "oai-613", "teen": "unsure", "why": "sexual: ED drug spam, not explicit"}
+{"id": "oai-614", "teen": "allow"}
+{"id": "oai-615", "teen": "allow"}
+{"id": "oai-616", "teen": "allow"}
+{"id": "oai-617", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-618", "teen": "unsure", "why": "sexual: assault while drunk named"}
+{"id": "oai-619", "teen": "allow"}
+{"id": "oai-620", "teen": "allow"}
+{"id": "oai-621", "teen": "allow"}
+{"id": "oai-622", "teen": "allow"}
+{"id": "oai-623", "teen": "allow"}
+{"id": "oai-624", "teen": "allow"}
+{"id": "oai-625", "teen": "allow"}
+{"id": "oai-626", "teen": "allow"}
+{"id": "oai-627", "teen": "allow"}
+{"id": "oai-628", "teen": "allow"}
+{"id": "oai-629", "teen": "allow"}
+{"id": "oai-630", "teen": "allow"}
+{"id": "oai-631", "teen": "unsure", "why": "profanity?: 'libtard'"}
+{"id": "oai-632", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-633", "teen": "allow"}
+{"id": "oai-634", "teen": "block", "why": "sexual: porn/sex spam"}
+{"id": "oai-635", "teen": "allow"}
+{"id": "oai-636", "teen": "block", "why": "hate: dehumanises protected group"}
+{"id": "oai-637", "teen": "allow"}
+{"id": "oai-638", "teen": "allow"}
+{"id": "oai-639", "teen": "allow"}
+{"id": "oai-640", "teen": "allow"}
+{"id": "oai-641", "teen": "allow"}
+{"id": "oai-642", "teen": "allow"}
+{"id": "oai-643", "teen": "allow"}
+{"id": "oai-644", "teen": "allow"}
+{"id": "oai-645", "teen": "allow"}
+{"id": "oai-646", "teen": "allow"}
+{"id": "oai-647", "teen": "allow"}
+{"id": "oai-648", "teen": "allow"}
+{"id": "oai-649", "teen": "allow"}
+{"id": "oai-650", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-651", "teen": "block", "why": "hate: endorses hatred or removal of group"}
+{"id": "oai-652", "teen": "allow"}
+{"id": "oai-653", "teen": "allow"}
+{"id": "oai-654", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-655", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-656", "teen": "allow"}
+{"id": "oai-657", "teen": "block", "why": "sexual: hentai, explicit"}
+{"id": "oai-658", "teen": "allow"}
+{"id": "oai-659", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-660", "teen": "allow"}
+{"id": "oai-661", "teen": "allow"}
+{"id": "oai-662", "teen": "allow"}
+{"id": "oai-663", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-664", "teen": "allow"}
+{"id": "oai-665", "teen": "allow"}
+{"id": "oai-666", "teen": "allow"}
+{"id": "oai-667", "teen": "allow"}
+{"id": "oai-668", "teen": "allow"}
+{"id": "oai-669", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-670", "teen": "allow"}
+{"id": "oai-671", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-672", "teen": "allow"}
+{"id": "oai-673", "teen": "unsure", "why": "sexual: sugar mommy spam"}
+{"id": "oai-674", "teen": "allow"}
+{"id": "oai-675", "teen": "block", "why": "sexual: rape described"}
+{"id": "oai-676", "teen": "allow"}
+{"id": "oai-677", "teen": "allow"}
+{"id": "oai-678", "teen": "allow"}
+{"id": "oai-679", "teen": "allow"}
+{"id": "oai-680", "teen": "allow"}
+{"id": "oai-681", "teen": "allow"}
+{"id": "oai-682", "teen": "allow"}
+{"id": "oai-683", "teen": "allow"}
+{"id": "oai-684", "teen": "allow"}
+{"id": "oai-685", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-686", "teen": "block", "why": "hate: antisemitic conspiracy endorsed"}
+{"id": "oai-687", "teen": "allow"}
+{"id": "oai-688", "teen": "allow"}
+{"id": "oai-689", "teen": "block", "why": "sexual: rape described"}
+{"id": "oai-690", "teen": "allow"}
+{"id": "oai-691", "teen": "block", "why": "profanity: slur"}
+{"id": "oai-692", "teen": "block", "why": "profanity: slur and misogyny"}
+{"id": "oai-693", "teen": "allow"}
+{"id": "oai-694", "teen": "allow"}
+{"id": "oai-695", "teen": "allow"}
+{"id": "oai-696", "teen": "unsure", "why": "violence: person set on fire, one line (consistent with oai-285)"}
+{"id": "oai-697", "teen": "allow"}
+{"id": "oai-698", "teen": "allow"}
+{"id": "oai-699", "teen": "allow"}
+{"id": "oai-700", "teen": "block", "why": "sexual: sex-life reference"}
+{"id": "oai-701", "teen": "allow"}
+{"id": "oai-702", "teen": "allow"}
+{"id": "oai-703", "teen": "allow"}
+{"id": "oai-704", "teen": "allow"}
+{"id": "oai-705", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-706", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-707", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-708", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-709", "teen": "allow"}
+{"id": "oai-710", "teen": "allow"}
+{"id": "oai-711", "teen": "allow"}
+{"id": "oai-712", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-713", "teen": "allow"}
+{"id": "oai-714", "teen": "allow"}
+{"id": "oai-715", "teen": "allow"}
+{"id": "oai-716", "teen": "allow"}
+{"id": "oai-717", "teen": "allow"}
+{"id": "oai-718", "teen": "allow"}
+{"id": "oai-719", "teen": "allow"}
+{"id": "oai-720", "teen": "allow"}
+{"id": "oai-721", "teen": "allow"}
+{"id": "oai-722", "teen": "allow"}
+{"id": "oai-723", "teen": "allow"}
+{"id": "oai-724", "teen": "allow"}
+{"id": "oai-725", "teen": "unsure", "why": "violence: fragment about targeting women and children"}
+{"id": "oai-726", "teen": "allow"}
+{"id": "oai-727", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-728", "teen": "allow"}
+{"id": "oai-729", "teen": "allow"}
+{"id": "oai-730", "teen": "allow"}
+{"id": "oai-731", "teen": "allow"}
+{"id": "oai-732", "teen": "allow"}
+{"id": "oai-733", "teen": "block", "why": "profanity: slur"}
+{"id": "oai-734", "teen": "allow"}
+{"id": "oai-735", "teen": "allow"}
+{"id": "oai-736", "teen": "allow"}
+{"id": "oai-737", "teen": "allow"}
+{"id": "oai-738", "teen": "allow"}
+{"id": "oai-739", "teen": "allow"}
+{"id": "oai-740", "teen": "allow"}
+{"id": "oai-741", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-742", "teen": "block", "why": "violence: incites police beatings"}
+{"id": "oai-743", "teen": "allow"}
+{"id": "oai-744", "teen": "allow"}
+{"id": "oai-745", "teen": "allow"}
+{"id": "oai-746", "teen": "block", "why": "sexual: anal sex reference"}
+{"id": "oai-747", "teen": "allow"}
+{"id": "oai-748", "teen": "allow"}
+{"id": "oai-749", "teen": "allow"}
+{"id": "oai-750", "teen": "allow"}
+{"id": "oai-751", "teen": "allow"}
+{"id": "oai-752", "teen": "allow"}
+{"id": "oai-753", "teen": "allow"}
+{"id": "oai-754", "teen": "allow"}
+{"id": "oai-755", "teen": "allow"}
+{"id": "oai-756", "teen": "allow"}
+{"id": "oai-757", "teen": "allow"}
+{"id": "oai-758", "teen": "allow"}
+{"id": "oai-759", "teen": "allow"}
+{"id": "oai-760", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-761", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-762", "teen": "allow"}
+{"id": "oai-763", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-764", "teen": "allow"}
+{"id": "oai-765", "teen": "unsure", "why": "sexual: rape named in passing"}
+{"id": "oai-766", "teen": "unsure", "why": "hate: beheading plus Muslim generalisation"}
+{"id": "oai-767", "teen": "allow"}
+{"id": "oai-768", "teen": "allow"}
+{"id": "oai-769", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-770", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-771", "teen": "allow"}
+{"id": "oai-772", "teen": "block", "why": "hate: endorses hatred or removal of group"}
+{"id": "oai-773", "teen": "allow"}
+{"id": "oai-774", "teen": "allow"}
+{"id": "oai-775", "teen": "allow"}
+{"id": "oai-776", "teen": "allow"}
+{"id": "oai-777", "teen": "allow"}
+{"id": "oai-778", "teen": "allow"}
+{"id": "oai-779", "teen": "allow"}
+{"id": "oai-780", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-781", "teen": "allow"}
+{"id": "oai-782", "teen": "allow"}
+{"id": "oai-783", "teen": "allow"}
+{"id": "oai-784", "teen": "allow"}
+{"id": "oai-785", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-786", "teen": "allow"}
+{"id": "oai-787", "teen": "allow"}
+{"id": "oai-788", "teen": "allow"}
+{"id": "oai-789", "teen": "block", "why": "hate: endorses hatred or removal of group"}
+{"id": "oai-790", "teen": "allow"}
+{"id": "oai-791", "teen": "allow"}
+{"id": "oai-792", "teen": "allow"}
+{"id": "oai-793", "teen": "allow"}
+{"id": "oai-794", "teen": "allow"}
+{"id": "oai-795", "teen": "allow"}
+{"id": "oai-796", "teen": "allow"}
+{"id": "oai-797", "teen": "allow"}
+{"id": "oai-798", "teen": "allow"}
+{"id": "oai-799", "teen": "allow"}
+{"id": "oai-800", "teen": "block", "why": "profanity: sustained f-words"}
+{"id": "oai-801", "teen": "allow"}
+{"id": "oai-802", "teen": "allow"}
+{"id": "oai-803", "teen": "allow"}
+{"id": "oai-804", "teen": "allow"}
+{"id": "oai-805", "teen": "allow"}
+{"id": "oai-806", "teen": "allow"}
+{"id": "oai-807", "teen": "allow"}
+{"id": "oai-808", "teen": "allow"}
+{"id": "oai-809", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-810", "teen": "allow"}
+{"id": "oai-811", "teen": "allow"}
+{"id": "oai-812", "teen": "allow"}
+{"id": "oai-813", "teen": "unsure", "why": "sexual: rape named in passing"}
+{"id": "oai-814", "teen": "allow"}
+{"id": "oai-815", "teen": "allow"}
+{"id": "oai-816", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-817", "teen": "allow"}
+{"id": "oai-818", "teen": "block", "why": "profanity: ableist slur and sexual"}
+{"id": "oai-819", "teen": "allow"}
+{"id": "oai-820", "teen": "allow"}
+{"id": "oai-821", "teen": "allow"}
+{"id": "oai-822", "teen": "allow"}
+{"id": "oai-823", "teen": "allow"}
+{"id": "oai-824", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-825", "teen": "allow"}
+{"id": "oai-826", "teen": "allow"}
+{"id": "oai-827", "teen": "allow"}
+{"id": "oai-828", "teen": "allow"}
+{"id": "oai-829", "teen": "allow"}
+{"id": "oai-830", "teen": "allow"}
+{"id": "oai-831", "teen": "allow"}
+{"id": "oai-832", "teen": "allow"}
+{"id": "oai-833", "teen": "allow"}
+{"id": "oai-834", "teen": "allow"}
+{"id": "oai-835", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-836", "teen": "block", "why": "hate: holocaust denial"}
+{"id": "oai-837", "teen": "allow"}
+{"id": "oai-838", "teen": "allow"}
+{"id": "oai-839", "teen": "allow"}
+{"id": "oai-840", "teen": "allow"}
+{"id": "oai-841", "teen": "allow"}
+{"id": "oai-842", "teen": "unsure", "why": "hate: sarcastic Muslim stereotypes"}
+{"id": "oai-843", "teen": "allow"}
+{"id": "oai-844", "teen": "allow"}
+{"id": "oai-845", "teen": "allow"}
+{"id": "oai-846", "teen": "allow"}
+{"id": "oai-847", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-848", "teen": "allow"}
+{"id": "oai-849", "teen": "allow"}
+{"id": "oai-850", "teen": "allow"}
+{"id": "oai-851", "teen": "allow"}
+{"id": "oai-852", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-853", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-854", "teen": "allow"}
+{"id": "oai-855", "teen": "allow"}
+{"id": "oai-856", "teen": "block", "why": "sexual: sex slave spam"}
+{"id": "oai-857", "teen": "allow"}
+{"id": "oai-858", "teen": "allow"}
+{"id": "oai-859", "teen": "allow"}
+{"id": "oai-860", "teen": "allow"}
+{"id": "oai-861", "teen": "allow"}
+{"id": "oai-862", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-863", "teen": "allow"}
+{"id": "oai-864", "teen": "unsure", "why": "sexual: rape named in passing"}
+{"id": "oai-865", "teen": "allow"}
+{"id": "oai-866", "teen": "allow"}
+{"id": "oai-867", "teen": "allow"}
+{"id": "oai-868", "teen": "allow"}
+{"id": "oai-869", "teen": "allow"}
+{"id": "oai-870", "teen": "allow"}
+{"id": "oai-871", "teen": "allow"}
+{"id": "oai-872", "teen": "allow"}
+{"id": "oai-873", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-874", "teen": "allow"}
+{"id": "oai-875", "teen": "allow"}
+{"id": "oai-876", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-877", "teen": "allow"}
+{"id": "oai-878", "teen": "allow"}
+{"id": "oai-879", "teen": "allow"}
+{"id": "oai-880", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-881", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-882", "teen": "allow"}
+{"id": "oai-883", "teen": "block", "why": "hate: dehumanising Jews as bugs"}
+{"id": "oai-884", "teen": "allow"}
+{"id": "oai-885", "teen": "allow"}
+{"id": "oai-886", "teen": "allow"}
+{"id": "oai-887", "teen": "allow"}
+{"id": "oai-888", "teen": "allow"}
+{"id": "oai-889", "teen": "allow"}
+{"id": "oai-890", "teen": "allow"}
+{"id": "oai-891", "teen": "allow"}
+{"id": "oai-892", "teen": "allow"}
+{"id": "oai-893", "teen": "allow"}
+{"id": "oai-894", "teen": "allow"}
+{"id": "oai-895", "teen": "allow"}
+{"id": "oai-896", "teen": "allow"}
+{"id": "oai-897", "teen": "allow"}
+{"id": "oai-898", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-899", "teen": "allow"}
+{"id": "oai-900", "teen": "allow"}
+{"id": "oai-901", "teen": "unsure", "why": "sexual: educational animal sexuality"}
+{"id": "oai-902", "teen": "allow"}
+{"id": "oai-903", "teen": "allow"}
+{"id": "oai-904", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-905", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-906", "teen": "allow"}
+{"id": "oai-907", "teen": "allow"}
+{"id": "oai-908", "teen": "allow"}
+{"id": "oai-909", "teen": "allow"}
+{"id": "oai-910", "teen": "block", "why": "hate: telling group to leave country"}
+{"id": "oai-911", "teen": "allow"}
+{"id": "oai-912", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-913", "teen": "block", "why": "hate: endorses hatred or removal of group"}
+{"id": "oai-914", "teen": "allow"}
+{"id": "oai-915", "teen": "unsure", "why": "sexual: molestation reported briefly"}
+{"id": "oai-916", "teen": "allow"}
+{"id": "oai-917", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-918", "teen": "allow"}
+{"id": "oai-919", "teen": "allow"}
+{"id": "oai-920", "teen": "allow"}
+{"id": "oai-921", "teen": "allow"}
+{"id": "oai-922", "teen": "allow"}
+{"id": "oai-923", "teen": "allow"}
+{"id": "oai-924", "teen": "allow"}
+{"id": "oai-925", "teen": "allow"}
+{"id": "oai-926", "teen": "unsure", "why": "sexual: hentai mentioned"}
+{"id": "oai-927", "teen": "block", "why": "profanity: slur"}
+{"id": "oai-928", "teen": "allow"}
+{"id": "oai-929", "teen": "unsure", "why": "sexual: sex workers mentioned"}
+{"id": "oai-930", "teen": "block", "why": "profanity: slur"}
+{"id": "oai-931", "teen": "allow"}
+{"id": "oai-932", "teen": "unsure", "why": "sexual?: sexual attraction discussed"}
+{"id": "oai-933", "teen": "allow"}
+{"id": "oai-934", "teen": "allow"}
+{"id": "oai-935", "teen": "allow"}
+{"id": "oai-936", "teen": "block", "why": "sexual: sexual content or adult spam"}
+{"id": "oai-937", "teen": "allow"}
+{"id": "oai-938", "teen": "allow"}
+{"id": "oai-939", "teen": "allow"}
+{"id": "oai-940", "teen": "block", "why": "sexual: stripper outfit, sex words"}
+{"id": "oai-941", "teen": "allow"}
+{"id": "oai-942", "teen": "allow"}
+{"id": "oai-943", "teen": "allow"}
+{"id": "oai-944", "teen": "allow"}
+{"id": "oai-945", "teen": "allow"}
+{"id": "oai-946", "teen": "allow"}
+{"id": "oai-947", "teen": "allow"}
+{"id": "oai-948", "teen": "allow"}
+{"id": "oai-949", "teen": "allow"}
+{"id": "oai-950", "teen": "allow"}
+{"id": "oai-951", "teen": "allow"}
+{"id": "oai-952", "teen": "allow"}
+{"id": "oai-953", "teen": "allow"}
+{"id": "oai-954", "teen": "allow"}
+{"id": "oai-955", "teen": "allow"}
+{"id": "oai-956", "teen": "allow"}
+{"id": "oai-957", "teen": "allow"}
+{"id": "oai-958", "teen": "allow"}
+{"id": "oai-959", "teen": "allow"}
+{"id": "oai-960", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-961", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-962", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-963", "teen": "allow"}
+{"id": "oai-964", "teen": "allow"}
+{"id": "oai-965", "teen": "allow"}
+{"id": "oai-966", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-967", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-968", "teen": "allow"}
+{"id": "oai-969", "teen": "allow"}
+{"id": "oai-970", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-971", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-972", "teen": "block", "why": "sexual: porn site"}
+{"id": "oai-973", "teen": "block", "why": "sexual: porn reference"}
+{"id": "oai-974", "teen": "allow"}
+{"id": "oai-975", "teen": "allow"}
+{"id": "oai-976", "teen": "allow"}
+{"id": "oai-977", "teen": "allow"}
+{"id": "oai-978", "teen": "allow"}
+{"id": "oai-979", "teen": "allow"}
+{"id": "oai-980", "teen": "allow"}
+{"id": "oai-981", "teen": "allow"}
+{"id": "oai-982", "teen": "allow"}
+{"id": "oai-983", "teen": "allow"}
+{"id": "oai-984", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-985", "teen": "block", "why": "hate: antisemitic conspiracy endorsed"}
+{"id": "oai-986", "teen": "allow"}
+{"id": "oai-987", "teen": "block", "why": "hate: dehumanising slur for group"}
+{"id": "oai-988", "teen": "allow"}
+{"id": "oai-989", "teen": "allow"}
+{"id": "oai-990", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-991", "teen": "allow"}
+{"id": "oai-992", "teen": "allow"}
+{"id": "oai-993", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-994", "teen": "allow"}
+{"id": "oai-995", "teen": "allow"}
+{"id": "oai-996", "teen": "allow"}
+{"id": "oai-997", "teen": "allow"}
+{"id": "oai-998", "teen": "allow"}
+{"id": "oai-999", "teen": "allow"}
+{"id": "oai-1000", "teen": "allow"}
+{"id": "oai-1001", "teen": "allow"}
+{"id": "oai-1002", "teen": "allow"}
+{"id": "oai-1003", "teen": "allow"}
+{"id": "oai-1004", "teen": "allow"}
+{"id": "oai-1005", "teen": "allow"}
+{"id": "oai-1006", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1007", "teen": "unsure", "why": "sexual: minors named in extortion news"}
+{"id": "oai-1008", "teen": "allow"}
+{"id": "oai-1009", "teen": "allow"}
+{"id": "oai-1010", "teen": "allow"}
+{"id": "oai-1011", "teen": "unsure", "why": "hate?: racial generalisations"}
+{"id": "oai-1012", "teen": "allow"}
+{"id": "oai-1013", "teen": "allow"}
+{"id": "oai-1014", "teen": "allow"}
+{"id": "oai-1015", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1016", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1017", "teen": "allow"}
+{"id": "oai-1018", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1019", "teen": "allow"}
+{"id": "oai-1020", "teen": "block", "why": "sexual: hentai spam"}
+{"id": "oai-1021", "teen": "allow"}
+{"id": "oai-1022", "teen": "allow"}
+{"id": "oai-1023", "teen": "unsure", "why": "hate?: demeaning remark on gay/trans people"}
+{"id": "oai-1024", "teen": "allow"}
+{"id": "oai-1025", "teen": "allow"}
+{"id": "oai-1026", "teen": "block", "why": "hate: antisemitic conspiracy"}
+{"id": "oai-1027", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1028", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1029", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1030", "teen": "allow"}
+{"id": "oai-1031", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1032", "teen": "allow"}
+{"id": "oai-1033", "teen": "allow"}
+{"id": "oai-1034", "teen": "allow"}
+{"id": "oai-1035", "teen": "unsure", "why": "sexual?: sex-education question"}
+{"id": "oai-1036", "teen": "allow"}
+{"id": "oai-1037", "teen": "allow"}
+{"id": "oai-1038", "teen": "allow"}
+{"id": "oai-1039", "teen": "allow"}
+{"id": "oai-1040", "teen": "allow"}
+{"id": "oai-1041", "teen": "block", "why": "sexual: adult game tags"}
+{"id": "oai-1042", "teen": "allow"}
+{"id": "oai-1043", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1044", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1045", "teen": "allow"}
+{"id": "oai-1046", "teen": "allow"}
+{"id": "oai-1047", "teen": "allow"}
+{"id": "oai-1048", "teen": "allow"}
+{"id": "oai-1049", "teen": "allow"}
+{"id": "oai-1050", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1051", "teen": "allow"}
+{"id": "oai-1052", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1053", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1054", "teen": "allow"}
+{"id": "oai-1055", "teen": "allow"}
+{"id": "oai-1056", "teen": "allow"}
+{"id": "oai-1057", "teen": "allow"}
+{"id": "oai-1058", "teen": "allow"}
+{"id": "oai-1059", "teen": "allow"}
+{"id": "oai-1060", "teen": "allow"}
+{"id": "oai-1061", "teen": "allow"}
+{"id": "oai-1062", "teen": "allow"}
+{"id": "oai-1063", "teen": "allow"}
+{"id": "oai-1064", "teen": "unsure", "why": "sexual: ambiguous bedroom fragment"}
+{"id": "oai-1065", "teen": "allow"}
+{"id": "oai-1066", "teen": "allow"}
+{"id": "oai-1067", "teen": "allow"}
+{"id": "oai-1068", "teen": "block", "why": "hate: endorses hatred of Jews"}
+{"id": "oai-1069", "teen": "allow"}
+{"id": "oai-1070", "teen": "allow"}
+{"id": "oai-1071", "teen": "allow"}
+{"id": "oai-1072", "teen": "allow"}
+{"id": "oai-1073", "teen": "allow"}
+{"id": "oai-1074", "teen": "allow"}
+{"id": "oai-1075", "teen": "allow"}
+{"id": "oai-1076", "teen": "allow"}
+{"id": "oai-1077", "teen": "allow"}
+{"id": "oai-1078", "teen": "allow"}
+{"id": "oai-1079", "teen": "allow"}
+{"id": "oai-1080", "teen": "allow"}
+{"id": "oai-1081", "teen": "allow"}
+{"id": "oai-1082", "teen": "allow"}
+{"id": "oai-1083", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1084", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1085", "teen": "allow"}
+{"id": "oai-1086", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1087", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1088", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1089", "teen": "allow"}
+{"id": "oai-1090", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1091", "teen": "allow"}
+{"id": "oai-1092", "teen": "allow"}
+{"id": "oai-1093", "teen": "allow"}
+{"id": "oai-1094", "teen": "allow"}
+{"id": "oai-1095", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1096", "teen": "allow"}
+{"id": "oai-1097", "teen": "allow"}
+{"id": "oai-1098", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1099", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1100", "teen": "allow"}
+{"id": "oai-1101", "teen": "allow"}
+{"id": "oai-1102", "teen": "allow"}
+{"id": "oai-1103", "teen": "allow"}
+{"id": "oai-1104", "teen": "allow"}
+{"id": "oai-1105", "teen": "allow"}
+{"id": "oai-1106", "teen": "allow"}
+{"id": "oai-1107", "teen": "allow"}
+{"id": "oai-1108", "teen": "allow"}
+{"id": "oai-1109", "teen": "allow"}
+{"id": "oai-1110", "teen": "allow"}
+{"id": "oai-1111", "teen": "allow"}
+{"id": "oai-1112", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1113", "teen": "allow"}
+{"id": "oai-1114", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1115", "teen": "allow"}
+{"id": "oai-1116", "teen": "allow"}
+{"id": "oai-1117", "teen": "allow"}
+{"id": "oai-1118", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1119", "teen": "allow"}
+{"id": "oai-1120", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1121", "teen": "allow"}
+{"id": "oai-1122", "teen": "allow"}
+{"id": "oai-1123", "teen": "block", "why": "sexual: hookup and sexting spam"}
+{"id": "oai-1124", "teen": "allow"}
+{"id": "oai-1125", "teen": "allow"}
+{"id": "oai-1126", "teen": "allow"}
+{"id": "oai-1127", "teen": "allow"}
+{"id": "oai-1128", "teen": "allow"}
+{"id": "oai-1129", "teen": "allow"}
+{"id": "oai-1130", "teen": "allow"}
+{"id": "oai-1131", "teen": "allow"}
+{"id": "oai-1132", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1133", "teen": "allow"}
+{"id": "oai-1134", "teen": "allow"}
+{"id": "oai-1135", "teen": "block", "why": "hate: anti-Muslim takeover conspiracy"}
+{"id": "oai-1136", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1137", "teen": "allow"}
+{"id": "oai-1138", "teen": "allow"}
+{"id": "oai-1139", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1140", "teen": "allow"}
+{"id": "oai-1141", "teen": "allow"}
+{"id": "oai-1142", "teen": "allow"}
+{"id": "oai-1143", "teen": "block", "why": "hate: Holocaust denial"}
+{"id": "oai-1144", "teen": "allow"}
+{"id": "oai-1145", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1146", "teen": "allow"}
+{"id": "oai-1147", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1148", "teen": "allow"}
+{"id": "oai-1149", "teen": "allow"}
+{"id": "oai-1150", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1151", "teen": "allow"}
+{"id": "oai-1152", "teen": "allow"}
+{"id": "oai-1153", "teen": "allow"}
+{"id": "oai-1154", "teen": "allow"}
+{"id": "oai-1155", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1156", "teen": "allow"}
+{"id": "oai-1157", "teen": "allow"}
+{"id": "oai-1158", "teen": "allow"}
+{"id": "oai-1159", "teen": "allow"}
+{"id": "oai-1160", "teen": "allow"}
+{"id": "oai-1161", "teen": "allow"}
+{"id": "oai-1162", "teen": "allow"}
+{"id": "oai-1163", "teen": "block", "why": "hate: racist call for removal"}
+{"id": "oai-1164", "teen": "allow"}
+{"id": "oai-1165", "teen": "allow"}
+{"id": "oai-1166", "teen": "allow"}
+{"id": "oai-1167", "teen": "allow"}
+{"id": "oai-1168", "teen": "allow"}
+{"id": "oai-1169", "teen": "allow"}
+{"id": "oai-1170", "teen": "allow"}
+{"id": "oai-1171", "teen": "allow"}
+{"id": "oai-1172", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1173", "teen": "allow"}
+{"id": "oai-1174", "teen": "allow"}
+{"id": "oai-1175", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1176", "teen": "allow"}
+{"id": "oai-1177", "teen": "allow"}
+{"id": "oai-1178", "teen": "allow"}
+{"id": "oai-1179", "teen": "allow"}
+{"id": "oai-1180", "teen": "allow"}
+{"id": "oai-1181", "teen": "allow"}
+{"id": "oai-1182", "teen": "allow"}
+{"id": "oai-1183", "teen": "allow"}
+{"id": "oai-1184", "teen": "block", "why": "sexual: live cam spam"}
+{"id": "oai-1185", "teen": "allow"}
+{"id": "oai-1186", "teen": "allow"}
+{"id": "oai-1187", "teen": "allow"}
+{"id": "oai-1188", "teen": "allow"}
+{"id": "oai-1189", "teen": "allow"}
+{"id": "oai-1190", "teen": "allow"}
+{"id": "oai-1191", "teen": "allow"}
+{"id": "oai-1192", "teen": "allow"}
+{"id": "oai-1193", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1194", "teen": "allow"}
+{"id": "oai-1195", "teen": "allow"}
+{"id": "oai-1196", "teen": "unsure", "why": "sexual: mass rape named in passing"}
+{"id": "oai-1197", "teen": "allow"}
+{"id": "oai-1198", "teen": "allow"}
+{"id": "oai-1199", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1200", "teen": "allow"}
+{"id": "oai-1201", "teen": "allow"}
+{"id": "oai-1202", "teen": "allow"}
+{"id": "oai-1203", "teen": "allow"}
+{"id": "oai-1204", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1205", "teen": "allow"}
+{"id": "oai-1206", "teen": "allow"}
+{"id": "oai-1207", "teen": "allow"}
+{"id": "oai-1208", "teen": "unsure", "why": "hate: possible aryan glorification"}
+{"id": "oai-1209", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1210", "teen": "allow"}
+{"id": "oai-1211", "teen": "allow"}
+{"id": "oai-1212", "teen": "allow"}
+{"id": "oai-1213", "teen": "allow"}
+{"id": "oai-1214", "teen": "allow"}
+{"id": "oai-1215", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1216", "teen": "allow"}
+{"id": "oai-1217", "teen": "block", "why": "sexual: explicit/adult spam"}
+{"id": "oai-1218", "teen": "allow"}
+{"id": "oai-1219", "teen": "allow"}
+{"id": "oai-1220", "teen": "allow"}
+{"id": "oai-1221", "teen": "allow"}
+{"id": "oai-1222", "teen": "allow"}
+{"id": "oai-1223", "teen": "allow"}
+{"id": "oai-1224", "teen": "allow"}
+{"id": "oai-1225", "teen": "allow"}
+{"id": "oai-1226", "teen": "allow"}
+{"id": "oai-1227", "teen": "allow"}
+{"id": "oai-1228", "teen": "allow"}
+{"id": "oai-1229", "teen": "allow"}
+{"id": "oai-1230", "teen": "allow"}
+{"id": "oai-1231", "teen": "allow"}
+{"id": "oai-1232", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-1233", "teen": "allow"}
+{"id": "oai-1234", "teen": "allow"}
+{"id": "oai-1235", "teen": "allow"}
+{"id": "oai-1236", "teen": "allow"}
+{"id": "oai-1237", "teen": "allow"}
+{"id": "oai-1238", "teen": "allow"}
+{"id": "oai-1239", "teen": "allow"}
+{"id": "oai-1240", "teen": "block", "why": "sexual: porn site text"}
+{"id": "oai-1241", "teen": "allow"}
+{"id": "oai-1242", "teen": "allow"}
+{"id": "oai-1243", "teen": "allow"}
+{"id": "oai-1244", "teen": "allow"}
+{"id": "oai-1245", "teen": "allow"}
+{"id": "oai-1246", "teen": "allow"}
+{"id": "oai-1247", "teen": "allow"}
+{"id": "oai-1248", "teen": "allow"}
+{"id": "oai-1249", "teen": "allow"}
+{"id": "oai-1250", "teen": "allow"}
+{"id": "oai-1251", "teen": "allow"}
+{"id": "oai-1252", "teen": "allow"}
+{"id": "oai-1253", "teen": "allow"}
+{"id": "oai-1254", "teen": "allow"}
+{"id": "oai-1255", "teen": "allow"}
+{"id": "oai-1256", "teen": "allow"}
+{"id": "oai-1257", "teen": "allow"}
+{"id": "oai-1258", "teen": "allow"}
+{"id": "oai-1259", "teen": "allow"}
+{"id": "oai-1260", "teen": "allow"}
+{"id": "oai-1261", "teen": "allow"}
+{"id": "oai-1262", "teen": "allow"}
+{"id": "oai-1263", "teen": "allow"}
+{"id": "oai-1264", "teen": "block", "why": "sexual: sex hookup spam"}
+{"id": "oai-1265", "teen": "allow"}
+{"id": "oai-1266", "teen": "allow"}
+{"id": "oai-1267", "teen": "block", "why": "sexual: adult cam site"}
+{"id": "oai-1268", "teen": "allow"}
+{"id": "oai-1269", "teen": "allow"}
+{"id": "oai-1270", "teen": "block", "why": "sexual: cam show sex acts"}
+{"id": "oai-1271", "teen": "allow"}
+{"id": "oai-1272", "teen": "allow"}
+{"id": "oai-1273", "teen": "allow"}
+{"id": "oai-1274", "teen": "allow"}
+{"id": "oai-1275", "teen": "allow"}
+{"id": "oai-1276", "teen": "allow"}
+{"id": "oai-1277", "teen": "allow"}
+{"id": "oai-1278", "teen": "allow"}
+{"id": "oai-1279", "teen": "unsure", "why": "sexual: porn actress mentioned"}
+{"id": "oai-1280", "teen": "allow"}
+{"id": "oai-1281", "teen": "allow"}
+{"id": "oai-1282", "teen": "allow"}
+{"id": "oai-1283", "teen": "allow"}
+{"id": "oai-1284", "teen": "allow"}
+{"id": "oai-1285", "teen": "allow"}
+{"id": "oai-1286", "teen": "allow"}
+{"id": "oai-1287", "teen": "allow"}
+{"id": "oai-1288", "teen": "allow"}
+{"id": "oai-1289", "teen": "allow"}
+{"id": "oai-1290", "teen": "allow"}
+{"id": "oai-1291", "teen": "allow"}
+{"id": "oai-1292", "teen": "allow"}
+{"id": "oai-1293", "teen": "allow"}
+{"id": "oai-1294", "teen": "allow"}
+{"id": "oai-1295", "teen": "allow"}
+{"id": "oai-1296", "teen": "allow"}
+{"id": "oai-1297", "teen": "block", "why": "hate: calls to turn everyone against Jews"}
+{"id": "oai-1298", "teen": "allow"}
+{"id": "oai-1299", "teen": "allow"}
+{"id": "oai-1300", "teen": "block", "why": "sexual: explicit hedonistic club"}
+{"id": "oai-1301", "teen": "allow"}
+{"id": "oai-1302", "teen": "allow"}
+{"id": "oai-1303", "teen": "allow"}
+{"id": "oai-1304", "teen": "allow"}
+{"id": "oai-1305", "teen": "allow"}
+{"id": "oai-1306", "teen": "allow"}
+{"id": "oai-1307", "teen": "allow"}
+{"id": "oai-1308", "teen": "allow"}
+{"id": "oai-1309", "teen": "allow"}
+{"id": "oai-1310", "teen": "allow"}
+{"id": "oai-1311", "teen": "allow"}
+{"id": "oai-1312", "teen": "allow"}
+{"id": "oai-1313", "teen": "allow"}
+{"id": "oai-1314", "teen": "allow"}
+{"id": "oai-1315", "teen": "allow"}
+{"id": "oai-1316", "teen": "allow"}
+{"id": "oai-1317", "teen": "allow"}
+{"id": "oai-1318", "teen": "allow"}
+{"id": "oai-1319", "teen": "allow"}
+{"id": "oai-1320", "teen": "allow"}
+{"id": "oai-1321", "teen": "allow"}
+{"id": "oai-1322", "teen": "allow"}
+{"id": "oai-1323", "teen": "allow"}
+{"id": "oai-1324", "teen": "allow"}
+{"id": "oai-1325", "teen": "allow"}
+{"id": "oai-1326", "teen": "allow"}
+{"id": "oai-1327", "teen": "allow"}
+{"id": "oai-1328", "teen": "allow"}
+{"id": "oai-1329", "teen": "allow"}
+{"id": "oai-1330", "teen": "allow"}
+{"id": "oai-1331", "teen": "allow"}
+{"id": "oai-1332", "teen": "allow"}
+{"id": "oai-1333", "teen": "allow"}
+{"id": "oai-1334", "teen": "allow"}
+{"id": "oai-1335", "teen": "block", "why": "sexual: fetish porn listing"}
+{"id": "oai-1336", "teen": "allow"}
+{"id": "oai-1337", "teen": "allow"}
+{"id": "oai-1338", "teen": "allow"}
+{"id": "oai-1339", "teen": "allow"}
+{"id": "oai-1340", "teen": "allow"}
+{"id": "oai-1341", "teen": "allow"}
+{"id": "oai-1342", "teen": "allow"}
+{"id": "oai-1343", "teen": "unsure", "why": "sexual?: game map name"}
+{"id": "oai-1344", "teen": "block", "why": "hate: misogynist sexual slur"}
+{"id": "oai-1345", "teen": "allow"}
+{"id": "oai-1346", "teen": "allow"}
+{"id": "oai-1347", "teen": "block", "why": "profanity: racial slur"}
+{"id": "oai-1348", "teen": "allow"}
+{"id": "oai-1349", "teen": "allow"}
+{"id": "oai-1350", "teen": "allow"}
+{"id": "oai-1351", "teen": "allow"}
+{"id": "oai-1352", "teen": "block", "why": "sexual: porn video titles"}
+{"id": "oai-1353", "teen": "block", "why": "sexual: casual sex ad"}
+{"id": "oai-1354", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-1355", "teen": "allow"}
+{"id": "oai-1356", "teen": "unsure", "why": "violence: ambiguous killing remark"}
+{"id": "oai-1357", "teen": "block", "why": "sexual: explicit sex scene"}
+{"id": "oai-1358", "teen": "allow"}
+{"id": "oai-1359", "teen": "allow"}
+{"id": "oai-1360", "teen": "block", "why": "sexual: prostitution porn spam"}
+{"id": "oai-1361", "teen": "allow"}
+{"id": "oai-1362", "teen": "block", "why": "sexual: explicit porn description"}
+{"id": "oai-1363", "teen": "allow"}
+{"id": "oai-1364", "teen": "block", "why": "sexual: rape defined in anatomical detail"}
+{"id": "oai-1365", "teen": "allow"}
+{"id": "oai-1366", "teen": "block", "why": "hate: LGBT called cancer"}
+{"id": "oai-1367", "teen": "allow"}
+{"id": "oai-1368", "teen": "allow"}
+{"id": "oai-1369", "teen": "allow"}
+{"id": "oai-1370", "teen": "allow"}
+{"id": "oai-1371", "teen": "unsure", "why": "violence: graphic injury; strong profanity"}
+{"id": "oai-1372", "teen": "allow"}
+{"id": "oai-1373", "teen": "allow"}
+{"id": "oai-1374", "teen": "unsure", "why": "violence: murder news, corpse photo"}
+{"id": "oai-1375", "teen": "allow"}
+{"id": "oai-1376", "teen": "block", "why": "sexual: sex reference, coercion"}
+{"id": "oai-1377", "teen": "allow"}
+{"id": "oai-1378", "teen": "block", "why": "sexual: child sexual abuse described"}
+{"id": "oai-1379", "teen": "block", "why": "sexual: escort porn spam"}
+{"id": "oai-1380", "teen": "block", "why": "sexual: nude description"}
+{"id": "oai-1381", "teen": "block", "why": "self_harm: self-punishment, suicide wish"}
+{"id": "oai-1382", "teen": "block", "why": "sexual: explicit sex discussion"}
+{"id": "oai-1383", "teen": "allow"}
+{"id": "oai-1384", "teen": "unsure", "why": "sexual: pedophilia discussed, no description"}
+{"id": "oai-1385", "teen": "allow"}
+{"id": "oai-1386", "teen": "allow"}
+{"id": "oai-1387", "teen": "unsure", "why": "self_harm: pregnancy self-harm idea"}
+{"id": "oai-1388", "teen": "allow"}
+{"id": "oai-1389", "teen": "unsure", "why": "violence: historical lynching description"}
+{"id": "oai-1390", "teen": "block", "why": "self_harm: encourages hiding SH"}
+{"id": "oai-1391", "teen": "allow"}
+{"id": "oai-1392", "teen": "unsure", "why": "violence: one-line kill"}
+{"id": "oai-1393", "teen": "allow"}
+{"id": "oai-1394", "teen": "unsure", "why": "violence: drowning in scalding bath"}
+{"id": "oai-1395", "teen": "unsure", "why": "sexual: 'rapists' in a game setting"}
+{"id": "oai-1396", "teen": "block", "why": "sexual: explicit fetish dialogue"}
+{"id": "oai-1397", "teen": "allow"}
+{"id": "oai-1398", "teen": "allow"}
+{"id": "oai-1399", "teen": "allow"}
+{"id": "oai-1400", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-1401", "teen": "allow"}
+{"id": "oai-1402", "teen": "block", "why": "sexual: rape script"}
+{"id": "oai-1403", "teen": "allow"}
+{"id": "oai-1404", "teen": "allow"}
+{"id": "oai-1405", "teen": "allow"}
+{"id": "oai-1406", "teen": "allow"}
+{"id": "oai-1407", "teen": "block", "why": "profanity: transphobic slur"}
+{"id": "oai-1408", "teen": "allow"}
+{"id": "oai-1409", "teen": "allow"}
+{"id": "oai-1410", "teen": "allow"}
+{"id": "oai-1411", "teen": "allow"}
+{"id": "oai-1412", "teen": "allow"}
+{"id": "oai-1413", "teen": "block", "why": "hate: expel Muslims"}
+{"id": "oai-1414", "teen": "allow"}
+{"id": "oai-1415", "teen": "allow"}
+{"id": "oai-1416", "teen": "allow"}
+{"id": "oai-1417", "teen": "block", "why": "sexual: explicit sex"}
+{"id": "oai-1418", "teen": "unsure", "why": "hate: political insult"}
+{"id": "oai-1419", "teen": "unsure", "why": "sexual: rape named in passing"}
+{"id": "oai-1420", "teen": "allow"}
+{"id": "oai-1421", "teen": "unsure", "why": "self_harm?: possible suicide hint"}
+{"id": "oai-1422", "teen": "block", "why": "sexual: sex video title"}
+{"id": "oai-1423", "teen": "allow"}
+{"id": "oai-1424", "teen": "allow"}
+{"id": "oai-1425", "teen": "block", "why": "sexual: escort/sex spam"}
+{"id": "oai-1426", "teen": "block", "why": "sexual: sexual doll text"}
+{"id": "oai-1427", "teen": "allow"}
+{"id": "oai-1428", "teen": "allow"}
+{"id": "oai-1429", "teen": "allow"}
+{"id": "oai-1430", "teen": "allow"}
+{"id": "oai-1431", "teen": "unsure", "why": "sexual?: 'sexy women'"}
+{"id": "oai-1432", "teen": "block", "why": "sexual: sexual references"}
+{"id": "oai-1433", "teen": "block", "why": "self_harm: cutting vein detail"}
+{"id": "oai-1434", "teen": "block", "why": "sexual: escort porn spam"}
+{"id": "oai-1435", "teen": "allow"}
+{"id": "oai-1436", "teen": "block", "why": "self_harm: graphic self-mutilation fantasies"}
+{"id": "oai-1437", "teen": "allow"}
+{"id": "oai-1438", "teen": "block", "why": "violence: advocates bombing city"}
+{"id": "oai-1439", "teen": "allow"}
+{"id": "oai-1440", "teen": "unsure", "why": "self_harm: death wish"}
+{"id": "oai-1441", "teen": "allow"}
+{"id": "oai-1442", "teen": "block", "why": "violence: graphic castration"}
+{"id": "oai-1443", "teen": "allow"}
+{"id": "oai-1444", "teen": "allow"}
+{"id": "oai-1445", "teen": "allow"}
+{"id": "oai-1446", "teen": "allow"}
+{"id": "oai-1447", "teen": "block", "why": "self_harm: overdose attempt method"}
+{"id": "oai-1448", "teen": "allow"}
+{"id": "oai-1449", "teen": "allow"}
+{"id": "oai-1450", "teen": "allow"}
+{"id": "oai-1451", "teen": "allow"}
+{"id": "oai-1452", "teen": "unsure", "why": "violence: wish to kill all"}
+{"id": "oai-1453", "teen": "unsure", "why": "sexual: 'rapist' in passing"}
+{"id": "oai-1454", "teen": "allow"}
+{"id": "oai-1455", "teen": "block", "why": "violence: calls to hang/bleed out"}
+{"id": "oai-1456", "teen": "allow"}
+{"id": "oai-1457", "teen": "allow"}
+{"id": "oai-1458", "teen": "allow"}
+{"id": "oai-1459", "teen": "block", "why": "sexual: explicit sexual text"}
+{"id": "oai-1460", "teen": "block", "why": "sexual: sex and kidnapping"}
+{"id": "oai-1461", "teen": "block", "why": "hate: incitement to kill Jews"}
+{"id": "oai-1462", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-1463", "teen": "block", "why": "self_harm: bloodletting glamorised"}
+{"id": "oai-1464", "teen": "block", "why": "profanity: racial/homophobic slurs"}
+{"id": "oai-1465", "teen": "block", "why": "hate: Jews called plague"}
+{"id": "oai-1466", "teen": "allow"}
+{"id": "oai-1467", "teen": "block", "why": "sexual: hookup sex ad"}
+{"id": "oai-1468", "teen": "allow"}
+{"id": "oai-1469", "teen": "unsure", "why": "hate: women not people"}
+{"id": "oai-1470", "teen": "block", "why": "sexual: impregnation revenge"}
+{"id": "oai-1471", "teen": "block", "why": "hate: immigrants as rapists, child rape described"}
+{"id": "oai-1472", "teen": "allow"}
+{"id": "oai-1473", "teen": "unsure", "why": "violence: execution endorsement"}
+{"id": "oai-1474", "teen": "allow"}
+{"id": "oai-1475", "teen": "block", "why": "violence: torture threat"}
+{"id": "oai-1476", "teen": "block", "why": "sexual: molestation and stripping described"}
+{"id": "oai-1477", "teen": "block", "why": "self_harm: names cutting instruction topics"}
+{"id": "oai-1478", "teen": "allow"}
+{"id": "oai-1479", "teen": "block", "why": "hate: Muslims as criminal metastasis"}
+{"id": "oai-1480", "teen": "allow"}
+{"id": "oai-1481", "teen": "allow"}
+{"id": "oai-1482", "teen": "allow"}
+{"id": "oai-1483", "teen": "allow"}
+{"id": "oai-1484", "teen": "block", "why": "sexual: explicit sexual abuse"}
+{"id": "oai-1485", "teen": "allow"}
+{"id": "oai-1486", "teen": "allow"}
+{"id": "oai-1487", "teen": "allow"}
+{"id": "oai-1488", "teen": "allow"}
+{"id": "oai-1489", "teen": "allow"}
+{"id": "oai-1490", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-1491", "teen": "block", "why": "sexual: BDSM and assault"}
+{"id": "oai-1492", "teen": "allow"}
+{"id": "oai-1493", "teen": "allow"}
+{"id": "oai-1494", "teen": "allow"}
+{"id": "oai-1495", "teen": "block", "why": "sexual: porn titles with teens"}
+{"id": "oai-1496", "teen": "block", "why": "violence: seeking tips to injure"}
+{"id": "oai-1497", "teen": "allow"}
+{"id": "oai-1498", "teen": "allow"}
+{"id": "oai-1499", "teen": "allow"}
+{"id": "oai-1500", "teen": "block", "why": "sexual: sexual assault scene"}
+{"id": "oai-1501", "teen": "unsure", "why": "violence: 'tortured to death', no detail"}
+{"id": "oai-1502", "teen": "allow"}
+{"id": "oai-1503", "teen": "allow"}
+{"id": "oai-1504", "teen": "unsure", "why": "profanity: repeated f-words"}
+{"id": "oai-1505", "teen": "allow"}
+{"id": "oai-1506", "teen": "allow"}
+{"id": "oai-1507", "teen": "allow"}
+{"id": "oai-1508", "teen": "unsure", "why": "violence: half-eaten bodies"}
+{"id": "oai-1509", "teen": "block", "why": "sexual: genital references"}
+{"id": "oai-1510", "teen": "allow"}
+{"id": "oai-1511", "teen": "allow"}
+{"id": "oai-1512", "teen": "allow"}
+{"id": "oai-1513", "teen": "allow"}
+{"id": "oai-1514", "teen": "allow"}
+{"id": "oai-1515", "teen": "allow"}
+{"id": "oai-1516", "teen": "allow"}
+{"id": "oai-1517", "teen": "allow"}
+{"id": "oai-1518", "teen": "block", "why": "sexual: sexual lyrics"}
+{"id": "oai-1519", "teen": "block", "why": "sexual: porn site ad"}
+{"id": "oai-1520", "teen": "allow"}
+{"id": "oai-1521", "teen": "allow"}
+{"id": "oai-1522", "teen": "block", "why": "sexual: kidnap and rape"}
+{"id": "oai-1523", "teen": "allow"}
+{"id": "oai-1524", "teen": "allow"}
+{"id": "oai-1525", "teen": "block", "why": "sexual: sex act stated"}
+{"id": "oai-1526", "teen": "allow"}
+{"id": "oai-1527", "teen": "block", "why": "self_harm: suicide as right thing"}
+{"id": "oai-1528", "teen": "unsure", "why": "hate: anti-Christian insult"}
+{"id": "oai-1529", "teen": "allow"}
+{"id": "oai-1530", "teen": "allow"}
+{"id": "oai-1531", "teen": "allow"}
+{"id": "oai-1532", "teen": "block", "why": "sexual: child sexual abuse"}
+{"id": "oai-1533", "teen": "allow"}
+{"id": "oai-1534", "teen": "block", "why": "hate: slur and extermination call"}
+{"id": "oai-1535", "teen": "allow"}
+{"id": "oai-1536", "teen": "block", "why": "hate: antisemitic/anti-Muslim generalisation"}
+{"id": "oai-1537", "teen": "allow"}
+{"id": "oai-1538", "teen": "allow"}
+{"id": "oai-1539", "teen": "unsure", "why": "self_harm: pain-inducing alternatives"}
+{"id": "oai-1540", "teen": "block", "why": "sexual: sex dating spam"}
+{"id": "oai-1541", "teen": "allow"}
+{"id": "oai-1542", "teen": "allow"}
+{"id": "oai-1543", "teen": "unsure", "why": "sexual: pedophile discussion"}
+{"id": "oai-1544", "teen": "allow"}
+{"id": "oai-1545", "teen": "block", "why": "sexual: porn prostitution spam"}
+{"id": "oai-1546", "teen": "block", "why": "hate: white power"}
+{"id": "oai-1547", "teen": "allow"}
+{"id": "oai-1548", "teen": "allow"}
+{"id": "oai-1549", "teen": "block", "why": "hate: incitement to kill group"}
+{"id": "oai-1550", "teen": "unsure", "why": "hate: country insult"}
+{"id": "oai-1551", "teen": "block", "why": "sexual: explicit incest sex"}
+{"id": "oai-1552", "teen": "allow"}
+{"id": "oai-1553", "teen": "block", "why": "sexual: porn spam"}
+{"id": "oai-1554", "teen": "unsure", "why": "sexual?: religious text on 'private parts'"}
+{"id": "oai-1555", "teen": "block", "why": "violence: planned assault, racial"}
+{"id": "oai-1556", "teen": "allow"}
+{"id": "oai-1557", "teen": "allow"}
+{"id": "oai-1558", "teen": "unsure", "why": "sexual: child abuse named"}
+{"id": "oai-1559", "teen": "block", "why": "sexual: 'second/third base'"}
+{"id": "oai-1560", "teen": "block", "why": "sexual: lovemaking scene"}
+{"id": "oai-1561", "teen": "block", "why": "sexual: fetish tags with a minor"}
+{"id": "oai-1562", "teen": "allow"}
+{"id": "oai-1563", "teen": "block", "why": "sexual: oral sex and rape described"}
+{"id": "oai-1564", "teen": "block", "why": "self_harm: bloodletting glamorised"}
+{"id": "oai-1565", "teen": "allow"}
+{"id": "oai-1566", "teen": "unsure", "why": "self_harm: suicides listed"}
+{"id": "oai-1567", "teen": "allow"}
+{"id": "oai-1568", "teen": "allow"}
+{"id": "oai-1569", "teen": "allow"}
+{"id": "oai-1570", "teen": "block", "why": "sexual: hookup spam"}
+{"id": "oai-1571", "teen": "unsure", "why": "sexual?: voyeurism joke"}
+{"id": "oai-1572", "teen": "allow"}
+{"id": "oai-1573", "teen": "block", "why": "sexual: sexual spam"}
+{"id": "oai-1574", "teen": "allow"}
+{"id": "oai-1575", "teen": "block", "why": "sexual: escort porn spam"}
+{"id": "oai-1576", "teen": "unsure", "why": "sexual: marital rape in a legal text"}
+{"id": "oai-1577", "teen": "allow"}
+{"id": "oai-1578", "teen": "allow"}
+{"id": "oai-1579", "teen": "allow"}
+{"id": "oai-1580", "teen": "unsure", "why": "sexual: sex trafficking named"}
+{"id": "oai-1581", "teen": "unsure", "why": "violence: graphic injury"}
+{"id": "oai-1582", "teen": "allow"}
+{"id": "oai-1583", "teen": "unsure", "why": "hate: Asians remark"}
+{"id": "oai-1584", "teen": "unsure", "why": "self_harm: burning duration detail"}
+{"id": "oai-1585", "teen": "block", "why": "violence/hate/sexual: incitement to kill and rape"}
+{"id": "oai-1586", "teen": "block", "why": "sexual: suggestive sexual scene"}
+{"id": "oai-1587", "teen": "block", "why": "self_harm: suicide as solution"}
+{"id": "oai-1588", "teen": "block", "why": "sexual/violence: advocates rape, abduction described"}
+{"id": "oai-1589", "teen": "allow"}
+{"id": "oai-1590", "teen": "allow"}
+{"id": "oai-1591", "teen": "block", "why": "sexual: escort explicit review"}
+{"id": "oai-1592", "teen": "allow"}
+{"id": "oai-1593", "teen": "block", "why": "sexual: explicit masturbation"}
+{"id": "oai-1594", "teen": "unsure", "why": "sexual?: 'titillation' in film criticism"}
+{"id": "oai-1595", "teen": "allow"}
+{"id": "oai-1596", "teen": "block", "why": "self_harm: cutting method detail"}
+{"id": "oai-1597", "teen": "block", "why": "self_harm: suicide method discussed"}
+{"id": "oai-1598", "teen": "block", "why": "sexual: incest porn game"}
+{"id": "oai-1599", "teen": "block", "why": "self_harm: self-harm practice and hiding it"}
+{"id": "oai-1600", "teen": "block", "why": "hate: women worthless"}
+{"id": "oai-1601", "teen": "unsure", "why": "sexual: dicks reference"}
+{"id": "oai-1602", "teen": "block", "why": "self_harm: graphic self-inflicted wound"}
+{"id": "oai-1603", "teen": "allow"}
+{"id": "oai-1604", "teen": "block", "why": "sexual: prostitution porn spam"}
+{"id": "oai-1605", "teen": "unsure", "why": "self_harm: cutting imagery"}
+{"id": "oai-1606", "teen": "unsure", "why": "hate: racial blame"}
+{"id": "oai-1607", "teen": "allow"}
+{"id": "oai-1608", "teen": "allow"}
+{"id": "oai-1609", "teen": "block", "why": "profanity: sustained strong profanity"}
+{"id": "oai-1610", "teen": "allow"}
+{"id": "oai-1611", "teen": "allow"}
+{"id": "oai-1612", "teen": "unsure", "why": "sexual: 'sexual violence' in a list"}
+{"id": "oai-1613", "teen": "block", "why": "sexual: porn titles"}
+{"id": "oai-1614", "teen": "unsure", "why": "hate: anti-Muslim framing"}
+{"id": "oai-1615", "teen": "unsure", "why": "violence: war crimes remark"}
+{"id": "oai-1616", "teen": "unsure", "why": "sexual/hate: 'rapey migrants'"}
+{"id": "oai-1617", "teen": "unsure", "why": "sexual?: viagra spam"}
+{"id": "oai-1618", "teen": "block", "why": "hate: slur list of groups"}
+{"id": "oai-1619", "teen": "block", "why": "sexual: child porn discussion"}
+{"id": "oai-1620", "teen": "block", "why": "self_harm: bloodletting method"}
+{"id": "oai-1621", "teen": "block", "why": "violence: enjoying death in blood"}
+{"id": "oai-1622", "teen": "allow"}
+{"id": "oai-1623", "teen": "block", "why": "hate: hatred of Chinese"}
+{"id": "oai-1624", "teen": "allow"}
+{"id": "oai-1625", "teen": "block", "why": "hate: blacks called inferior"}
+{"id": "oai-1626", "teen": "allow"}
+{"id": "oai-1627", "teen": "allow"}
+{"id": "oai-1628", "teen": "block", "why": "sexual: explicit masturbation"}
+{"id": "oai-1629", "teen": "allow"}
+{"id": "oai-1630", "teen": "allow"}
+{"id": "oai-1631", "teen": "unsure", "why": "self_harm: suicides listed"}
+{"id": "oai-1632", "teen": "block", "why": "hate: gay equated to rapist"}
+{"id": "oai-1633", "teen": "unsure", "why": "sexual?: mild innuendo"}
+{"id": "oai-1634", "teen": "allow"}
+{"id": "oai-1635", "teen": "allow"}
+{"id": "oai-1636", "teen": "allow"}
+{"id": "oai-1637", "teen": "block", "why": "profanity: strong profanity insult"}
+{"id": "oai-1638", "teen": "block", "why": "sexual: sex massage spam"}
+{"id": "oai-1639", "teen": "allow"}
+{"id": "oai-1640", "teen": "unsure", "why": "violence: world burn"}
+{"id": "oai-1641", "teen": "allow"}
+{"id": "oai-1642", "teen": "allow"}
+{"id": "oai-1643", "teen": "allow"}
+{"id": "oai-1644", "teen": "block", "why": "violence: advocates torture execution"}
+{"id": "oai-1645", "teen": "allow"}
+{"id": "oai-1646", "teen": "allow"}
+{"id": "oai-1647", "teen": "block", "why": "sexual: escort sex spam"}
+{"id": "oai-1648", "teen": "allow"}
+{"id": "oai-1649", "teen": "block", "why": "violence: graphic torture"}
+{"id": "oai-1650", "teen": "block", "why": "sexual: escort porn spam"}
+{"id": "oai-1651", "teen": "block", "why": "hate: migrants dehumanised"}
+{"id": "oai-1652", "teen": "allow"}
+{"id": "oai-1653", "teen": "allow"}
+{"id": "oai-1654", "teen": "block", "why": "profanity: racial slur"}
+{"id": "oai-1655", "teen": "block", "why": "hate: antisemitic conspiracy"}
+{"id": "oai-1656", "teen": "block", "why": "sexual: incest rape"}
+{"id": "oai-1657", "teen": "allow"}
+{"id": "oai-1658", "teen": "allow"}
+{"id": "oai-1659", "teen": "block", "why": "sexual: sex hookup spam"}
+{"id": "oai-1660", "teen": "allow"}
+{"id": "oai-1661", "teen": "block", "why": "sexual: escort sex spam"}
+{"id": "oai-1662", "teen": "allow"}
+{"id": "oai-1663", "teen": "block", "why": "self_harm: cutting detail"}
+{"id": "oai-1664", "teen": "allow"}
+{"id": "oai-1665", "teen": "allow"}
+{"id": "oai-1666", "teen": "allow"}
+{"id": "oai-1667", "teen": "allow"}
+{"id": "oai-1668", "teen": "allow"}
+{"id": "oai-1669", "teen": "allow"}
+{"id": "oai-1670", "teen": "block", "why": "sexual: explicit porn"}
+{"id": "oai-1671", "teen": "block", "why": "sexual: crude sexual phrasing"}
+{"id": "oai-1672", "teen": "block", "why": "sexual: sex dolls and pedophilia"}
+{"id": "oai-1673", "teen": "allow"}
+{"id": "oai-1674", "teen": "allow"}
+{"id": "oai-1675", "teen": "block", "why": "sexual: explicit sex"}
+{"id": "oai-1676", "teen": "allow"}
+{"id": "oai-1677", "teen": "unsure", "why": "sexual: abuse named in passing"}
+{"id": "oai-1678", "teen": "block", "why": "self_harm: cutting depth detail"}
+{"id": "oai-1679", "teen": "unsure", "why": "sexual: sexuality discussed historically"}

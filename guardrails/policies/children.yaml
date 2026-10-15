@@ -1,0 +1,22 @@
+# Censor policy for the `children` rating (12 and under).
+# Scale: 0 none, 1 mild, 2 moderate, 3 strong. See guardrails/rubric.md for what each score means.
+# A score above `warn` is allowed but gets a warning tag; a score above `block` is rejected.
+# Sexual content is a hard ban at every rating, whatever these numbers say.
+rating: children
+version: 2
+warn:
+  violence: 1
+  sexual: 0
+  profanity: 0
+  substance: 0
+  self_harm: 0
+  horror: 1
+  hate: 0
+block:
+  violence: 2
+  sexual: 0
+  profanity: 1
+  substance: 1
+  self_harm: 1
+  horror: 2
+  hate: 1

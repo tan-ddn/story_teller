@@ -8,10 +8,13 @@ requires-python = ">=3.12"
 dependencies = [
     "anthropic>=1.13.0",
     "google-genai>=2.30.0",
+    "langfuse>=5.0.1",
+    "langgraph>=1.2.15",
     "mlflow-skinny>=3.17.0,<4",
     "openai>=3.29.0",
     "pydantic>=2.14.0",
     "python-dotenv>=1.2.4",
+    "pyyaml>=6.0.3",
 ]
 
 [dependency-groups]
@@ -22,6 +25,7 @@ dev = [
     "pip-audit>=2.10.1",
     "pytest>=8.3",
     "ruff>=0.16.10",
+    "types-pyyaml>=6.0.12.20260906",
 ]
 
 [tool.uv]
