@@ -173,7 +173,8 @@ by default**. It is only included in explicit experiments, so the model does not
   - assigns chapters/POVs to writer models according to the user's spec ("model A writes Kael's POV, model B the antagonist")
   - runs the loop: write → Censor → Archivist → Scripty → Editor → accept
   - splits each chapter into scenes with the ingest scene splitter, because chapters usually hold several
-    scenes and Archivist is trained on scene-sized text; Archivist and Scripty work scene by scene
+    scenes and Archivist is trained on scene-sized text; Censor, Archivist and Scripty work scene by
+    scene, and Censor's reasons and warnings name the scene
   - enforces retry limits, a cost budget per novel, and escalation to the human
   - puts chapter text into graph state only after Censor allowed it, so rejected text is never checkpointed
   - implements the optional chapter gate as a LangGraph interrupt that the author resumes with accept or reject

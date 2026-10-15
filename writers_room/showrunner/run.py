@@ -5,9 +5,11 @@
                        revise
 
 - draft: Context Builder prompt -> writer -> screen. revise: Editor -> screen.
-- screen (inside draft/revise): Censor; one "tone down" edit if over the rating. A hard ban,
-  an unavailable Censor or a second failure discards the text and the run stops ("censored").
-  Text only enters graph state after Censor allowed it, so it is never checkpointed otherwise.
+- screen (inside draft/revise): Censor checks each scene of the chapter separately, the unit the
+  rubric is tuned on, so a failure names the scene. If a scene is over the rating, the Editor gets
+  one "tone down" edit for the scenes named. A hard ban, an unavailable Censor or a second failure
+  discards the text and the run stops ("censored"). Text only enters graph state after Censor
+  allowed every scene, so it is never checkpointed otherwise.
 - check: the chapter is split into scenes (same splitter as ingest), each scene goes through
   Archivist, then Scripty checks the chapter's scenes. High-severity flags go to revise, up to
   `max_revisions` times, then the run stops ("flagged"). Low-severity flags are only recorded.
@@ -24,6 +26,7 @@ import operator
 import time
 import uuid
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Annotated, Any, Literal, TypedDict
@@ -34,6 +37,7 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command, interrupt
 from pydantic import BaseModel
 
+from guardrails.censor import Verdict
 from pipelines.ingest.split import split_scenes
 from services.extractor.schema import SceneExtraction
 from services.llm import TextCall, cost
@@ -41,6 +45,8 @@ from writers_room.context.builder import Strategy, build, system_prompt
 from writers_room.editor.revise import revise
 from writers_room.models import ChapterPlan, StoryPlan
 from writers_room.ports import Archivist, Bible, Censor, Scripty
+
+CENSOR_WORKERS = 4  # parallel Censor calls per chapter
 
 Status = Literal["accepted", "censored", "flagged", "rejected_by_author", "over_budget"]
 
@@ -194,21 +200,37 @@ class Showrunner:
         path = self.chapter_path(number - 1)
         return path.read_text(encoding="utf-8") if path.exists() else ""
 
+    def _censor_scenes(self, text: str) -> list[Verdict]:
+        """One verdict per scene, in order (scenes are checked in parallel)."""
+        scenes = [piece.text for piece in split_scenes(text)] or [text]
+        rating = self.plan.rating
+        with ThreadPoolExecutor(min(len(scenes), CENSOR_WORKERS)) as pool:
+            return list(pool.map(lambda scene: self.services.censor.check(scene, rating), scenes))
+
     def _screen(self, run: ChapterRun, text: str, toned_down: bool) -> State:
-        """Censor the text, toning it down once per chapter; discard it if it still fails."""
+        """Censor every scene, toning the failing ones down once per chapter; discard the
+        chapter if any scene still fails."""
         rating = self.plan.rating
         while True:
-            verdict = self.services.censor.check(text, rating)
-            if verdict.allowed:
-                run.warnings = [w.message for w in verdict.warnings]
-                run.labels = list(verdict.labels)
+            verdicts = self._censor_scenes(text)
+            failed = [(n, v) for n, v in enumerate(verdicts, 1) if not v.allowed]
+            if not failed:
+                run.warnings = [
+                    f"Scene {n}: {w.message}" for n, v in enumerate(verdicts, 1) for w in v.warnings
+                ]
+                run.labels = sorted({label for v in verdicts for label in v.labels})
                 return {"run": run, "text": text, "toned_down": toned_down}
-            run.censor_reasons += list(verdict.reasons)
-            if verdict.hard_ban or verdict.unavailable or toned_down or self._over_budget():
+            run.censor_reasons += [f"Scene {n}: {r}" for n, v in failed for r in v.reasons]
+            stop = any(v.hard_ban or v.unavailable for _, v in failed)
+            if stop or toned_down or self._over_budget():
                 run.status = "censored"  # the text is dropped here, never stored
                 return {"run": run, "text": "", "toned_down": toned_down}
             toned_down = True
-            issues = [f"Tone down for a {rating} audience: {r}" for r in verdict.reasons]
+            issues = [
+                f"Scene {n}: tone down for a {rating} audience. {r}"
+                for n, v in failed
+                for r in v.reasons
+            ]
             text, t_in, t_out = revise(self.call(run.editor), rating, text, issues)
             self._spend(run, run.editor, t_in, t_out)
 

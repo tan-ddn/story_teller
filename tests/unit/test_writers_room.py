@@ -3,7 +3,7 @@ from typing import Any
 
 import pytest
 
-from guardrails.censor import Verdict
+from guardrails.censor import Verdict, Warning
 from services.extractor.schema import SceneExtraction, SceneTime
 from services.llm import TextCall
 from writers_room.brainstormer.plan import PlanRejected, brainstorm
@@ -64,10 +64,14 @@ def make_plan(chapters: int = 2, approved: bool = True) -> StoryPlan:
 class FakeCensor:
     def __init__(self, banned: str = "BLOOD") -> None:
         self.banned = banned
+        self.seen: list[str] = []
 
     def check(self, text: str, rating: str) -> Verdict:
+        self.seen.append(text)
         if self.banned in text:
-            return Verdict(False, ("violence 3 > teen limit 2",))
+            return Verdict(False, ("It has graphic violence.",))
+        if "STORM" in text:
+            return Verdict(True, warnings=(Warning("horror", 2, "It has frightening scenes."),))
         return Verdict(True)
 
 
@@ -262,12 +266,33 @@ def test_persistent_flags_escalate_without_storing(tmp_path: Path) -> None:
     assert bible.committed == [] and not (tmp_path / "ch01.md").exists()
 
 
+def scenes(*texts: str) -> str:
+    """A chapter of scenes long enough not to be merged by the splitter."""
+    pad = " ".join(["word"] * 25)
+    return "\n\n* * *\n\n".join(f"{t} {pad}" for t in texts)
+
+
+def test_censor_checks_each_scene_and_names_the_failing_one(tmp_path: Path) -> None:
+    first = scenes("A calm start.", "BLOOD everywhere.", "A STORM rolls in.")
+    fixed = scenes("A calm start.", "A tense standoff.", "A STORM rolls in.")
+    call, prompts = scripted(first, fixed)
+    censor = FakeCensor()
+    sr, bible, _ = showrunner(tmp_path, call, plan=make_plan(chapters=1), censor=censor)
+    [run] = sr.run().runs
+    assert run.status == "accepted" and bible.committed == [1]
+    assert len(censor.seen) == 6  # three scenes, checked before and after the tone-down
+    assert "Scene 2: tone down for a teen audience. It has graphic violence." in prompts[1]
+    assert "Scene 1" not in prompts[1] and "Scene 3" not in prompts[1]
+    assert run.censor_reasons == ["Scene 2: It has graphic violence."]
+    assert run.warnings == ["Scene 3: It has frightening scenes."]
+
+
 def test_censor_tone_down_once_then_discard(tmp_path: Path) -> None:
     call, prompts = scripted("BLOOD everywhere.", "Still BLOOD.")
     sr, bible, _ = showrunner(tmp_path, call)
     [run] = sr.run().runs
     assert run.status == "censored"
-    assert "Tone down for a teen audience" in prompts[1]
+    assert "Scene 1: tone down for a teen audience" in prompts[1]
     assert len(prompts) == 2 and bible.committed == []
     assert not (tmp_path / "ch01.md").exists()
 
