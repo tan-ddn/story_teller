@@ -57,7 +57,7 @@ def _ollama(host: str, model: str, num_ctx: int, think: bool, num_predict: int |
             data=json.dumps(body).encode(),
             headers={"Content-Type": "application/json"},
         )
-        with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT) as response:  # noqa: S310
+        with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT) as response:  # noqa: S310  # nosec B310
             r = json.load(response)
         extraction = SceneExtraction.model_validate_json(r["message"]["content"])
         return extraction, r.get("prompt_eval_count", 0), r.get("eval_count", 0)
@@ -76,7 +76,7 @@ def run_model(host: str, model: str, scenes: dict[str, str], args: argparse.Name
     if out.exists():
         done = {json.loads(line)["scene_id"] for line in out.open(encoding="utf-8")}
     todo = [sid for sid in scenes if sid not in done]
-    with urllib.request.urlopen(f"{host.rstrip('/')}/api/tags", timeout=10) as r:  # noqa: S310
+    with urllib.request.urlopen(f"{host.rstrip('/')}/api/tags", timeout=10) as r:  # noqa: S310  # nosec B310
         pulled = {m["name"] for m in json.load(r)["models"]}
     if model not in pulled and f"{model}:latest" not in pulled:
         raise SystemExit(f"{model} is not pulled on {host}; run: ollama pull {model}")
