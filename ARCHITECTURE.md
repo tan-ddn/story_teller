@@ -89,8 +89,8 @@ The code uses plain names. Codenames are used in docs and the UI. The theme is t
 | `store/` | `GraphStore` interface over Postgres; pgvector for matching aliases to entities | Postgres, pgvector |
 | `writers_room/` | Brainstormer, Showrunner, Context Builder, Editor, style/voice check | LangGraph |
 | `security/` (cross-cutting) | AuthN/Z, row-level security, rate limits, audit log | OIDC, JWT, Postgres RLS |
-| `guardrails/` | Censor: rating classifier, hard bans, content warnings | Rubric-prompted LLM (o3 for now; a fine-tuned local model later) + rules |
-| `services/llm.py` | One interface to API LLMs: provider by model ID, one price table, Langfuse tracing | Anthropic, OpenAI, Google SDKs |
+| `guardrails/` | Censor: rating classifier, hard bans, content warnings | Rubric-prompted local LLM (qwen3.6:27b via Ollama; to be fine-tuned) + rules |
+| `services/llm.py` | One interface to LLMs: local Ollama models by default, API providers for reference runs only; one price table, Langfuse tracing | Ollama (Mac Studio), Anthropic/OpenAI/Google SDKs |
 | `web/` | Upload, Story Bible pages, timeline, flag review, approval gates | Minimal React or HTMX |
 | `monitoring/` | Dashboards, drift reports, alerts | Prometheus, Grafana, Evidently, Langfuse |
 | `infra/` | Local compose, k8s, cloud IaC | Docker Compose, Helm/kind, Terraform |
@@ -257,13 +257,14 @@ substance use, self-harm, horror/disturbing themes, hate/discrimination.
 - Guardrail decisions are logged in the run ledger for audit.
 
 **Evaluation.** `uv run python -m evaluation.censor_check` runs every check and must pass before a change to the
-rubric, policies, model or Censor code is merged (about $11 with o3 after a rubric change). Scores are cached per
+rubric, policies, model or Censor code is merged. It runs on the local Censor model only. Scores are cached per
 model, rubric and text, so only changed inputs cost money. It is a local check, not a CI job: Censor will move to a
 fine-tuned local model, and a paid API eval per push adds cost without catching what matters most.
 - **Fiction** (`evaluation/censor_fiction.py`): 200 Gutenberg scenes, three quarters picked for content near the
-  children/teen line. An independent model from another vendor (claude-opus-5) decides allow/warn/block per
-  rating without seeing the rubric; Censor must agree with it (children ≥ 75%, teen ≥ 90%) and rarely block
-  what it accepts (children ≤ 5%, teen ≤ 2%).
+  children/teen line. An independent model (claude-opus-5) decided allow/warn/block per rating without seeing
+  the rubric; its decisions are frozen in `evaluation/suites/censor_fiction_reference.jsonl`, so no API is
+  called. Censor must agree with them (children ≥ 75%, teen ≥ 90%) and rarely block what they accept
+  (children ≤ 5%, teen ≤ 2%).
 - **Hard bans** (`evaluation/censor_bans.py`): harmful-instruction samples from Aegis 2.0, handwritten attacks
   on named private people, and hard-ban samples wrapped in prompt-injection text. Recall ≥ 90% each, and no
   false hard-ban flags on fiction, public-figure criticism or safety advice.
@@ -403,11 +404,14 @@ and never use user text for training without opt-in consent.
 - Training compute: MLX on Apple Silicon for development and training; rented CUDA GPU for vLLM and PEFT benchmarks.
 - Showrunner: LangGraph, for its checkpointing and interrupts (the chapter gate).
 - LLM cost: one price table in `services/llm.py`, computed at call time and mirrored to Langfuse.
-- Censor: an LLM applies a rubric, and versioned policies turn its scores into allow/warn/block. o3 for now;
-  a fine-tuned local model is planned. Evaluated locally on fiction against an independent judge, with public
-  moderation benchmarks used only for the hard bans.
+- Local models only (from 2026-10-16): all running, training and testing uses local LLMs served by Ollama on
+  the Mac Studio. API models were used to design the Censor rubric (o3 as Censor, claude-opus-5 as fiction
+  judge); their outputs are kept as data, but no new API calls are made.
+- Censor: an LLM applies a rubric, and versioned policies turn its scores into allow/warn/block. The default
+  is qwen3.6:27b, to be replaced by a fine-tuned local model. Evaluated locally on fiction against the frozen
+  judge reference, with public moderation benchmarks used only for the hard bans.
 
 **Open**
 
 - Archivist base model: Qwen/Llama ~8B vs. DeBERTa for NER + LLM for relations/time.
-- Censor local model: base model, and whether to distil from the o3 + rubric labels on fiction.
+- Censor fine-tune: base model, and whether to distil from the o3 + rubric scores collected so far.

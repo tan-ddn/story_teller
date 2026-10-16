@@ -11,7 +11,7 @@ Cases are in evaluation/suites/censor_bans.json:
 
 Scores share the per-model cache with evaluation/censor.py.
 
-uv run python -m evaluation.censor_bans --model o3
+uv run python -m evaluation.censor_bans
 """
 
 import argparse
@@ -25,7 +25,7 @@ from typing import Any
 from dotenv import load_dotenv
 
 from evaluation.censor import REPORTS, classify_all, is_hard_ban, load_benchmark
-from guardrails.censor import Censor, Scores, judge
+from guardrails.censor import DEFAULT_MODEL, Censor, Scores, judge
 from services.llm import parse_call
 
 SUITE = Path("evaluation/suites/censor_bans.json")
@@ -122,8 +122,8 @@ def gate(r: dict[str, Any]) -> list[str]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Censor hard-ban and prompt-injection checks.")
-    parser.add_argument("--model", default="o3")
-    parser.add_argument("--workers", type=int, default=8)
+    parser.add_argument("--model", default=DEFAULT_MODEL)
+    parser.add_argument("--workers", type=int, default=2)
     args = parser.parse_args()
     load_dotenv(".env")
 

@@ -1,4 +1,9 @@
-"""One way to call API LLMs: provider by model ID prefix, one price table, Langfuse tracing.
+"""One way to call LLMs: provider by model ID, one price table, Langfuse tracing.
+
+Local models are the default for running, training and testing. A model ID with an Ollama tag
+("qwen3.6:27b") goes to the Ollama server at OLLAMA_HOST (default http://127.0.0.1:11435, an SSH
+tunnel to the Mac Studio). claude-*, gpt-*, o3/o4-* and gemini-* IDs still reach the API
+providers, for reference runs only.
 
 Cost is computed here from PRICES at call time, because budgets (Showrunner) need it before
 Langfuse has ingested anything. The same numbers are sent to Langfuse as `cost_details`, so the
@@ -6,8 +11,10 @@ run ledger and the Langfuse dashboard agree. Tracing is on when LANGFUSE_PUBLIC_
 Prompts and outputs are not sent to Langfuse (manuscript text stays out of traces, §12.3).
 """
 
+import json
 import os
 import re
+import urllib.request
 from collections.abc import Callable
 from typing import Any
 
@@ -15,6 +22,9 @@ from pydantic import BaseModel
 
 MAX_TOKENS = 16000
 REQUEST_TIMEOUT = 600.0  # seconds
+OLLAMA_HOST = "http://127.0.0.1:11435"
+OLLAMA_TIMEOUT = 1800.0  # local models on a shared machine can be slow
+OLLAMA_NUM_CTX = 16384  # rubric + a 1,500-word scene + reasoning fit comfortably
 
 # USD per 1M tokens (input, output). Thinking/reasoning tokens are billed as output.
 # Cached input is counted at the full input price, so Claude's cost is a slight overestimate.
@@ -40,6 +50,8 @@ def _raw_call(
     model: str, schema: type[BaseModel] | None
 ) -> Callable[[str, str], tuple[Any, int, int]]:
     """(system, user) -> (text or parsed schema, tokens in, tokens out)."""
+    if ":" in model:
+        return _ollama(model, schema)
     if model.startswith("claude-"):
         import anthropic
 
@@ -123,6 +135,39 @@ def _raw_call(
 
         return call_gemini
     raise ValueError(f"unknown provider for {model}")
+
+
+def _ollama(
+    model: str, schema: type[BaseModel] | None
+) -> Callable[[str, str], tuple[Any, int, int]]:
+    host = os.environ.get("OLLAMA_HOST", OLLAMA_HOST).rstrip("/")
+    fmt: Any = None
+    if schema is not None:
+        # Ollama's grammar parser rejects the \d escape used in some ID patterns.
+        fmt = json.loads(json.dumps(schema.model_json_schema()).replace(r"\\d", "[0-9]"))
+
+    def call_ollama(system: str, user: str) -> tuple[Any, int, int]:
+        body: dict[str, Any] = {
+            "model": model,
+            "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
+            "stream": False,
+            "think": False,
+            "options": {"temperature": 0, "num_ctx": OLLAMA_NUM_CTX},
+        }
+        if fmt is not None:
+            body["format"] = fmt
+        request = urllib.request.Request(  # noqa: S310 - host is an http(s) URL we chose
+            f"{host}/api/chat",
+            data=json.dumps(body).encode(),
+            headers={"Content-Type": "application/json"},
+        )
+        with urllib.request.urlopen(request, timeout=OLLAMA_TIMEOUT) as response:  # noqa: S310  # nosec B310
+            r = json.load(response)
+        text = r["message"]["content"]
+        out = text if schema is None else schema.model_validate_json(text)
+        return out, r.get("prompt_eval_count", 0), r.get("eval_count", 0)
+
+    return call_ollama
 
 
 def traced[T](

@@ -5,17 +5,19 @@ adult ones, so peril, death, grief, drinking, cruelty and horror appear with a p
 Selection favours scenes likely to sit near the children/teen line (keyword hits), plus some
 random ones, with a fixed seed; the chosen IDs are saved to evaluation/suites/.
 
-Two models read each scene:
+Each scene is compared on two sides:
 - Censor: the rubric model (guardrails/rubric.md), whose scores the policies turn into
-  allow / warn / block per rating.
-- Judge: an independent model from another vendor that never sees the rubric. It decides
-  allow / warn / block per rating from a plain description of the platform, as an experienced
-  children's and YA editor would. Its decisions stand in for "what we want".
+  allow / warn / block per rating. A local model by default.
+- Reference: an independent judge that never saw the rubric decided allow / warn / block per
+  rating from a plain description of the platform, as an experienced children's and YA editor
+  would. Its decisions stand in for "what we want". They were made once by claude-opus-5 and are
+  frozen in evaluation/suites/censor_fiction_reference.jsonl, so evaluating needs no API call.
+  --judge MODEL re-judges with another model instead (cached like the Censor side).
 
-Disagreements point at rubric rules that are too strict or too loose. Both models' outputs are
-cached per model, prompt and text, so a rubric change only re-scores the Censor side.
+Disagreements point at rubric rules that are too strict or too loose.
 
-uv run python -m evaluation.censor_fiction --censor o3 --judge claude-opus-5 --gate
+uv run python -m evaluation.censor_fiction --gate
+uv run python -m evaluation.censor_fiction --censor qwen3:32b --gate
 """
 
 import argparse
@@ -35,11 +37,12 @@ from dotenv import load_dotenv
 from pydantic import BaseModel, ConfigDict
 
 from evaluation.censor import action
-from guardrails.censor import Censor, Rating, Scores, judge
+from guardrails.censor import DEFAULT_MODEL, Censor, Rating, Scores, judge
 from services.llm import cost, parse_call
 
 SCENES = Path("data/processed/scenes.jsonl")
 SELECTION = Path("evaluation/suites/censor_fiction_scenes.json")
+REFERENCE = Path("evaluation/suites/censor_fiction_reference.jsonl")
 REPORTS = Path("data/interim/censor_fiction")
 RATINGS: tuple[Rating, ...] = ("children", "teen")
 ACTIONS = ("allow", "warn", "block")
@@ -207,10 +210,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Censor rubric vs an independent judge on fiction."
     )
-    parser.add_argument("--censor", default="o3")
-    parser.add_argument("--judge", default="claude-opus-5")
+    parser.add_argument("--censor", default=DEFAULT_MODEL)
+    parser.add_argument("--judge", help="re-judge with this model instead of the frozen reference")
     parser.add_argument("--n", type=int, default=200)
-    parser.add_argument("--workers", type=int, default=8)
+    parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--gate", action="store_true", help="exit 1 if a threshold fails")
     args = parser.parse_args()
     load_dotenv(".env")
@@ -227,26 +230,40 @@ def main() -> None:
     scored, censor_usd = cached_map(
         "censor", args.censor, censor.rubric, censor.classify_text, Scores, texts, args.workers
     )
-    judge_call = parse_call(args.judge, JudgeVerdict, name="censor-judge")
-    judged, judge_usd = cached_map(
-        "judge",
-        args.judge,
-        JUDGE_SYSTEM,
-        lambda text: judge_call(JUDGE_SYSTEM, f"<scene>\n{text}\n</scene>"),
-        JudgeVerdict,
-        texts,
-        args.workers,
-    )
+    judged: dict[str, JudgeVerdict | None]
+    if args.judge:
+        if args.judge == args.censor:
+            sys.exit("The judge must be a different model from the Censor model.")
+        judge_call = parse_call(args.judge, JudgeVerdict, name="censor-judge")
+        judged, judge_usd = cached_map(
+            "judge",
+            args.judge,
+            JUDGE_SYSTEM,
+            lambda text: judge_call(JUDGE_SYSTEM, f"<scene>\n{text}\n</scene>"),
+            JudgeVerdict,
+            texts,
+            args.workers,
+        )
+        judge_name = args.judge
+    else:
+        rows = [json.loads(line) for line in REFERENCE.open(encoding="utf-8")]
+        judged = {
+            r["id"]: JudgeVerdict.model_validate({k: r[k] for k in ("children", "teen", "reason")})
+            for r in rows
+            if r["id"] in texts
+        }
+        judge_usd = 0.0
+        judge_name = f"reference-{rows[0]['judge']}"
 
     metrics, disagreements = compare(judged, scored)
     report = {
         "censor": args.censor,
-        "judge": args.judge,
+        "judge": judge_name,
         "n_scenes": len(ids),
         "new_cost_usd": {"censor": censor_usd, "judge": judge_usd},
         **metrics,
     }
-    out = REPORTS / f"report.{args.censor}.vs.{args.judge}.json"
+    out = REPORTS / f"report.{args.censor.replace(':', '_')}.vs.{judge_name}.json"
     out.write_text(json.dumps({**report, "disagreements": disagreements}, indent=2), "utf-8")
     print(json.dumps(report, indent=2))
     print(f"{len(disagreements)} disagreements written to {out}")

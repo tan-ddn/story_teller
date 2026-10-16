@@ -30,8 +30,8 @@ Metrics:
 - detection: per benchmark label, the share Censor scores at least at the mapped level.
 - oai_clean_block_rate: block rate on samples with no positive benchmark label, for reference.
 
-uv run python -m evaluation.censor --model claude-opus-5                # full benchmark
-uv run python -m evaluation.censor --model claude-opus-5 --sample 300 --gate   # CI
+uv run python -m evaluation.censor --gate               # full benchmark, local Censor model
+uv run python -m evaluation.censor --sample 300 --gate  # quick subset
 """
 
 import argparse
@@ -51,7 +51,7 @@ from typing import Any
 
 from dotenv import load_dotenv
 
-from guardrails.censor import CATEGORIES, Censor, Rating, Scores, Verdict, judge
+from guardrails.censor import CATEGORIES, DEFAULT_MODEL, Censor, Rating, Scores, Verdict, judge
 from services.llm import cost, parse_call
 
 BENCHMARK_URL = (
@@ -296,9 +296,9 @@ def gate(r: dict[str, Any]) -> list[str]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Evaluate Censor; --gate fails on regressions.")
-    parser.add_argument("--model", default="claude-opus-5")
+    parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--sample", type=int, default=0, help="benchmark subset size; 0 = all")
-    parser.add_argument("--workers", type=int, default=8)
+    parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--gate", action="store_true", help="exit 1 if a threshold fails")
     args = parser.parse_args()
     load_dotenv(".env")

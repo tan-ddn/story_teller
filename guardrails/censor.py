@@ -15,6 +15,7 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field
 
 HERE = Path(__file__).parent
+DEFAULT_MODEL = "qwen3.6:27b"  # local, via Ollama; see services/llm.py
 CATEGORIES = ("violence", "sexual", "profanity", "substance", "self_harm", "horror", "hate")
 Rating = Literal["children", "teen"]
 Score = Field(ge=0, le=3)

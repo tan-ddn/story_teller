@@ -1,31 +1,30 @@
 """Run every Censor check before merging a change to the rubric, policies, model or code.
 
-1. evaluation.censor_fiction: decisions on 200 Gutenberg scenes vs an independent judge.
+1. evaluation.censor_fiction: decisions on 200 Gutenberg scenes vs the frozen judge reference.
 2. evaluation.censor_bans: hard bans (harmful instructions, real people) and prompt injection.
 3. evaluation.censor: sexual-content hard ban on the full OpenAI moderation set, and the
    boundary passages.
 
-Scores are cached per model, rubric and text, so an unchanged setup costs nothing; after a
-rubric change a full run costs about $11 with o3.
+Everything runs on the local Censor model (Ollama; no API calls). Scores are cached per model,
+rubric and text, so only changed inputs are re-scored.
 
 uv run python -m evaluation.censor_check
-uv run python -m evaluation.censor_check --model claude-opus-5 --judge o3
+uv run python -m evaluation.censor_check --model qwen3:32b
 """
 
 import argparse
 import subprocess  # nosec B404
 import sys
 
+from guardrails.censor import DEFAULT_MODEL
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run every Censor check.")
-    parser.add_argument("--model", default="o3", help="the model that applies the rubric")
-    parser.add_argument("--judge", default="claude-opus-5", help="independent fiction judge")
+    parser.add_argument("--model", default=DEFAULT_MODEL, help="the model that applies the rubric")
     args = parser.parse_args()
-    if args.model == args.judge:
-        sys.exit("The fiction judge must be a different model from the Censor model.")
     checks = [
-        ["evaluation.censor_fiction", "--censor", args.model, "--judge", args.judge, "--gate"],
+        ["evaluation.censor_fiction", "--censor", args.model, "--gate"],
         ["evaluation.censor_bans", "--model", args.model],
         ["evaluation.censor", "--model", args.model, "--gate"],
     ]
