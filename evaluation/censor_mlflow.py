@@ -101,12 +101,14 @@ def start_parent(model: str) -> str | None:
 
 
 def end_parent(run_id: str | None, passed: bool) -> None:
+    """Record the outcome: gate_passed for a real run; for a smoke run, whose gates are not
+    applied, only checks_completed (every check ran without crashing)."""
     if run_id is None:
         return
     import mlflow
 
     with mlflow.start_run(run_id=run_id):
-        mlflow.log_metric("gate_passed", float(passed))
+        mlflow.log_metric("checks_completed" if smoke() else "gate_passed", float(passed))
 
 
 def log_check(
