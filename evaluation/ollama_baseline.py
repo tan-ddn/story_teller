@@ -12,19 +12,24 @@ uv run python -m evaluation.ollama_baseline run --models qwen3:32b --host http:/
 uv run python -m evaluation.ollama_baseline run --models qwen3:8b --pilot --no-think --tag nothink
 uv run python -m evaluation.ollama_baseline report
 uv run python -m evaluation.ollama_baseline report --reference data/interim/silver/gpt-6.1-sol.jsonl
+uv run python -m evaluation.ollama_baseline log data/interim/baseline/qwen3_8b.think.jsonl \
+    --param think=true --param num_ctx=16384      # one MLflow run per file (MLFLOW_TRACKING_URI)
 """
 
 import argparse
 import json
 import os
 import re
+import statistics
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass
 from pathlib import Path
 
-from evaluation.extraction import CATEGORIES, total
+from evaluation.extraction import CATEGORIES, Counts, total
 from evaluation.extraction import score as score_extraction
 from evaluation.silver_report import f1_row, load_runs, usage_summary
+from pipelines.labeling.models import LabelRun
 from pipelines.labeling.silver import PILOT, SCENES, Call, label_scene
 from services.extractor.schema import SceneExtraction, check_evidence
 
@@ -101,33 +106,92 @@ def quote_count(e: SceneExtraction) -> int:
     return len(e.entities) + len(e.attributes) + len(e.events) + len(e.relations) + len(e.time.cues)
 
 
-def print_scores(label: str, pairs: list[tuple[SceneExtraction, SceneExtraction]]) -> None:
-    print(f"  {label}: scored on {len(pairs)} scenes")
-    totals = total(score_extraction(pred, gold) for pred, gold in pairs)
-    for category in CATEGORIES:
-        print(f1_row(category, totals[category]))
+@dataclass
+class Scores:
+    strict: dict[str, Counts]  # answers whose evidence checked out
+    lenient: dict[str, Counts]  # any answer that parsed against the schema
+    strict_scenes: int
+    lenient_scenes: int
+    parsed: int
+    quotes: int
+    bad_quotes: int
+
+
+def score_runs(
+    runs: list[LabelRun], reference: dict[str, SceneExtraction], scenes: dict[str, str]
+) -> Scores:
+    strict = [
+        (r.extraction, reference[r.scene_id])
+        for r in runs
+        if r.extraction and r.scene_id in reference
+    ]
+    answers = [(r.scene_id, r.extraction or r.unverified) for r in runs]
+    parsed = [(sid, e) for sid, e in answers if e]
+    lenient = [(e, reference[sid]) for sid, e in parsed if sid in reference]
+    return Scores(
+        strict=total(score_extraction(pred, gold) for pred, gold in strict),
+        lenient=total(score_extraction(pred, gold) for pred, gold in lenient),
+        strict_scenes=len(strict),
+        lenient_scenes=len(lenient),
+        parsed=len(parsed),
+        quotes=sum(quote_count(e) for _, e in parsed),
+        bad_quotes=sum(len(check_evidence(e, scenes[sid])) for sid, e in parsed),
+    )
+
+
+def load_scenes() -> dict[str, str]:
+    return {s["scene_id"]: s["text"] for s in map(json.loads, SCENES.open(encoding="utf-8"))}
 
 
 def report(reference_path: Path) -> None:
     reference = load_reference(reference_path)
-    scenes = {s["scene_id"]: s["text"] for s in map(json.loads, SCENES.open(encoding="utf-8"))}
+    scenes = load_scenes()
     print(f"reference: {reference_path} ({len(reference)} scenes)\n")
     for path in sorted(OUT_DIR.glob("*.jsonl")):
         runs = load_runs(path)
         print(f"{path.stem}  {usage_summary(runs)}")
-        strict = [
-            (r.extraction, reference[r.scene_id])
-            for r in runs
-            if r.extraction and r.scene_id in reference
-        ]
-        print_scores("strict (evidence verified)", strict)
-        answers = [(r.scene_id, r.extraction or r.unverified) for r in runs]
-        parsed = [(sid, e) for sid, e in answers if e]
-        quotes = sum(quote_count(e) for _, e in parsed)
-        bad = sum(len(check_evidence(e, scenes[sid])) for sid, e in parsed)
-        print(f"    parsed {len(parsed)}/{len(runs)}  verbatim quotes {quotes - bad}/{quotes}")
-        lenient = [(e, reference[sid]) for sid, e in parsed if sid in reference]
-        print_scores("lenient (any parsed answer)", lenient)
+        s = score_runs(runs, reference, scenes)
+        print(f"  strict (evidence verified): scored on {s.strict_scenes} scenes")
+        for category in CATEGORIES:
+            print(f1_row(category, s.strict[category]))
+        verbatim = s.quotes - s.bad_quotes
+        print(f"    parsed {s.parsed}/{len(runs)}  verbatim quotes {verbatim}/{s.quotes}")
+        print(f"  lenient (any parsed answer): scored on {s.lenient_scenes} scenes")
+        for category in CATEGORIES:
+            print(f1_row(category, s.lenient[category]))
+
+
+def log_to_mlflow(paths: list[Path], reference_path: Path, params: dict[str, str]) -> None:
+    """Log each result file as one MLflow run: settings, scores, latency and the file itself."""
+    import mlflow
+
+    reference = load_reference(reference_path)
+    scenes = load_scenes()
+    mlflow.set_experiment("archivist-baseline")
+    for path in paths:
+        runs = load_runs(path)
+        s = score_runs(runs, reference, scenes)
+        seconds = sorted(r.seconds for r in runs)
+        metrics = {
+            "scenes": len(runs),
+            "valid": sum(bool(r.extraction) for r in runs),
+            "parsed": s.parsed,
+            "verbatim_quote_rate": 1 - s.bad_quotes / s.quotes if s.quotes else 0.0,
+            "latency_p50_s": statistics.median(seconds),
+            "latency_p95_s": seconds[min(len(seconds) - 1, int(0.95 * len(seconds)))],
+        }
+        for kind, totals in (("strict", s.strict), ("lenient", s.lenient)):
+            for category, c in totals.items():
+                metrics |= {
+                    f"{kind}_{category}_precision": c.precision,
+                    f"{kind}_{category}_recall": c.recall,
+                    f"{kind}_{category}_f1": c.f1,
+                }
+        with mlflow.start_run(run_name=path.stem):
+            mlflow.log_params({"model": runs[0].model, "reference": str(reference_path), **params})
+            mlflow.log_metrics({k: float(v) for k, v in metrics.items()})
+            mlflow.log_artifact(str(path))
+        print(f"logged {path.stem}")
 
 
 def main() -> None:
@@ -144,15 +208,19 @@ def main() -> None:
     run.add_argument("--no-think", action="store_true", help="disable reasoning (qwen3 etc.)")
     rep = sub.add_parser("report", help="score baseline runs")
     rep.add_argument("--reference", type=Path, default=PILOT)
+    log = sub.add_parser("log", help="log result files to MLflow, one run each")
+    log.add_argument("paths", nargs="+", type=Path)
+    log.add_argument("--reference", type=Path, default=PILOT)
+    log.add_argument("--param", action="append", default=[], help="extra key=value run setting")
     args = parser.parse_args()
 
     if args.command == "report":
         report(args.reference)
         return
-    scenes = {}
-    for line in SCENES.open(encoding="utf-8"):
-        s = json.loads(line)
-        scenes[s["scene_id"]] = s["text"]
+    if args.command == "log":
+        log_to_mlflow(args.paths, args.reference, dict(p.split("=", 1) for p in args.param))
+        return
+    scenes = load_scenes()
     if args.pilot:
         pilot = [json.loads(line)["scene_id"] for line in PILOT.open(encoding="utf-8")]
         scenes = {sid: scenes[sid] for sid in pilot}
