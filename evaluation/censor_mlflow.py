@@ -43,7 +43,10 @@ def experiment() -> str:
 
 
 def _git_commit() -> str:
-    """Short commit of the checkout, with "-dirty" if Censor-related files have changes."""
+    """Short commit of the checkout, with "-dirty" if Censor-related files have changes.
+    CENSOR_GIT_COMMIT overrides it for copies without .git (e.g. the queue on the Mac)."""
+    if commit := os.environ.get("CENSOR_GIT_COMMIT"):
+        return commit
     git = shutil.which("git")
     if git is None:
         return "unknown"
