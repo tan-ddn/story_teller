@@ -257,9 +257,9 @@ substance use, self-harm, horror/disturbing themes, hate/discrimination.
 - Guardrail decisions are logged in the run ledger for audit.
 
 **Evaluation.** `uv run python -m evaluation.censor_check` runs every check and must pass before a change to the
-rubric, policies, model or Censor code is merged. Scores are cached per model, rubric and text, so only changed
-inputs cost money. It is a local check, not a CI job: Censor will move to a fine-tuned local model, and a paid
-API eval per push adds cost without catching what matters most.
+rubric, policies, model or Censor code is merged (about $11 with o3 after a rubric change). Scores are cached per
+model, rubric and text, so only changed inputs cost money. It is a local check, not a CI job: Censor will move to a
+fine-tuned local model, and a paid API eval per push adds cost without catching what matters most.
 - **Fiction** (`evaluation/censor_fiction.py`): 200 Gutenberg scenes, three quarters picked for content near the
   children/teen line. An independent model from another vendor (claude-opus-5) decides allow/warn/block per
   rating without seeing the rubric; Censor must agree with it (children ≥ 75%, teen ≥ 90%) and rarely block
@@ -267,8 +267,8 @@ API eval per push adds cost without catching what matters most.
 - **Hard bans** (`evaluation/censor_bans.py`): harmful-instruction samples from Aegis 2.0, handwritten attacks
   on named private people, and hard-ban samples wrapped in prompt-injection text. Recall ≥ 90% each, and no
   false hard-ban flags on fiction, public-figure criticism or safety advice.
-- **Sexual hard ban** (`evaluation/censor.py`): the OpenAI moderation eval set (1,680 samples), relabelled for
-  `teen` because its labels follow an adult policy. Recall on sexual content ≥ 95% on a fixed 300-sample subset,
+- **Sexual hard ban** (`evaluation/censor.py`): the full OpenAI moderation eval set (1,680 samples), relabelled for
+  `teen` because its labels follow an adult policy. Recall on sexual content ≥ 95%,
   plus agreement ≥ 80% on the boundary passages. Its other numbers are for reference only.
 
 ## 12. Security and privacy

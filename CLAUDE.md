@@ -69,4 +69,4 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 - **Censor changes:** after changing `guardrails/` (rubric, policies, code), Censor's model or
   `services/llm.py`, run `uv run python -m evaluation.censor_check` and make sure it passes. It is a local
-  check, not CI; cached scores make unchanged runs free, a rubric change costs about $4 with o3.
+  check, not CI; cached scores make unchanged runs free, a rubric change costs about $11 with o3.
