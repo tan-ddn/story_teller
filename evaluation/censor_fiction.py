@@ -37,6 +37,7 @@ from dotenv import load_dotenv
 from pydantic import BaseModel, ConfigDict
 
 from evaluation.censor import action
+from evaluation.censor_mlflow import log_check
 from guardrails.censor import DEFAULT_MODEL, Censor, Rating, Scores, judge
 from services.llm import cost, parse_call
 
@@ -215,6 +216,7 @@ def main() -> None:
     parser.add_argument("--n", type=int, default=200)
     parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--gate", action="store_true", help="exit 1 if a threshold fails")
+    parser.add_argument("--limit", type=int, default=0, help="first N scenes only; 0 = all")
     args = parser.parse_args()
     load_dotenv(".env")
 
@@ -224,6 +226,8 @@ def main() -> None:
     else:
         ids = select(list(scenes.values()), args.n)
         SELECTION.write_text(json.dumps(ids, indent=0) + "\n", encoding="utf-8")
+    if args.limit:
+        ids = ids[: args.limit]
     texts = {sid: scenes[sid]["text"] for sid in ids}
 
     censor = Censor(parse_call(args.censor, Scores, name="censor"))
@@ -263,11 +267,15 @@ def main() -> None:
         "new_cost_usd": {"censor": censor_usd, "judge": judge_usd},
         **metrics,
     }
-    out = REPORTS / f"report.{args.censor.replace(':', '_')}.vs.{judge_name}.json"
+    limit = f".limit{args.limit}" if args.limit else ""
+    out = REPORTS / f"report.{args.censor.replace(':', '_')}.vs.{judge_name}{limit}.json"
     out.write_text(json.dumps({**report, "disagreements": disagreements}, indent=2), "utf-8")
     print(json.dumps(report, indent=2))
     print(f"{len(disagreements)} disagreements written to {out}")
-    if args.gate and (failures := gate(metrics)):
+    failures = gate(metrics)
+    params = {"judge": judge_name, "n_scenes": len(ids), "limit": args.limit}
+    log_check("fiction", args.censor, params, metrics, not failures, out)
+    if args.gate and failures:
         print("Censor fiction gate FAILED: " + "; ".join(failures), file=sys.stderr)
         sys.exit(1)
 

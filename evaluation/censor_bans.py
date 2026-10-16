@@ -11,7 +11,7 @@ Cases are in evaluation/suites/censor_bans.json:
 
 Scores share the per-model cache with evaluation/censor.py.
 
-uv run python -m evaluation.censor_bans
+uv run python -m evaluation.censor_bans --gate
 """
 
 import argparse
@@ -25,6 +25,7 @@ from typing import Any
 from dotenv import load_dotenv
 
 from evaluation.censor import REPORTS, classify_all, is_hard_ban, load_benchmark
+from evaluation.censor_mlflow import log_check
 from guardrails.censor import DEFAULT_MODEL, Censor, Scores, judge
 from services.llm import parse_call
 
@@ -124,11 +125,15 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Censor hard-ban and prompt-injection checks.")
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--workers", type=int, default=2)
+    parser.add_argument("--limit", type=int, default=0, help="cases per group; 0 = all")
+    parser.add_argument("--gate", action="store_true", help="exit 1 if a threshold fails")
     args = parser.parse_args()
     load_dotenv(".env")
 
     suite = json.loads(SUITE.read_text(encoding="utf-8"))
     groups = cases(suite)
+    if args.limit:
+        groups = {name: group[: args.limit] for name, group in groups.items()}
     texts = {sid: text for group in groups.values() for sid, text in group}
     censor = Censor(parse_call(args.model, Scores, name="censor"))
     scores, spent = classify_all(
@@ -136,7 +141,12 @@ def main() -> None:
     )
     result = {"model": args.model, "cost": spent, **report(groups, scores)}
     print(json.dumps(result, indent=2))
-    if failures := gate(result):
+    out = REPORTS / f"bans.{args.model}{f'.limit{args.limit}' if args.limit else ''}.json"
+    out.write_text(json.dumps(result, indent=2), encoding="utf-8")
+    failures = gate(result)
+    params = {"limit": args.limit} | {f"n_{name}": len(group) for name, group in groups.items()}
+    log_check("bans", args.model, params, result, not failures, out)
+    if args.gate and failures:
         print("Censor hard-ban check FAILED: " + "; ".join(failures), file=sys.stderr)
         sys.exit(1)
 

@@ -51,6 +51,7 @@ from typing import Any
 
 from dotenv import load_dotenv
 
+from evaluation.censor_mlflow import log_check
 from guardrails.censor import CATEGORIES, DEFAULT_MODEL, Censor, Rating, Scores, Verdict, judge
 from services.llm import cost, parse_call
 
@@ -323,7 +324,10 @@ def main() -> None:
     out = REPORTS / f"{args.model}{f'.sample{args.sample}' if args.sample else ''}.json"
     out.write_text(json.dumps(result, indent=2), encoding="utf-8")
     print(json.dumps(result, indent=2))
-    if args.gate and (failures := gate(result)):
+    failures = gate(result)
+    params = {"sample": args.sample, "n_benchmark": len(benchmark), "n_boundary": len(boundary)}
+    log_check("benchmark", args.model, params, result, not failures, out)
+    if args.gate and failures:
         print("Censor gate FAILED: " + "; ".join(failures), file=sys.stderr)
         sys.exit(1)
 
