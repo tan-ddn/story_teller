@@ -120,7 +120,7 @@ def client_for(model: str) -> Call:
 
 
 def cost(model: str, tokens_in: int, tokens_out: int) -> float:
-    price_in, price_out = PRICES[model]
+    price_in, price_out = PRICES.get(model, (0.0, 0.0))  # local models are free
     return (tokens_in * price_in + tokens_out * price_out) / 1_000_000
 
 
@@ -141,8 +141,9 @@ def label_scene(call: Call, model: str, scene_id: str, text: str) -> LabelRun:
         run.output_tokens += tokens_out
         bad = check_evidence(extraction, text)
         if not bad:
-            run.extraction, run.error = extraction, None
+            run.extraction, run.unverified, run.error = extraction, None, None
             break
+        run.unverified = extraction
         run.error = f"{len(bad)} evidence quotes not in scene"
         quotes = "\n".join(f"- {q}" for q in bad)
         user = (

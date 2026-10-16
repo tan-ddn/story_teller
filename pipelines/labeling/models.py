@@ -15,11 +15,15 @@ class SilverLabel(BaseModel):
 
 
 class LabelRun(BaseModel):
-    """One API labelling attempt for a scene; extraction is None if it failed."""
+    """One API labelling attempt for a scene; extraction is None if it failed.
+
+    unverified keeps the last parsed answer whose evidence quotes did not all check out.
+    """
 
     scene_id: str
     model: str
     extraction: SceneExtraction | None = None
+    unverified: SceneExtraction | None = None
     error: str | None = None
     attempts: int = 0
     input_tokens: int = 0

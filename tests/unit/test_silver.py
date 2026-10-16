@@ -39,3 +39,12 @@ def test_failures_are_recorded_not_raised() -> None:
     assert run.extraction is None
     assert run.attempts == 2
     assert run.error == "TimeoutError: slow"
+
+
+def test_unverifiable_answer_is_kept_as_unverified() -> None:
+    def call(system: str, user: str) -> tuple[SceneExtraction, int, int]:
+        return extraction("Jim stood proudly"), 1, 1
+
+    run = label_scene(call, "local-model", "s1", SCENE)
+    assert run.extraction is None
+    assert run.unverified is not None and run.cost_usd == 0.0
