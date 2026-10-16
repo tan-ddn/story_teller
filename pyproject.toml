@@ -10,18 +10,18 @@ dependencies = [
     "google-genai>=2.30.0",
     "mlflow-skinny>=3.17.0,<4",
     "openai>=3.29.0",
-    "pydantic>=2.9",
+    "pydantic>=2.14.0",
     "python-dotenv>=1.2.4",
 ]
 
 [dependency-groups]
 dev = [
-    "bandit>=1.7",
+    "bandit>=1.9.4",
     "dvc>=3.67.1",
-    "mypy>=1.13",
-    "pip-audit>=2.7",
+    "mypy>=2.4.0",
+    "pip-audit>=2.10.1",
     "pytest>=8.3",
-    "ruff>=0.7",
+    "ruff>=0.16.10",
 ]
 
 [tool.uv]
