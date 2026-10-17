@@ -115,3 +115,29 @@ def test_epoch_checkpoints_are_split_and_ranked(tmp_path: Path) -> None:
         "teen": {"agreement": 0.9, "block_recall": 1.0, "block_precision": 1.0},
     }
     assert checkpoints.score(good) > checkpoints.score(worse)
+
+
+def test_plan_config_derives_epochs_and_schedule(tmp_path: Path) -> None:
+    import yaml
+
+    from training.censor import plan
+
+    data = tmp_path / "data"
+    data.mkdir()
+    (data / "train.jsonl").write_text("{}\n" * 100)
+    base = tmp_path / "base.yaml"
+    base.write_text(
+        yaml.safe_dump(
+            {
+                "model": "M",
+                "adapter_name": "a",
+                "batch_size": 1,
+                "grad_accumulation_steps": 4,
+                "learning_rate": 5e-5,
+            }
+        )
+    )
+    cfg = plan.config(base, data, 3, "new", tmp_path / "out.yaml")
+    assert (cfg["iters"], cfg["save_every"]) == (300, 100)
+    assert cfg["lr_schedule"]["arguments"] == [5e-5, 75, 1.0e-6]
+    assert cfg["adapter_name"] == "new" and cfg["dataset"] == str(data)
