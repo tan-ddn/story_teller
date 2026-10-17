@@ -414,4 +414,8 @@ and never use user text for training without opt-in consent.
 **Open**
 
 - Archivist base model: Qwen/Llama ~8B vs. DeBERTa for NER + LLM for relations/time.
-- Censor fine-tune: base model, and whether to distil from the o3 + rubric scores collected so far.
+- Censor fine-tune: base model and training recipe. The dataset is ready (`pipelines/censor_sft/`): 2,466
+  hand-labelled samples (condensed Gutenberg windows and scenes, an Aegis 2.0 train-split sample, synthetic
+  real-person cases with Census-frequency names) plus injection-wrapped copies of the positives, split by book
+  or template, with every Censor eval sample excluded by ID and text hash. Only IDs, text hashes and labels
+  (quotes as character spans) are committed; texts are fetched and assembled at build time.
