@@ -16,6 +16,7 @@ uv run python -m training.censor.train training/configs/censor_qwen3_30b_a3b_lor
 import argparse
 import json
 import os
+import threading
 import time
 import types
 from pathlib import Path
@@ -51,10 +52,41 @@ def mlx_data(out: Path) -> Path:
     return out
 
 
+def _thinking_off(tokenizer: Any) -> None:
+    """mlx-lm renders training chats with thinking on by default; inference (services.llm) turns
+    it off. Force it off here too, so training and inference prompts match (for gemma4 thinking
+    on adds a flag to the system turn)."""
+    render = tokenizer.apply_chat_template
+
+    def apply_chat_template(*a: Any, **k: Any) -> Any:
+        return render(*a, **(k | {"enable_thinking": False}))
+
+    tokenizer.apply_chat_template = apply_chat_template
+
+
+def _memory_guard(max_gb: float) -> None:
+    """Stop the process if MLX memory passes max_gb. The Mac is shared, and a model that does not
+    fit (Qwen3.6-27B reached 85-91 GB) must fail cleanly instead of starving other users."""
+    import mlx.core as mx
+
+    def watch() -> None:
+        while True:
+            used = mx.get_active_memory() / 1e9
+            if used > max_gb:
+                print(f"memory guard: {used:.1f} GB > {max_gb} GB, stopping", flush=True)
+                os._exit(3)
+            time.sleep(0.5)
+
+    threading.Thread(target=watch, daemon=True).start()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Censor LoRA fine-tune (MLX).")
     parser.add_argument("config", type=Path)
     parser.add_argument("--smoke", action="store_true", help="a few steps, to check memory")
+    parser.add_argument(
+        "--max-memory-gb", type=float, default=60.0, help="abort training above this (shared Mac)"
+    )
     args = parser.parse_args()
     load_dotenv(".env")
 
@@ -114,7 +146,9 @@ def main() -> None:
         mlflow.log_params({f"data.{k}": v for k, v in manifest["counts"].items()})
         mlflow.log_artifact(str(args.config))
         start = time.monotonic()
+        _memory_guard(args.max_memory_gb)
         model, tokenizer = load(margs.model)
+        _thinking_off(tokenizer)
         train_set, valid_set, _ = load_dataset(margs, tokenizer)
         train_model(margs, model, train_set, valid_set, MLflowCallback())
         mlflow.log_metric("train_hours", (time.monotonic() - start) / 3600)
