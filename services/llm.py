@@ -15,10 +15,12 @@ Prompts and outputs are not sent to Langfuse (manuscript text stays out of trace
 
 import json
 import os
+import queue
 import re
 import threading
 import urllib.request
 from collections.abc import Callable
+from concurrent.futures import Future
 from pathlib import Path
 from typing import Any
 
@@ -199,25 +201,52 @@ def parse_json_answer[M: BaseModel](text: str, schema: type[M]) -> M:
     return schema.model_validate_json(text[start : end + 1])
 
 
+class _MLXWorker:
+    """Runs every MLX load and generation on one thread. MLX arrays and streams belong to the
+    thread that created them (a model with a LoRA adapter fails with "no Stream ... in current
+    thread" when used from another), so callers on any thread queue work here instead."""
+
+    def __init__(self) -> None:
+        self._jobs: queue.Queue[tuple[Callable[[], Any], Future[Any]]] = queue.Queue()
+        threading.Thread(target=self._run, name="mlx", daemon=True).start()
+
+    def _run(self) -> None:
+        while True:
+            fn, future = self._jobs.get()
+            try:
+                future.set_result(fn())
+            except BaseException as e:  # noqa: BLE001 - handed back to the caller
+                future.set_exception(e)
+
+    def submit[T](self, fn: Callable[[], T]) -> T:
+        future: Future[T] = Future()
+        self._jobs.put((fn, future))
+        return future.result()
+
+
+_MLX_WORKER: _MLXWorker | None = None
 _MLX_CACHE: dict[str, Any] = {}
-_MLX_LOCK = threading.Lock()
 
 
 def _mlx(model: str, schema: type[BaseModel] | None) -> Callable[[str, str], tuple[Any, int, int]]:
     from mlx_lm import generate, load
     from mlx_lm.sample_utils import make_sampler
 
+    global _MLX_WORKER
+    if _MLX_WORKER is None:
+        _MLX_WORKER = _MLXWorker()
+    worker = _MLX_WORKER
     name, _, adapter = model.removeprefix("mlx:").partition("+")
     path = Path(os.environ.get("MLX_MODELS_DIR", MLX_MODELS_DIR)) / name
-    adapter_path = (
-        Path(os.environ.get("MLX_ADAPTERS_DIR", MLX_ADAPTERS_DIR)) / adapter if adapter else None
-    )
-    with _MLX_LOCK:
+    adapters = Path(os.environ.get("MLX_ADAPTERS_DIR", MLX_ADAPTERS_DIR))
+    adapter_path = str(adapters / adapter) if adapter else None
+
+    def load_once() -> Any:
         if model not in _MLX_CACHE:
-            _MLX_CACHE[model] = load(
-                str(path), adapter_path=str(adapter_path) if adapter_path else None
-            )
-    llm, tokenizer = _MLX_CACHE[model]
+            _MLX_CACHE[model] = load(str(path), adapter_path=adapter_path)
+        return _MLX_CACHE[model]
+
+    llm, tokenizer = worker.submit(load_once)
     sampler = make_sampler(temp=0.0)
 
     def call_mlx(system: str, user: str) -> tuple[Any, int, int]:
@@ -227,8 +256,9 @@ def _mlx(model: str, schema: type[BaseModel] | None) -> Callable[[str, str], tup
         prompt = tokenizer.apply_chat_template(
             messages, add_generation_prompt=True, enable_thinking=False, tokenize=False
         )
-        with _MLX_LOCK:  # one generation at a time per process
-            text = generate(llm, tokenizer, prompt, max_tokens=MLX_MAX_TOKENS, sampler=sampler)
+        text = worker.submit(
+            lambda: generate(llm, tokenizer, prompt, max_tokens=MLX_MAX_TOKENS, sampler=sampler)
+        )
         tokens_in, tokens_out = len(tokenizer.encode(prompt)), len(tokenizer.encode(text))
         out = text if schema is None else parse_json_answer(text, schema)
         return out, tokens_in, tokens_out

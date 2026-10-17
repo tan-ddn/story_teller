@@ -79,3 +79,17 @@ def test_json_answers_are_parsed_from_model_text() -> None:
     answer = "<think>\n\n</think>\n\n```json\n" + json.dumps(scores(violence=2)) + "\n```"
     assert parse_json_answer(answer, Scores).violence == 2
     assert "JSON schema" in json_system("RUBRIC", Scores)
+
+
+def test_mlx_worker_runs_every_job_on_one_thread() -> None:
+    import threading
+    from concurrent.futures import ThreadPoolExecutor
+
+    from services.llm import _MLXWorker
+
+    worker = _MLXWorker()
+    with ThreadPoolExecutor(4) as pool:
+        names = set(
+            pool.map(lambda _: worker.submit(lambda: threading.current_thread().name), range(8))
+        )
+    assert names == {"mlx"}
