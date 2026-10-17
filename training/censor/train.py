@@ -39,12 +39,12 @@ SMOKE = {
 }
 
 
-def mlx_data(out: Path) -> Path:
+def mlx_data(out: Path, data: Path = DATA) -> Path:
     """train.jsonl and valid.jsonl with only the chat messages, as mlx-lm reads them."""
     out.mkdir(parents=True, exist_ok=True)
     for src, dst in (("train", "train"), ("val", "valid")):
         with (
-            (DATA / f"{src}.jsonl").open(encoding="utf-8") as f,
+            (data / f"{src}.jsonl").open(encoding="utf-8") as f,
             (out / f"{dst}.jsonl").open("w", encoding="utf-8") as g,
         ):
             for line in f:
@@ -96,12 +96,13 @@ def main() -> None:
 
     cfg: dict[str, Any] = yaml.safe_load(args.config.read_text(encoding="utf-8"))
     model_name, adapter_name = cfg.pop("model"), cfg.pop("adapter_name")
+    data_root = Path(cfg.pop("dataset", str(DATA)))  # e.g. data/processed/censor_sft_v2
     if args.smoke:
         cfg |= SMOKE
         adapter_name += "-smoke"
     models_dir = Path(os.environ.get("MLX_MODELS_DIR", MLX_MODELS_DIR))
     adapter_dir = Path(os.environ.get("MLX_ADAPTERS_DIR", MLX_ADAPTERS_DIR)) / adapter_name
-    data_dir = mlx_data(Path("data/interim/censor_sft/mlx"))
+    data_dir = mlx_data(Path("data/interim/censor_sft/mlx") / data_root.name, data_root)
     settings = (
         CONFIG_DEFAULTS
         | cfg
@@ -115,7 +116,7 @@ def main() -> None:
         }
     )
     margs = types.SimpleNamespace(**settings)
-    manifest = json.loads((DATA / "manifest.json").read_text(encoding="utf-8"))
+    manifest = json.loads((data_root / "manifest.json").read_text(encoding="utf-8"))
 
     class MLflowCallback(TrainingCallback):  # type: ignore[misc]
         def on_train_loss_report(self, info: dict[str, Any]) -> None:
@@ -142,7 +143,10 @@ def main() -> None:
                 "smoke": str(args.smoke).lower(),
             }
         )
-        mlflow.log_params({k: str(v) for k, v in cfg.items()} | {"base_model": model_name})
+        mlflow.log_params(
+            {k: str(v) for k, v in cfg.items()}
+            | {"base_model": model_name, "dataset": str(data_root)}
+        )
         mlflow.log_params({f"data.{k}": v for k, v in manifest["counts"].items()})
         mlflow.log_artifact(str(args.config))
         start = time.monotonic()
