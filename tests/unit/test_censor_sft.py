@@ -93,3 +93,25 @@ def test_mlx_worker_runs_every_job_on_one_thread() -> None:
             pool.map(lambda _: worker.submit(lambda: threading.current_thread().name), range(8))
         )
     assert names == {"mlx"}
+
+
+def test_epoch_checkpoints_are_split_and_ranked(tmp_path: Path) -> None:
+    from training.censor import checkpoints
+
+    run = tmp_path / "run"
+    run.mkdir()
+    (run / "adapter_config.json").write_text("{}")
+    for step in (1200, 2400, 4800):
+        (run / f"{step:07d}_adapters.safetensors").write_bytes(b"w")
+    made = checkpoints.split(run, every=2400)
+    assert [p.name for p in made] == ["run-epoch1", "run-epoch2"]
+    assert (made[0] / "adapters.safetensors").read_bytes() == b"w"
+    good = {
+        "children": {"agreement": 0.9},
+        "teen": {"agreement": 0.9, "block_recall": 0.9, "block_precision": 0.9},
+    }
+    worse = {
+        "children": {"agreement": 0.8},
+        "teen": {"agreement": 0.9, "block_recall": 1.0, "block_precision": 1.0},
+    }
+    assert checkpoints.score(good) > checkpoints.score(worse)
