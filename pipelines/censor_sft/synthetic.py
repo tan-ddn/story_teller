@@ -145,6 +145,213 @@ EXTRA = {
 }
 
 
+# Matched negatives for the operational_harm ban (dataset v2): weapons, chemicals, drugs, hacking
+# and break-ins mentioned the way fiction, history, news and safety advice mention them, with no
+# usable instructions. Label: no ban; the scores the rubric gives the text itself.
+OPS_NEGATIVE: list[tuple[str, dict[str, int], dict[str, str]]] = [
+    (
+        "The old soldier cleaned his rifle by the fire and told the boys it had jammed at the worst possible moment, the winter the river froze.",
+        {},
+        {},
+    ),
+    (
+        "In chemistry class Ms. Ortiz explained why bleach and ammonia must never be mixed, and made everyone repeat it back to her.",
+        {},
+        {},
+    ),
+    (
+        'The detective found a small bottle of rat poison under the sink and frowned. "Somebody wanted us to find this," she said.',
+        {"violence": 1},
+        {"violence": "rat poison"},
+    ),
+    (
+        "Gunpowder was invented in China around the ninth century, probably by alchemists searching for a potion of long life.",
+        {},
+        {},
+    ),
+    (
+        'The hacker in the film typed for ten seconds, said "I\'m in," and the whole audience laughed at how unrealistic it was.',
+        {},
+        {},
+    ),
+    (
+        "Grandpa kept his hunting knife in a locked drawer and only took it out when he was gutting the fish he had caught.",
+        {},
+        {},
+    ),
+    (
+        "The police warned residents that a new scam was going round: callers pretending to be from the bank and asking for card numbers. Never give them out.",
+        {},
+        {},
+    ),
+    (
+        "The pirates rolled out the cannon and the whole ship shuddered as it fired; the gulls scattered across the bay.",
+        {"violence": 1},
+        {"violence": "the whole ship shuddered as it fired"},
+    ),
+    (
+        "Mara picked the lock of the old diary with a hairpin, the way the girl in her favourite mystery novel always did, and felt terribly guilty.",
+        {},
+        {},
+    ),
+    (
+        "The documentary showed how the bomb squad uses robots to inspect suspicious packages so that nobody has to get close.",
+        {},
+        {},
+    ),
+    (
+        "If you find a syringe in the park, don't touch it; call the council and they will send someone to collect it safely.",
+        {},
+        {},
+    ),
+    (
+        'The wizard\'s potion bubbled green and smelled of burnt toast. "Three newt eyes," he muttered, "or was it four?"',
+        {},
+        {},
+    ),
+    (
+        "During the war, the village blacksmith made horseshoes by day and, the story goes, swords for the resistance by night.",
+        {"violence": 1},
+        {"violence": "swords for the resistance"},
+    ),
+    (
+        "Our IT team reminds everyone to use a password manager and to report any email that asks you to click a strange link.",
+        {},
+        {},
+    ),
+    (
+        "The archer drew back the string, held her breath and loosed the arrow straight into the centre of the straw target.",
+        {},
+        {},
+    ),
+    (
+        "The museum's display explains how medieval castles were defended with boiling water, arrows and very thick walls.",
+        {"violence": 1},
+        {"violence": "boiling water, arrows"},
+    ),
+    (
+        '"Stay away from the fireworks shed," Dad said. "Only the people from the council are allowed to set them off."',
+        {},
+        {},
+    ),
+    (
+        "The news reported that customs officers had seized a shipment of illegal drugs hidden inside crates of bananas.",
+        {"substance": 1},
+        {"substance": "a shipment of illegal drugs"},
+    ),
+    (
+        "In the game, Leo's character builds a catapult out of logs and rope and launches pumpkins at the castle wall.",
+        {},
+        {},
+    ),
+    (
+        "The pharmacist explained that you should never take more than the dose on the label, and never share prescription pills.",
+        {},
+        {},
+    ),
+    (
+        "The bank robbers in the story were caught because one of them left his library card at the scene.",
+        {},
+        {},
+    ),
+    (
+        "Fire investigators found that the blaze started in an old toaster; nobody was hurt, but the kitchen was ruined.",
+        {},
+        {},
+    ),
+    (
+        "The spy hid the microfilm inside a hollow coin and slipped it into the guard's pocket without him noticing.",
+        {},
+        {},
+    ),
+    (
+        "A virus deleted half the school's files last year, so now the computers update every night and the teachers back up their work.",
+        {},
+        {},
+    ),
+    (
+        "The knight sharpened his sword on the whetstone while the squire polished the dented helmet until it shone.",
+        {},
+        {},
+    ),
+    (
+        "Scientists warned that some mushrooms in the forest are deadly and that nobody should eat a wild mushroom they cannot identify.",
+        {},
+        {},
+    ),
+    (
+        "The smugglers in the novel used a secret tunnel under the inn to move barrels of brandy past the excise men.",
+        {"substance": 1},
+        {"substance": "barrels of brandy"},
+    ),
+    (
+        "The safety leaflet says to keep matches and lighters out of children's reach and to test the smoke alarm every month.",
+        {},
+        {},
+    ),
+    (
+        "Ellie's uncle, a locksmith, showed her the tiny pins inside a lock and explained why cheap padlocks are easy to open.",
+        {},
+        {},
+    ),
+    (
+        "The general studied the map, moved two wooden blocks across the river and declared that the attack would come at dawn.",
+        {"violence": 1},
+        {"violence": "the attack would come at dawn"},
+    ),
+    (
+        "The magician's trick knife folded into the handle, and the audience screamed with delight when he 'stabbed' the apple.",
+        {},
+        {},
+    ),
+    (
+        "Cybersecurity experts say the best defence against phishing is to slow down and check who really sent the message.",
+        {},
+        {},
+    ),
+    (
+        "The farmer kept a shotgun to scare off foxes, though in twenty years he had never once fired it.",
+        {},
+        {},
+    ),
+    (
+        "A lab accident in the comic gave Max the ability to talk to ants, which was less useful than he had hoped.",
+        {},
+        {},
+    ),
+    (
+        "The court heard that the defendant had bought the stolen credit card numbers online; he was sentenced to two years.",
+        {},
+        {},
+    ),
+    (
+        "The volcano in the science fair project erupted with baking soda and vinegar, and the judges gave it second prize.",
+        {},
+        {},
+    ),
+    (
+        "Rangers asked hikers not to light campfires during the drought, because a single spark could set the hills alight.",
+        {},
+        {},
+    ),
+    (
+        "The heist crew argued for an hour about the plan, then gave up and ordered pizza instead.",
+        {},
+        {},
+    ),
+    (
+        "Historians believe the poison in the old king's cup was arsenic, though the case has never been proven.",
+        {"violence": 1},
+        {"violence": "the poison in the old king's cup"},
+    ),
+    (
+        "The police dog found the hidden weapons under the floorboards, and the officers sealed off the house.",
+        {"violence": 1},
+        {"violence": "the hidden weapons"},
+    ),
+]
+
+
 def _names(path: Path, col: int, sep: str | None) -> tuple[list[str], list[float]]:
     names: list[str] = []
     weights: list[float] = []
@@ -202,6 +409,22 @@ def generate() -> list[dict[str, object]]:
                         "label": {"real_person": kind == "pos", **scores, "quotes": quotes},
                     }
                 )
+    for i, (text, ops_scores, ops_quotes) in enumerate(OPS_NEGATIVE):
+        q = [{"category": c, "text": t} for c, t in ops_quotes.items()]
+        if any(x["text"] not in text for x in q):
+            raise ValueError(f"quote not in ops negative {i}")
+        rows.append(
+            {
+                "id": f"synth-ops-neg{i:02d}",
+                "text": text,
+                "label": {
+                    "operational_harm": False,
+                    "real_person": False,
+                    **ops_scores,
+                    "quotes": q,
+                },
+            }
+        )
     return rows
 
 

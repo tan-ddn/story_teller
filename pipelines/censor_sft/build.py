@@ -384,7 +384,7 @@ def _split(row: dict[str, Any], val_books: set[int]) -> str:
     return "val" if digest / 0xFFFFFFFF < VAL_SHARE else "train"
 
 
-def assemble() -> None:
+def assemble(out_dir: Path = OUT_DIR, oversample_ops: int = 1) -> None:
     rubric = (GUARDRAILS / "rubric.md").read_text(encoding="utf-8")
     cands = {r["id"]: r for r in map(json.loads, CANDIDATES.open(encoding="utf-8"))}
     labels = {
@@ -436,6 +436,31 @@ def assemble() -> None:
                 }
             )
 
+    # Oversample the rare operational_harm positives in the train split (dataset v2): N-1 extra
+    # copies each, cycling through the plain text and the training injection templates so the
+    # copies are not identical. The val split is left as it is.
+    if oversample_ops > 1:
+        variants = ["{text}", *INJECTION_TEMPLATES]
+        ops = [
+            s
+            for s in samples
+            if s["split"] == "train"
+            and s["source"] != "injection"
+            and s["scores"]["operational_harm"]
+        ]
+        for s in ops:
+            for k in range(1, oversample_ops):
+                text = variants[k % len(variants)].format(text=s["text"])
+                samples.append(
+                    {
+                        "id": f"{s['id']}~ops{k}",
+                        "source": "oversample",
+                        "split": "train",
+                        "text": text,
+                        "scores": s["scores"],
+                    }
+                )
+
     _, eval_hashes = eval_exclusions()
     near = NearDuplicates(eval_texts())
     leaked = [
@@ -444,10 +469,10 @@ def assemble() -> None:
     if leaked:
         raise ValueError(f"{len(leaked)} samples match an eval text, e.g. {leaked[:3]}")
 
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    out_dir.mkdir(parents=True, exist_ok=True)
     counts: Counter[tuple[str, str]] = Counter()
     for split in ("train", "val"):
-        with (OUT_DIR / f"{split}.jsonl").open("w", encoding="utf-8") as f:
+        with (out_dir / f"{split}.jsonl").open("w", encoding="utf-8") as f:
             for s in samples:
                 if s["split"] != split:
                     continue
@@ -475,9 +500,10 @@ def assemble() -> None:
         "val_books": sorted(val_books),
         "counts": {f"{sp}.{src}": n for (sp, src), n in sorted(counts.items())},
         "positives": len(positives),
+        "oversample_ops": oversample_ops,
         "eval_overlap": 0,
     }
-    (OUT_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print(json.dumps(manifest, indent=2))
 
 
@@ -485,13 +511,17 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Build the Censor fine-tuning dataset.")
     parser.add_argument("step", choices=["candidates", "import-labels", "assemble"])
     parser.add_argument("src", nargs="?", type=Path, help="folder of labels_*.jsonl files")
+    parser.add_argument("--out", type=Path, default=OUT_DIR, help="assemble: output folder")
+    parser.add_argument(
+        "--oversample-ops", type=int, default=1, help="assemble: copies of each train ban positive"
+    )
     args = parser.parse_args()
     if args.step == "candidates":
         candidates()
     elif args.step == "import-labels":
         import_labels(args.src)
     else:
-        assemble()
+        assemble(args.out, args.oversample_ops)
 
 
 if __name__ == "__main__":
