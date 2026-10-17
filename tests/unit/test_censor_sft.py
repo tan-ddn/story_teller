@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 from evaluation.censor_bans import SUITE
-from guardrails.censor import CATEGORIES
+from guardrails.censor import CATEGORIES, Scores
 from pipelines.censor_sft import build
 
 
@@ -57,3 +57,25 @@ def test_labels_never_name_an_eval_sample() -> None:
         for line in path.open(encoding="utf-8")
     }
     assert not labelled & eval_ids
+
+
+def test_val_report_counts_errors_as_blocks() -> None:
+    from evaluation.censor_sft_val import report
+
+    clean = Scores.model_validate(scores())
+    sexual = Scores.model_validate(scores(sexual=1))
+    gold = {"a": clean, "b": sexual}
+    r = report(gold, {"a": clean, "b": None})
+    assert r["error_rate"] == 0.5
+    assert r["teen"]["block_recall"] == 1.0  # the failed answer fails closed
+    r = report(gold, {"a": sexual, "b": clean})
+    assert r["teen"]["block_recall"] == 0.0 and r["teen"]["block_precision"] == 0.0
+    assert r["sexual"]["exact"] == 0.0
+
+
+def test_json_answers_are_parsed_from_model_text() -> None:
+    from services.llm import json_system, parse_json_answer
+
+    answer = "<think>\n\n</think>\n\n```json\n" + json.dumps(scores(violence=2)) + "\n```"
+    assert parse_json_answer(answer, Scores).violence == 2
+    assert "JSON schema" in json_system("RUBRIC", Scores)

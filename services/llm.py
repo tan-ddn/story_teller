@@ -2,8 +2,10 @@
 
 Local models are the default for running, training and testing. A model ID with an Ollama tag
 ("qwen3.6:27b") goes to the Ollama server at OLLAMA_HOST (default http://127.0.0.1:11435, an SSH
-tunnel to the Mac Studio). claude-*, gpt-*, o3/o4-* and gemini-* IDs still reach the API
-providers, for reference runs only.
+tunnel to the Mac Studio). "mlx:<model>[+<adapter>]" runs an MLX model in this process (on the
+Mac): <model> is a folder in MLX_MODELS_DIR, <adapter> a LoRA adapter folder in
+MLX_ADAPTERS_DIR. claude-*, gpt-*, o3/o4-* and gemini-* IDs still reach the API providers, for
+reference runs only.
 
 Cost is computed here from PRICES at call time, because budgets (Showrunner) need it before
 Langfuse has ingested anything. The same numbers are sent to Langfuse as `cost_details`, so the
@@ -14,8 +16,10 @@ Prompts and outputs are not sent to Langfuse (manuscript text stays out of trace
 import json
 import os
 import re
+import threading
 import urllib.request
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 
 from pydantic import BaseModel
@@ -25,6 +29,9 @@ REQUEST_TIMEOUT = 600.0  # seconds
 OLLAMA_HOST = "http://127.0.0.1:11435"
 OLLAMA_TIMEOUT = 1800.0  # local models on a shared machine can be slow
 OLLAMA_NUM_CTX = 16384  # rubric + a 1,500-word scene + reasoning fit comfortably
+MLX_MODELS_DIR = "/Volumes/Untitled/Shared/models"
+MLX_ADAPTERS_DIR = "adapters"
+MLX_MAX_TOKENS = 1024
 
 # USD per 1M tokens (input, output). Thinking/reasoning tokens are billed as output.
 # Cached input is counted at the full input price, so Claude's cost is a slight overestimate.
@@ -50,6 +57,8 @@ def _raw_call(
     model: str, schema: type[BaseModel] | None
 ) -> Callable[[str, str], tuple[Any, int, int]]:
     """(system, user) -> (text or parsed schema, tokens in, tokens out)."""
+    if model.startswith("mlx:"):
+        return _mlx(model, schema)
     if ":" in model:
         return _ollama(model, schema)
     if model.startswith("claude-"):
@@ -168,6 +177,63 @@ def _ollama(
         return out, r.get("prompt_eval_count", 0), r.get("eval_count", 0)
 
     return call_ollama
+
+
+def json_system(system: str, schema: type[BaseModel]) -> str:
+    """The system prompt plus an instruction to answer with JSON for the schema. Used for models
+    without constrained decoding (MLX), and for their fine-tuning data, so both match exactly."""
+    compact = json.dumps(schema.model_json_schema(), separators=(",", ":"))
+    return (
+        f"{system}\n\nAnswer with one JSON object and nothing else, matching this JSON schema:\n"
+        f"{compact}"
+    )
+
+
+def parse_json_answer[M: BaseModel](text: str, schema: type[M]) -> M:
+    """Validate the first JSON object in a model's answer (code fences and any think block
+    around it are ignored)."""
+    text = text.split("</think>")[-1]
+    start, end = text.find("{"), text.rfind("}")
+    if start < 0 or end < start:
+        raise ValueError("no JSON object in the answer")
+    return schema.model_validate_json(text[start : end + 1])
+
+
+_MLX_CACHE: dict[str, Any] = {}
+_MLX_LOCK = threading.Lock()
+
+
+def _mlx(model: str, schema: type[BaseModel] | None) -> Callable[[str, str], tuple[Any, int, int]]:
+    from mlx_lm import generate, load
+    from mlx_lm.sample_utils import make_sampler
+
+    name, _, adapter = model.removeprefix("mlx:").partition("+")
+    path = Path(os.environ.get("MLX_MODELS_DIR", MLX_MODELS_DIR)) / name
+    adapter_path = (
+        Path(os.environ.get("MLX_ADAPTERS_DIR", MLX_ADAPTERS_DIR)) / adapter if adapter else None
+    )
+    with _MLX_LOCK:
+        if model not in _MLX_CACHE:
+            _MLX_CACHE[model] = load(
+                str(path), adapter_path=str(adapter_path) if adapter_path else None
+            )
+    llm, tokenizer = _MLX_CACHE[model]
+    sampler = make_sampler(temp=0.0)
+
+    def call_mlx(system: str, user: str) -> tuple[Any, int, int]:
+        if schema is not None:
+            system = json_system(system, schema)
+        messages = [{"role": "system", "content": system}, {"role": "user", "content": user}]
+        prompt = tokenizer.apply_chat_template(
+            messages, add_generation_prompt=True, enable_thinking=False, tokenize=False
+        )
+        with _MLX_LOCK:  # one generation at a time per process
+            text = generate(llm, tokenizer, prompt, max_tokens=MLX_MAX_TOKENS, sampler=sampler)
+        tokens_in, tokens_out = len(tokenizer.encode(prompt)), len(tokenizer.encode(text))
+        out = text if schema is None else parse_json_answer(text, schema)
+        return out, tokens_in, tokens_out
+
+    return call_mlx
 
 
 def traced[T](

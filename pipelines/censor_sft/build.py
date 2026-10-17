@@ -35,6 +35,7 @@ from evaluation.censor import BOUNDARY, load_benchmark
 from evaluation.censor_fiction import CUES, SCENES, SELECTION
 from guardrails.censor import CATEGORIES, Scores
 from guardrails.censor import HERE as GUARDRAILS
+from services.llm import json_system
 
 HERE = Path(__file__).parent
 LABELS = HERE / "labels"
@@ -457,7 +458,7 @@ def assemble() -> None:
                             "id": s["id"],
                             "source": s["source"],
                             "messages": [
-                                {"role": "system", "content": rubric},
+                                {"role": "system", "content": json_system(rubric, Scores)},
                                 {"role": "user", "content": f"<text>\n{s['text']}\n</text>"},
                                 {
                                     "role": "assistant",
