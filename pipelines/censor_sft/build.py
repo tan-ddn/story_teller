@@ -68,6 +68,48 @@ def norm_hash(text: str) -> str:
     return hashlib.sha256(" ".join(text.lower().split()).encode("utf-8")).hexdigest()[:20]
 
 
+NEAR_DUP_SHARE = 0.2  # share of a text's 8-word sequences found in one eval text
+
+
+def shingles(text: str, n: int = 8) -> set[str]:
+    words = re.sub(r"[^\w\s]", " ", text.lower()).split()
+    return {" ".join(words[i : i + n]) for i in range(max(0, len(words) - n + 1))}
+
+
+def eval_texts() -> dict[str, str]:
+    """Every text a Censor eval uses, by ID."""
+    scenes = {s["scene_id"]: s["text"] for s in map(json.loads, SCENES.open(encoding="utf-8"))}
+    texts = {sid: scenes[sid] for sid in json.loads(SELECTION.read_text(encoding="utf-8"))}
+    texts |= {r["id"]: r["text"] for r in map(json.loads, BOUNDARY.open(encoding="utf-8"))}
+    texts |= {s.id: s.text for s in load_benchmark()}
+    texts |= {f"aegis-{aid}": t for aid, t in censor_bans.load_aegis().items() if t}
+    suite = json.loads(censor_bans.SUITE.read_text(encoding="utf-8"))
+    for group in censor_bans.cases(suite).values():
+        texts |= dict(group)
+    return texts
+
+
+class NearDuplicates:
+    """Finds texts sharing NEAR_DUP_SHARE or more of their 8-word sequences with one eval text."""
+
+    def __init__(self, texts: dict[str, str]) -> None:
+        self.index: dict[str, set[str]] = {}
+        for eid, text in texts.items():
+            for sh in shingles(text):
+                self.index.setdefault(sh, set()).add(eid)
+
+    def match(self, text: str) -> str | None:
+        sh = shingles(text)
+        if not sh:
+            return None
+        hits = Counter(e for s in sh for e in self.index.get(s, ()))
+        if hits:
+            eid, n = hits.most_common(1)[0]
+            if n / len(sh) >= NEAR_DUP_SHARE:
+                return eid
+        return None
+
+
 def eval_exclusions() -> tuple[set[str], set[str]]:
     """IDs and normalised text hashes of every text a Censor eval uses."""
     ids: set[str] = set()
@@ -216,12 +258,18 @@ def aegis_candidates(exclude: set[str]) -> list[dict[str, Any]]:
 
 def candidates() -> None:
     ids, hashes = eval_exclusions()
+    near = NearDuplicates(eval_texts())
     out: list[dict[str, Any]] = []
     seen: set[str] = set()
+    dropped: Counter[str] = Counter()
 
     def keep(row: dict[str, Any]) -> None:
         h = norm_hash(row["text"])
         if row["id"] in ids or h in hashes or h in seen:
+            dropped["exact"] += 1
+            return
+        if near.match(row["text"]):
+            dropped["near-duplicate"] += 1
             return
         seen.add(h)
         out.append(row | {"text_sha": h})
@@ -238,7 +286,8 @@ def candidates() -> None:
         for row in out:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
     print(
-        f"{len(out)} candidates ({dict(Counter(r['source'] for r in out))}); "
+        f"{len(out)} candidates ({dict(Counter(r['source'] for r in out))}); dropped "
+        f"{dict(dropped)}; "
         f"excluded against {len(ids)} eval IDs and {len(hashes)} eval text hashes"
     )
 
@@ -338,7 +387,10 @@ def assemble() -> None:
     rubric = (GUARDRAILS / "rubric.md").read_text(encoding="utf-8")
     cands = {r["id"]: r for r in map(json.loads, CANDIDATES.open(encoding="utf-8"))}
     labels = {
-        r["id"]: r for path in sorted(LABELS.glob("*.jsonl")) for r in map(json.loads, path.open())
+        r["id"]: r
+        for path in sorted(LABELS.glob("*.jsonl"))
+        for r in map(json.loads, path.open())
+        if r["id"] in cands
     }
     missing = set(cands) - set(labels)
     if missing:
@@ -384,7 +436,10 @@ def assemble() -> None:
             )
 
     _, eval_hashes = eval_exclusions()
-    leaked = [s["id"] for s in samples if norm_hash(s["text"]) in eval_hashes]
+    near = NearDuplicates(eval_texts())
+    leaked = [
+        s["id"] for s in samples if norm_hash(s["text"]) in eval_hashes or near.match(s["text"])
+    ]
     if leaked:
         raise ValueError(f"{len(leaked)} samples match an eval text, e.g. {leaked[:3]}")
 

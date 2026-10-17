@@ -27,6 +27,9 @@ dev = [
     "ruff>=0.16.10",
     "types-pyyaml>=6.0.12.20260906",
 ]
+mlx = [
+    "mlx-lm>=0.30 ; sys_platform == 'darwin'",
+]
 
 [tool.uv]
 package = false
