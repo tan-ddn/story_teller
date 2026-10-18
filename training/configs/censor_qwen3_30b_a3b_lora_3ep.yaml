@@ -2,7 +2,7 @@
 # Base: mlx-community/Qwen3-30B-A3B-4bit (MoE, ~3B active); trains in ~27 GB per the
 # 2026-10-16 feasibility check. Data: data/processed/censor_sft (pipelines/censor_sft).
 model: Qwen3-30B-A3B-4bit          # folder in MLX_MODELS_DIR
-adapter_name: censor-lora-v2-3ep   # folder in MLX_ADAPTERS_DIR
+adapter_name: censor-lora-v1-3ep   # folder in MLX_ADAPTERS_DIR
 fine_tune_type: lora
 num_layers: 16                     # of 48 transformer blocks
 lora_parameters: {rank: 8, dropout: 0.0, scale: 20.0}

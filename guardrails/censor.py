@@ -195,14 +195,35 @@ def judge(scores: Scores, rating: Rating) -> Verdict:
     )
 
 
+RETRY_NOTE = (
+    "Your previous answer was not a valid JSON object for the required schema. Answer again with "
+    "only the JSON object: the seven category scores as integers 0-3, real_person, "
+    "operational_harm and quotes."
+)
+
+
 class Censor:
     def __init__(self, classify: Classify) -> None:
         self.classify = classify
         self.rubric = (HERE / "rubric.md").read_text(encoding="utf-8")
 
     def classify_text(self, text: str) -> tuple[Scores, int, int]:
-        """Scores plus input and output tokens."""
-        return self.classify(self.rubric, f"<text>\n{text}\n</text>")
+        """Scores plus input and output tokens.
+
+        An answer that is not valid Scores JSON (a ValueError, which includes pydantic's
+        ValidationError) gets one retry with a correction appended, so a deterministic model does
+        not repeat the same output. A second bad answer raises, and check() fails closed. Other
+        errors (network, server) are not retried here."""
+        user = f"<text>\n{text}\n</text>"
+        try:
+            return self.classify(self.rubric, user)
+        except ValueError as first:
+            retry = f"{user}\n\n{RETRY_NOTE}"
+            try:
+                scores, tokens_in, tokens_out = self.classify(self.rubric, retry)
+            except ValueError:
+                raise first from None
+            return scores, tokens_in, tokens_out
 
     def scores(self, text: str) -> Scores:
         return self.classify_text(text)[0]

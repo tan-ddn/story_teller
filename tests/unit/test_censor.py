@@ -89,3 +89,36 @@ def test_uploads_accept_flag_or_reject() -> None:
     assert check_upload(censor_returning(scores(violence=3)), "t", "children")[0] == "reject"
     assert check_upload(censor_returning(scores(hate=3)), "t", "children")[0] == "reject"
     assert check_upload(censor_returning(scores(sexual=1)), "t", "teen")[0] == "reject"
+
+
+def test_invalid_json_gets_one_retry_with_a_correction() -> None:
+    calls: list[str] = []
+
+    def classify(system: str, user: str) -> tuple[Scores, int, int]:
+        calls.append(user)
+        if len(calls) == 1:
+            raise ValueError("no JSON object in the answer")
+        return scores(violence=1), 10, 5
+
+    v = Censor(classify).check("A scuffle.", "children")
+    assert v.allowed and len(calls) == 2
+    assert "not a valid JSON object" in calls[1] and calls[1].startswith("<text>\nA scuffle.")
+
+
+def test_second_bad_answer_fails_closed_and_network_errors_are_not_retried() -> None:
+    calls: list[str] = []
+
+    def bad(system: str, user: str) -> tuple[Scores, int, int]:
+        calls.append(user)
+        raise ValueError("bad json")
+
+    v = Censor(bad).check("text", "teen")
+    assert not v.allowed and v.unavailable and len(calls) == 2
+
+    calls.clear()
+
+    def down(system: str, user: str) -> tuple[Scores, int, int]:
+        calls.append(user)
+        raise ConnectionError("server down")
+
+    assert Censor(down).check("text", "teen").unavailable and len(calls) == 1

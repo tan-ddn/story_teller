@@ -5,8 +5,8 @@ ones at each epoch boundary into sibling adapter folders (<adapter>-epoch<k>, ha
 extra disk), which services.llm can load as "mlx:<model>+<adapter>-epoch<k>". `best` reads their
 val-split reports (evaluation.censor_sft_val) and prints the best epoch's adapter name.
 
-uv run python -m training.censor.checkpoints split adapters/censor-lora-v2-3ep --every 2400
-uv run python -m training.censor.checkpoints best mlx:Qwen3-30B-A3B-4bit censor-lora-v2-3ep 3
+uv run python -m training.censor.checkpoints split adapters/censor-lora-v1-3ep --every 2400
+uv run python -m training.censor.checkpoints best mlx:Qwen3-30B-A3B-4bit censor-lora-v1-3ep 3
 """
 
 import argparse
