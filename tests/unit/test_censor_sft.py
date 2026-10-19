@@ -141,3 +141,21 @@ def test_plan_config_derives_epochs_and_schedule(tmp_path: Path) -> None:
     assert (cfg["iters"], cfg["save_every"]) == (300, 100)
     assert cfg["lr_schedule"]["arguments"] == [5e-5, 75, 1.0e-6]
     assert cfg["adapter_name"] == "new" and cfg["dataset"] == str(data)
+
+
+def test_resume_renames_checkpoints_and_continues_the_schedule(tmp_path: Path) -> None:
+    from training.censor import train
+
+    run = tmp_path / "run"
+    run.mkdir()
+    for step in (400, 800):
+        (run / f"{step:07d}_adapters.safetensors").write_bytes(b"w")
+    sched = {"name": "cosine_decay", "warmup": 30, "arguments": [5e-5, 500, 1e-6]}
+    step, ckpt, new = train._prepare_resume(run, 2000, 4, sched)
+    assert step == 800 and ckpt is not None and ckpt.name == "global_0000800_adapters.safetensors"
+    assert new is not None and new["arguments"][1] == 300 and "warmup" not in new
+    assert 1e-6 < new["arguments"][0] < 5e-5
+    # a second interrupted segment numbered from 0 again continues from the global step
+    (run / "0000400_adapters.safetensors").write_bytes(b"w")
+    step, ckpt, _ = train._prepare_resume(run, 2000, 4, sched)
+    assert step == 1200 and ckpt is not None and ckpt.name == "global_0001200_adapters.safetensors"

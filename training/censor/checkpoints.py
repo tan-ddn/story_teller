@@ -24,7 +24,10 @@ from guardrails.censor import PROFILE_FILE
 def split(adapter_dir: Path, every: int) -> list[Path]:
     out = []
     for ckpt in sorted(adapter_dir.glob("*_adapters.safetensors")):
-        step = int(re.match(r"(\d+)_", ckpt.name).group(1))  # type: ignore[union-attr]
+        found = re.search(r"(\d{7})_adapters", ckpt.name)  # also global_NNNNNNN_ after a resume
+        if not found:
+            continue
+        step = int(found.group(1))
         if step % every:
             continue
         target = adapter_dir.with_name(f"{adapter_dir.name}-epoch{step // every}")

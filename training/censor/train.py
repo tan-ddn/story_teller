@@ -15,7 +15,9 @@ uv run python -m training.censor.train training/configs/censor_qwen3_30b_a3b_lor
 
 import argparse
 import json
+import math
 import os
+import re
 import subprocess  # nosec B404
 import threading
 import time
@@ -108,6 +110,35 @@ def _memory_guard(max_gb: float, min_free_percent: int = MIN_FREE_PERCENT) -> No
     threading.Thread(target=watch, daemon=True).start()
 
 
+CKPT = re.compile(r"^(\d{7})_adapters\.safetensors$")  # mlx-lm's checkpoint names
+OFFSET_FILE = "resume_offset.txt"
+
+
+def _prepare_resume(
+    adapter_dir: Path, total_iters: int, accumulation: int, schedule: dict[str, Any] | None
+) -> tuple[int, Path | None, dict[str, Any] | None]:
+    """Continue an interrupted run. mlx-lm numbers checkpoints from 0 in every run, so the last
+    run's checkpoints are renamed to global step numbers (global_NNNNNNN_adapters.safetensors)
+    first. Returns the global step to continue from, its checkpoint, and the learning-rate
+    schedule from that point on (cosine decay continued, no new warm-up)."""
+    offset_path = adapter_dir / OFFSET_FILE
+    offset = int(offset_path.read_text()) if offset_path.exists() else 0
+    for ckpt in adapter_dir.glob("*_adapters.safetensors"):
+        if m := CKPT.match(ckpt.name):
+            ckpt.rename(adapter_dir / f"global_{offset + int(m.group(1)):07d}_adapters.safetensors")
+    done = sorted(adapter_dir.glob("global_*_adapters.safetensors"))
+    if not done:
+        return 0, None, schedule
+    step = int(done[-1].name.split("_")[1])
+    offset_path.write_text(str(step))
+    if schedule and schedule.get("name") == "cosine_decay":
+        init, decay, end = schedule["arguments"]
+        updates = min(step // accumulation, decay)
+        lr = end + (init - end) * 0.5 * (1 + math.cos(math.pi * updates / decay))
+        schedule = {"name": "cosine_decay", "arguments": [lr, max(1, decay - updates), end]}
+    return min(step, total_iters), done[-1], schedule
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Censor LoRA fine-tune (MLX).")
     parser.add_argument("config", type=Path)
@@ -117,6 +148,9 @@ def main() -> None:
     )
     parser.add_argument(
         "--cache-limit-gb", type=float, default=4.0, help="cap MLX's cache of reusable buffers"
+    )
+    parser.add_argument(
+        "--resume", action="store_true", help="continue from the adapter's latest checkpoint"
     )
     args = parser.parse_args()
     load_dotenv(".env")
@@ -147,12 +181,30 @@ def main() -> None:
             "report_to": None,
         }
     )
+    offset, resume_file = 0, None
+    if args.resume:
+        offset, resume_file, schedule = _prepare_resume(
+            adapter_dir,
+            settings["iters"],
+            settings.get("grad_accumulation_steps", 1),
+            settings.get("lr_schedule"),
+        )
+        if resume_file is not None:
+            settings |= {
+                "resume_adapter_file": str(resume_file),
+                "iters": settings["iters"] - offset,
+                "lr_schedule": schedule,
+            }
+            print(f"resuming from step {offset} ({resume_file.name})", flush=True)
+        if settings["iters"] <= 0:
+            print("already trained to the last step", flush=True)
+            return
     margs = types.SimpleNamespace(**settings)
     manifest = json.loads((data_root / "manifest.json").read_text(encoding="utf-8"))
 
     class MLflowCallback(TrainingCallback):  # type: ignore[misc]
         def on_train_loss_report(self, info: dict[str, Any]) -> None:
-            step = int(info["iteration"])
+            step = offset + int(info["iteration"])
             mlflow.log_metrics(
                 {
                     k: float(info[k])
@@ -163,7 +215,9 @@ def main() -> None:
             )
 
         def on_val_loss_report(self, info: dict[str, Any]) -> None:
-            mlflow.log_metric("val_loss", float(info["val_loss"]), step=int(info["iteration"]))
+            mlflow.log_metric(
+                "val_loss", float(info["val_loss"]), step=offset + int(info["iteration"])
+            )
 
     mlflow.set_experiment(EXPERIMENT + ("-smoke" if args.smoke else ""))
     with mlflow.start_run(run_name=f"{adapter_name} {model_name}"):
@@ -173,6 +227,7 @@ def main() -> None:
                 "adapter": adapter_name,
                 "dataset_rubric_sha": manifest["rubric_sha"],
                 "smoke": str(args.smoke).lower(),
+                "resumed_from_step": str(offset),
             }
         )
         mlflow.log_params(

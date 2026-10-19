@@ -26,7 +26,7 @@ grad_checkpoint: true
 steps_per_report: 40
 steps_per_eval: 749
 val_batches: 60
-save_every: 2247
+save_every: 400
 seed: 0
 dataset: data/processed/censor_sft_short_v2
 censor_profile: short
