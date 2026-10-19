@@ -38,7 +38,7 @@ from pydantic import BaseModel, ConfigDict
 
 from evaluation.censor import action
 from evaluation.censor_mlflow import log_check
-from guardrails.censor import DEFAULT_MODEL, Censor, Rating, Scores, judge
+from guardrails.censor import DEFAULT_MODEL, Rating, Scores, judge, make_censor
 from services.llm import cost, parse_call
 
 SCENES = Path("data/processed/scenes.jsonl")
@@ -230,7 +230,7 @@ def main() -> None:
         ids = ids[: args.limit]
     texts = {sid: scenes[sid]["text"] for sid in ids}
 
-    censor = Censor(parse_call(args.censor, Scores, name="censor"))
+    censor = make_censor(args.censor)
     scored, censor_usd = cached_map(
         "censor", args.censor, censor.rubric, censor.classify_text, Scores, texts, args.workers
     )

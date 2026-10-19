@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -122,3 +123,46 @@ def test_second_bad_answer_fails_closed_and_network_errors_are_not_retried() -> 
         raise ConnectionError("server down")
 
     assert Censor(down).check("text", "teen").unavailable and len(calls) == 1
+
+
+def test_split_chunks_keeps_sentences_and_respects_the_limit() -> None:
+    from guardrails.censor import split_chunks
+
+    text = " ".join(f"Sentence number {i} is here." for i in range(200))
+    chunks = split_chunks(text, 300)
+    assert all(len(c) <= 300 for c in chunks)
+    assert " ".join(chunks) == " ".join(text.split())
+    assert all(c.endswith(".") for c in chunks)
+    assert split_chunks("x" * 700, 300) == ["x" * 300, "x" * 300, "x" * 100]
+
+
+def test_short_profile_rates_chunks_and_takes_the_strictest() -> None:
+    seen: list[str] = []
+
+    def classify(system: str, user: str) -> tuple[Scores, int, int]:
+        seen.append(system)
+        if "BLOOD" in user:
+            return scores(violence=3, quotes=[{"category": "violence", "text": "BLOOD"}]), 10, 5
+        if "KNIFE" in user:
+            return scores(violence=1, operational_harm=True), 10, 5
+        return scores(), 10, 5
+
+    text = "Calm sentence. " * 150 + "BLOOD everywhere. " + "Calm again. " * 150 + "KNIFE steps."
+    censor = Censor(classify, profile="short")
+    s, tokens_in, _ = censor.classify_text(text)
+    assert len(seen) > 2 and set(seen) == {censor.rubric}
+    assert s.violence == 3 and s.operational_harm and s.quotes[0].text == "BLOOD"
+    assert tokens_in == 10 * len(seen)
+
+
+def test_make_censor_reads_the_adapter_profile(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from guardrails.censor import PROFILE_FILE, make_censor
+
+    monkeypatch.setenv("MLX_ADAPTERS_DIR", str(tmp_path))
+    (tmp_path / "a").mkdir()
+    (tmp_path / "a" / PROFILE_FILE).write_text("short\n")
+    monkeypatch.setattr("services.llm._mlx", lambda model, schema: lambda s, u: (None, 0, 0))
+    assert make_censor("mlx:M+a").profile == "short"
+    assert make_censor("qwen3.6:27b").profile == "rubric"

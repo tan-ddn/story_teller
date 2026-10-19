@@ -5,11 +5,12 @@ scores with the versioned policy for the project rating (guardrails/policies/*.y
 bans. Censor fails closed: if the classifier errors, the text is not allowed.
 """
 
+import re
 from collections.abc import Callable
 from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
@@ -202,12 +203,79 @@ RETRY_NOTE = (
 )
 
 
+# Censor profiles. "rubric": the rubric is the system prompt and a scene is rated in one call.
+# "short": for models fine-tuned without the rubric in the prompt (Qwen3.6 on the Mac only trains
+# on short sequences): a one-line system prompt, and texts are rated in chunks of at most
+# SHORT_CHUNK_CHARS (~512 tokens), the size they were trained on, then combined.
+SHORT_SYSTEM = (
+    "You are Censor, the content rater for a family-friendly fiction platform. Rate the text."
+)
+SHORT_CHUNK_CHARS = 2000
+PROFILE_FILE = "censor_profile.txt"  # written into a LoRA adapter folder by training
+
+
+def split_chunks(text: str, max_chars: int) -> list[str]:
+    """Whole sentences packed into chunks of at most max_chars (a longer sentence is cut)."""
+    sentences = re.split(r"(?<=[.!?…\"”’])\s+", " ".join(text.split()))
+    chunks: list[str] = []
+    current = ""
+    for sentence in sentences:
+        while len(sentence) > max_chars:
+            if current:
+                chunks.append(current)
+                current = ""
+            chunks.append(sentence[:max_chars])
+            sentence = sentence[max_chars:]
+        if current and len(current) + 1 + len(sentence) > max_chars:
+            chunks.append(current)
+            current = sentence
+        else:
+            current = f"{current} {sentence}".strip()
+    if current:
+        chunks.append(current)
+    return chunks or [text]
+
+
+def combine(parts: list[Scores]) -> Scores:
+    """The strictest reading over chunks: highest score per category, a ban if any chunk sets it,
+    and each category's quote from the chunk that scored it highest."""
+    data: dict[str, Any] = {c: max(getattr(p, c) for p in parts) for c in CATEGORIES}
+    data["real_person"] = any(p.real_person for p in parts)
+    data["operational_harm"] = any(p.operational_harm for p in parts)
+    quotes = []
+    for c in CATEGORIES:
+        if data[c]:
+            top = max(parts, key=lambda p: getattr(p, c))
+            quotes += [q for q in top.quotes if q.category == c][:1]
+    data["quotes"] = quotes
+    return Scores.model_validate(data)
+
+
 class Censor:
-    def __init__(self, classify: Classify) -> None:
+    def __init__(self, classify: Classify, profile: str = "rubric") -> None:
         self.classify = classify
-        self.rubric = (HERE / "rubric.md").read_text(encoding="utf-8")
+        self.profile = profile
+        if profile == "rubric":
+            self.rubric = (HERE / "rubric.md").read_text(encoding="utf-8")
+            self.chunk_chars: int | None = None
+        elif profile == "short":
+            self.rubric = SHORT_SYSTEM
+            self.chunk_chars = SHORT_CHUNK_CHARS
+        else:
+            raise ValueError(f"unknown Censor profile {profile!r}")
 
     def classify_text(self, text: str) -> tuple[Scores, int, int]:
+        """Scores plus input and output tokens; chunked and combined for the short profile."""
+        if self.chunk_chars is None or len(text) <= self.chunk_chars:
+            return self._classify_one(text)
+        parts, tokens_in, tokens_out = [], 0, 0
+        for chunk in split_chunks(text, self.chunk_chars):
+            scores, t_in, t_out = self._classify_one(chunk)
+            parts.append(scores)
+            tokens_in, tokens_out = tokens_in + t_in, tokens_out + t_out
+        return combine(parts), tokens_in, tokens_out
+
+    def _classify_one(self, text: str) -> tuple[Scores, int, int]:
         """Scores plus input and output tokens.
 
         An answer that is not valid Scores JSON (a ValueError, which includes pydantic's
@@ -234,6 +302,22 @@ class Censor:
         except Exception as e:  # noqa: BLE001 - fail closed on any classifier failure
             return Verdict(False, (f"censor unavailable: {type(e).__name__}",), unavailable=True)
         return judge(scores, rating)
+
+
+def make_censor(model: str) -> Censor:
+    """The Censor for a model ID, with the profile it was trained for: an MLX LoRA adapter folder
+    may hold censor_profile.txt (written by training); anything else uses the rubric profile."""
+    import os
+
+    from services.llm import MLX_ADAPTERS_DIR, parse_call
+
+    profile = "rubric"
+    if model.startswith("mlx:") and "+" in model:
+        adapters = Path(os.environ.get("MLX_ADAPTERS_DIR", MLX_ADAPTERS_DIR))
+        path = adapters / model.split("+", 1)[1] / PROFILE_FILE
+        if path.exists():
+            profile = path.read_text(encoding="utf-8").strip()
+    return Censor(parse_call(model, Scores, name="censor"), profile)
 
 
 UploadAction = Literal["accept", "flag", "reject"]

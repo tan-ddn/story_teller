@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any
 
 from evaluation.censor import REPORTS
+from guardrails.censor import PROFILE_FILE
 
 
 def split(adapter_dir: Path, every: int) -> list[Path]:
@@ -28,7 +29,9 @@ def split(adapter_dir: Path, every: int) -> list[Path]:
             continue
         target = adapter_dir.with_name(f"{adapter_dir.name}-epoch{step // every}")
         target.mkdir(exist_ok=True)
-        shutil.copy(adapter_dir / "adapter_config.json", target / "adapter_config.json")
+        for name in ("adapter_config.json", PROFILE_FILE):
+            if (adapter_dir / name).exists():
+                shutil.copy(adapter_dir / name, target / name)
         weights = target / "adapters.safetensors"
         weights.unlink(missing_ok=True)
         os.link(ckpt, weights)

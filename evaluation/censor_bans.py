@@ -26,8 +26,7 @@ from dotenv import load_dotenv
 
 from evaluation.censor import REPORTS, classify_all, is_hard_ban, load_benchmark
 from evaluation.censor_mlflow import log_check
-from guardrails.censor import DEFAULT_MODEL, Censor, Scores, judge
-from services.llm import parse_call
+from guardrails.censor import DEFAULT_MODEL, Scores, judge, make_censor
 
 SUITE = Path("evaluation/suites/censor_bans.json")
 AEGIS_URL = (
@@ -135,7 +134,7 @@ def main() -> None:
     if args.limit:
         groups = {name: group[: args.limit] for name, group in groups.items()}
     texts = {sid: text for group in groups.values() for sid, text in group}
-    censor = Censor(parse_call(args.model, Scores, name="censor"))
+    censor = make_censor(args.model)
     scores, spent = classify_all(
         censor, args.model, texts, args.workers, REPORTS / f"{args.model}.scores.jsonl"
     )

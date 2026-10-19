@@ -33,7 +33,7 @@ from typing import Any
 from evaluation import censor_bans
 from evaluation.censor import BOUNDARY, load_benchmark
 from evaluation.censor_fiction import CUES, SCENES, SELECTION
-from guardrails.censor import CATEGORIES, Scores
+from guardrails.censor import CATEGORIES, SHORT_CHUNK_CHARS, SHORT_SYSTEM, Scores
 from guardrails.censor import HERE as GUARDRAILS
 from services.llm import json_system
 
@@ -384,7 +384,7 @@ def _split(row: dict[str, Any], val_books: set[int]) -> str:
     return "val" if digest / 0xFFFFFFFF < VAL_SHARE else "train"
 
 
-def assemble(out_dir: Path = OUT_DIR, oversample_ops: int = 1) -> None:
+def assemble(out_dir: Path = OUT_DIR, oversample_ops: int = 1, profile: str = "rubric") -> None:
     rubric = (GUARDRAILS / "rubric.md").read_text(encoding="utf-8")
     cands = {r["id"]: r for r in map(json.loads, CANDIDATES.open(encoding="utf-8"))}
     labels = {
@@ -461,6 +461,13 @@ def assemble(out_dir: Path = OUT_DIR, oversample_ops: int = 1) -> None:
                     }
                 )
 
+    # Short profile: the Censor prompt without the rubric, and only texts that fit in one chunk
+    # (longer ones are dropped, not truncated, so no label loses its evidence).
+    system = json_system(rubric, Scores)
+    if profile == "short":
+        system = json_system(SHORT_SYSTEM, Scores)
+        samples = [s for s in samples if len(" ".join(s["text"].split())) <= SHORT_CHUNK_CHARS]
+
     _, eval_hashes = eval_exclusions()
     near = NearDuplicates(eval_texts())
     leaked = [
@@ -483,7 +490,7 @@ def assemble(out_dir: Path = OUT_DIR, oversample_ops: int = 1) -> None:
                             "id": s["id"],
                             "source": s["source"],
                             "messages": [
-                                {"role": "system", "content": json_system(rubric, Scores)},
+                                {"role": "system", "content": system},
                                 {"role": "user", "content": f"<text>\n{s['text']}\n</text>"},
                                 {
                                     "role": "assistant",
@@ -501,6 +508,7 @@ def assemble(out_dir: Path = OUT_DIR, oversample_ops: int = 1) -> None:
         "counts": {f"{sp}.{src}": n for (sp, src), n in sorted(counts.items())},
         "positives": len(positives),
         "oversample_ops": oversample_ops,
+        "profile": profile,
         "eval_overlap": 0,
     }
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
@@ -515,13 +523,14 @@ def main() -> None:
     parser.add_argument(
         "--oversample-ops", type=int, default=1, help="assemble: copies of each train ban positive"
     )
+    parser.add_argument("--profile", choices=["rubric", "short"], default="rubric")
     args = parser.parse_args()
     if args.step == "candidates":
         candidates()
     elif args.step == "import-labels":
         import_labels(args.src)
     else:
-        assemble(args.out, args.oversample_ops)
+        assemble(args.out, args.oversample_ops, args.profile)
 
 
 if __name__ == "__main__":

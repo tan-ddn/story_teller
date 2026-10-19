@@ -27,6 +27,7 @@ import yaml
 from dotenv import load_dotenv
 
 from evaluation.censor_mlflow import tags
+from guardrails.censor import PROFILE_FILE
 from services.llm import MLX_ADAPTERS_DIR, MLX_MODELS_DIR
 
 DATA = Path("data/processed/censor_sft")
@@ -127,6 +128,7 @@ def main() -> None:
     cfg: dict[str, Any] = yaml.safe_load(args.config.read_text(encoding="utf-8"))
     model_name, adapter_name = cfg.pop("model"), cfg.pop("adapter_name")
     data_root = Path(cfg.pop("dataset", str(DATA)))  # e.g. data/processed/censor_sft_v2
+    profile = cfg.pop("censor_profile", "rubric")  # how the Censor must prompt this adapter
     if args.smoke:
         cfg |= SMOKE
         adapter_name += "-smoke"
@@ -184,6 +186,9 @@ def main() -> None:
 
         mx.set_cache_limit(int(args.cache_limit_gb * 1e9))
         _memory_guard(args.max_memory_gb)
+        adapter_dir.mkdir(parents=True, exist_ok=True)
+        (adapter_dir / PROFILE_FILE).write_text(profile, encoding="utf-8")
+        mlflow.set_tag("censor_profile", profile)
         model, tokenizer = load(margs.model)
         _thinking_off(tokenizer)
         train_set, valid_set, _ = load_dataset(margs, tokenizer)

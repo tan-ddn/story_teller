@@ -52,8 +52,17 @@ from typing import Any
 from dotenv import load_dotenv
 
 from evaluation.censor_mlflow import log_check
-from guardrails.censor import CATEGORIES, DEFAULT_MODEL, Censor, Rating, Scores, Verdict, judge
-from services.llm import cost, parse_call
+from guardrails.censor import (
+    CATEGORIES,
+    DEFAULT_MODEL,
+    Censor,
+    Rating,
+    Scores,
+    Verdict,
+    judge,
+    make_censor,
+)
+from services.llm import cost
 
 BENCHMARK_URL = (
     "https://huggingface.co/datasets/mmathys/openai-moderation-api-evaluation/resolve/"
@@ -310,7 +319,7 @@ def main() -> None:
     boundary = [json.loads(line) for line in BOUNDARY.open(encoding="utf-8")]
     texts = {s.id: s.text for s in benchmark} | {str(b["id"]): str(b["text"]) for b in boundary}
 
-    censor = Censor(parse_call(args.model, Scores, name="censor"))
+    censor = make_censor(args.model)
     cache = REPORTS / f"{args.model}.scores.jsonl"
     scores, spent = classify_all(censor, args.model, texts, args.workers, cache)
     result = {

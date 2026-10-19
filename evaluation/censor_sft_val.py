@@ -22,8 +22,7 @@ from dotenv import load_dotenv
 
 from evaluation.censor import REPORTS, action, classify_all
 from evaluation.censor_mlflow import log_check
-from guardrails.censor import CATEGORIES, DEFAULT_MODEL, Censor, Rating, Scores, judge
-from services.llm import parse_call
+from guardrails.censor import CATEGORIES, DEFAULT_MODEL, Rating, Scores, judge, make_censor
 
 VAL = Path("data/processed/censor_sft/val.jsonl")
 RATINGS: tuple[Rating, ...] = ("children", "teen")
@@ -86,7 +85,7 @@ def main() -> None:
     if args.limit:
         keep = list(texts)[: args.limit]
         texts, gold = {k: texts[k] for k in keep}, {k: gold[k] for k in keep}
-    censor = Censor(parse_call(args.model, Scores, name="censor"))
+    censor = make_censor(args.model)
     cache = REPORTS / f"{args.model}.scores.jsonl"
     pred, spent = classify_all(censor, args.model, texts, args.workers, cache)
     result = {"model": args.model, **report(gold, pred)}
