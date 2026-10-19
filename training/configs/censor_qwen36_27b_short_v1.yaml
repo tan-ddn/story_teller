@@ -1,3 +1,6 @@
+# Qwen3.6-27B Censor LoRA with the short profile (no rubric in the prompt, texts <= ~512 tokens,
+# chunked at inference). Short sequences are what fits in memory on the Mac (probe: 33.6 GB at
+# ~640 tokens; 70+ GB at ~1,800). Derived with training.censor.plan.
 model: Qwen3.6-27B-4bit
 adapter_name: censor-lora-short-v1-qwen36_27b
 fine_tune_type: lora
@@ -17,7 +20,7 @@ lr_schedule:
   - 5.0e-05
   - 553
   - 1.0e-06
-max_seq_length: 4096
+max_seq_length: 1024
 mask_prompt: true
 grad_checkpoint: true
 steps_per_report: 40
@@ -26,3 +29,4 @@ val_batches: 60
 save_every: 2211
 seed: 0
 dataset: data/processed/censor_sft_short_v1
+censor_profile: short
