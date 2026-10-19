@@ -1,0 +1,21 @@
+# Censor LoRA fine-tune on the Mac Studio (MLX). Run with training/censor/train.py.
+# Base: mlx-community/Qwen3.6-27B-4bit.
+model: Qwen3.6-27B-4bit
+adapter_name: censor-lora-v1-qwen36_27b-l2
+fine_tune_type: lora
+num_layers: 2                      # of 64 transformer blocks (memory probe)
+lora_parameters: {rank: 8, dropout: 0.0, scale: 20.0}
+batch_size: 1
+grad_accumulation_steps: 4         # effective batch 4
+iters: 2400                        # mlx-lm counts batches: 1 epoch of 2,381 samples at batch 1
+learning_rate: 5.0e-5
+# The schedule advances once per optimizer update: 2400 / 4 accumulation steps = 600 updates.
+lr_schedule: {name: cosine_decay, warmup: 30, arguments: [5.0e-5, 600, 1.0e-6]}
+max_seq_length: 4096               # rubric + JSON instruction (~1.9k tokens) + text + answer
+mask_prompt: true                  # loss on the answer only
+grad_checkpoint: true
+steps_per_report: 40
+steps_per_eval: 400
+val_batches: 60
+save_every: 400
+seed: 0

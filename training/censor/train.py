@@ -114,6 +114,9 @@ def main() -> None:
     parser.add_argument(
         "--max-memory-gb", type=float, default=60.0, help="abort training above this (shared Mac)"
     )
+    parser.add_argument(
+        "--cache-limit-gb", type=float, default=4.0, help="cap MLX's cache of reusable buffers"
+    )
     args = parser.parse_args()
     load_dotenv(".env")
 
@@ -177,6 +180,9 @@ def main() -> None:
         mlflow.log_params({f"data.{k}": v for k, v in manifest["counts"].items()})
         mlflow.log_artifact(str(args.config))
         start = time.monotonic()
+        import mlx.core as mx
+
+        mx.set_cache_limit(int(args.cache_limit_gb * 1e9))
         _memory_guard(args.max_memory_gb)
         model, tokenizer = load(margs.model)
         _thinking_off(tokenizer)
