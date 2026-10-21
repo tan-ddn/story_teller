@@ -384,9 +384,37 @@ def _split(row: dict[str, Any], val_books: set[int]) -> str:
     return "val" if digest / 0xFFFFFFFF < VAL_SHARE else "train"
 
 
-def assemble(out_dir: Path = OUT_DIR, oversample_ops: int = 1, profile: str = "rubric") -> None:
+TEACHER_CANDIDATES = Path("data/interim/censor_sft/teacher/candidates.jsonl")
+
+
+def teacher_selection() -> dict[str, dict[str, Any]]:
+    """Dataset v3: every teacher-labelled operational_harm positive, plus as many negatives
+    (half Aegis-"safe" responses, half Aegis-"unsafe" ones without instructions), as candidates
+    with source "teacher". Labels are in labels/teacher.jsonl (pipelines.censor_sft.teacher)."""
+    rows = {r["id"]: r for r in map(json.loads, TEACHER_CANDIDATES.open(encoding="utf-8"))}
+    labels = {r["id"]: r for r in map(json.loads, (LABELS / "teacher.jsonl").open())}
+    pos = sorted(i for i, lbl in labels.items() if lbl["scores"]["operational_harm"])
+    neg = {"safe": [], "unsafe": []}  # type: dict[str, list[str]]
+    for i, lbl in sorted(labels.items()):
+        if not lbl["scores"]["operational_harm"]:
+            neg[rows[i]["aegis_label"]].append(i)
+    rng = random.Random(SEED)  # noqa: S311  # nosec B311
+    half = len(pos) // 2
+    picked = pos + rng.sample(neg["safe"], min(half, len(neg["safe"])))
+    picked += rng.sample(neg["unsafe"], min(len(pos) - half, len(neg["unsafe"])))
+    return {
+        i: {"id": i, "source": "teacher", "text": rows[i]["text"], "text_sha": rows[i]["text_sha"]}
+        for i in picked
+    }
+
+
+def assemble(
+    out_dir: Path = OUT_DIR, oversample_ops: int = 1, profile: str = "rubric", teacher: bool = False
+) -> None:
     rubric = (GUARDRAILS / "rubric.md").read_text(encoding="utf-8")
     cands = {r["id"]: r for r in map(json.loads, CANDIDATES.open(encoding="utf-8"))}
+    if teacher:
+        cands |= teacher_selection()
     labels = {
         r["id"]: r
         for path in sorted(LABELS.glob("*.jsonl"))
@@ -509,6 +537,7 @@ def assemble(out_dir: Path = OUT_DIR, oversample_ops: int = 1, profile: str = "r
         "positives": len(positives),
         "oversample_ops": oversample_ops,
         "profile": profile,
+        "teacher": teacher,
         "eval_overlap": 0,
     }
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
@@ -524,13 +553,16 @@ def main() -> None:
         "--oversample-ops", type=int, default=1, help="assemble: copies of each train ban positive"
     )
     parser.add_argument("--profile", choices=["rubric", "short"], default="rubric")
+    parser.add_argument(
+        "--teacher", action="store_true", help="assemble: add teacher-labelled ban data (v3)"
+    )
     args = parser.parse_args()
     if args.step == "candidates":
         candidates()
     elif args.step == "import-labels":
         import_labels(args.src)
     else:
-        assemble(args.out, args.oversample_ops, args.profile)
+        assemble(args.out, args.oversample_ops, args.profile, args.teacher)
 
 
 if __name__ == "__main__":
