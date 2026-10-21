@@ -166,3 +166,14 @@ def test_make_censor_reads_the_adapter_profile(
     monkeypatch.setattr("services.llm._mlx", lambda model, schema: lambda s, u: (None, 0, 0))
     assert make_censor("mlx:M+a").profile == "short"
     assert make_censor("qwen3.6:27b").profile == "rubric"
+
+
+def test_quotes_for_bans_are_dropped_not_fatal() -> None:
+    s = scores(
+        operational_harm=True,
+        quotes=[
+            {"category": "operational_harm", "text": "step one"},
+            {"category": "violence", "text": "a fight"},
+        ],
+    )
+    assert s.operational_harm and [q.category for q in s.quotes] == ["violence"]

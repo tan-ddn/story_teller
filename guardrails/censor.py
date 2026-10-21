@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 HERE = Path(__file__).parent
 DEFAULT_MODEL = "qwen3.6:27b"  # local, via Ollama; see services/llm.py
@@ -47,6 +47,16 @@ class Scores(BaseModel):
     real_person: bool = False
     operational_harm: bool = False
     quotes: list[Quote] = []  # a list, not a dict: OpenAI strict schemas reject free-form keys
+
+    @field_validator("quotes", mode="before")
+    @classmethod
+    def _drop_ban_quotes(cls, value: Any) -> Any:
+        """Models often quote evidence for a ban too ("operational_harm", "real_person"). Quotes
+        exist only for the seven score categories, so such quotes are dropped instead of
+        rejecting the whole answer, which hid the very ban decisions that matter."""
+        if isinstance(value, list):
+            return [q for q in value if not isinstance(q, dict) or q.get("category") in CATEGORIES]
+        return value
 
 
 Classify = Callable[[str, str], tuple[Scores, int, int]]  # services.llm.parse_call(model, Scores)
