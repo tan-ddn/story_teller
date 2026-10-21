@@ -116,6 +116,9 @@ REFUSAL = re.compile(
 )
 
 
+OPS_FIELD = re.compile(r'"operational_harm"\s*:\s*(true|false)')
+
+
 def raw(model: str = OPS_JUDGE) -> None:
     """Why did the teacher fail? Re-ask it for every candidate without a cached answer, with the
     Censor's exact prompt, and classify the raw reply: "parsed" (valid Scores after all),
@@ -137,11 +140,24 @@ def raw(model: str = OPS_JUDGE) -> None:
             try:
                 parsed = parse_json_answer(reply, Scores)
                 row |= {"kind": "parsed", "operational_harm": parsed.operational_harm}
-            except ValueError:
+            except ValueError as e:
                 if REFUSAL.search(reply[:400]):
                     row |= {"kind": "refusal", "start": reply[:160]}
                 else:
-                    row |= {"kind": "other", "length": len(reply)}
+                    flag = OPS_FIELD.search(reply)
+                    row |= {
+                        "kind": "other",
+                        "length": len(reply),
+                        # where validation failed (field paths only, no text) and the ban as
+                        # written in the reply
+                        "errors": sorted(
+                            {
+                                ".".join(str(p) for p in err["loc"])
+                                for err in getattr(e, "errors", list)()
+                            }
+                        )[:6],
+                        "operational_harm_written": flag.group(1) == "true" if flag else None,
+                    }
             kinds[row["kind"]] += 1
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
             f.flush()
