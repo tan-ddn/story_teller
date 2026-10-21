@@ -18,6 +18,7 @@ uv run python -m pipelines.censor_sft.teacher combine
 
 import argparse
 import json
+import re
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -108,6 +109,45 @@ def score(model: str, workers: int) -> None:
     )
 
 
+REFUSAL = re.compile(
+    r"\b(i can(no|')t|i won't|i'm sorry|i am sorry|i'm not able|i am not able|i'm unable|"
+    r"cannot (help|assist|provide)|can't (help|assist|provide)|not able to (help|assist))\b",
+    re.IGNORECASE,
+)
+
+
+def raw(model: str = OPS_JUDGE) -> None:
+    """Why did the teacher fail? Re-ask it for every candidate without a cached answer, with the
+    Censor's exact prompt, and classify the raw reply: "parsed" (valid Scores after all),
+    "refusal" (declined, no JSON) or "other". Only the classification, the parsed decision and,
+    for refusals, the first 160 characters are kept (data/interim, never committed)."""
+    from services.llm import _raw_call, json_system, parse_json_answer
+
+    done = set(_load(model))
+    texts = {i: t for i, t in _texts().items() if i not in done}
+    call = _raw_call(model, None)
+    censor = make_censor(model)
+    system = json_system(censor.rubric, Scores)
+    out = DIR / "teacher_failures.jsonl"
+    kinds: Counter[str] = Counter()
+    with out.open("w", encoding="utf-8") as f:
+        for i, text in texts.items():
+            reply, _, _ = call(system, f"<text>\n{text}\n</text>")
+            row: dict[str, Any] = {"id": i}
+            try:
+                parsed = parse_json_answer(reply, Scores)
+                row |= {"kind": "parsed", "operational_harm": parsed.operational_harm}
+            except ValueError:
+                if REFUSAL.search(reply[:400]):
+                    row |= {"kind": "refusal", "start": reply[:160]}
+                else:
+                    row |= {"kind": "other", "length": len(reply)}
+            kinds[row["kind"]] += 1
+            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+            f.flush()
+    print(f"{len(texts)} failures re-asked: {dict(kinds)}")
+
+
 def _load(model: str) -> dict[str, Scores]:
     out = {}
     for row in map(json.loads, _cache(model).open(encoding="utf-8")):
@@ -164,12 +204,15 @@ def main() -> None:
     s.add_argument("--model", required=True)
     s.add_argument("--workers", type=int, default=1)
     sub.add_parser("combine")
+    sub.add_parser("raw", help="re-ask the ops teacher on its failures and classify the replies")
     args = parser.parse_args()
     load_dotenv(".env")
     if args.cmd == "candidates":
         candidates()
     elif args.cmd == "score":
         score(args.model, args.workers)
+    elif args.cmd == "raw":
+        raw()
     else:
         combine()
 
