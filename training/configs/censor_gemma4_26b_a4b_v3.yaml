@@ -17,7 +17,7 @@ lr_schedule:
   warmup: 30
   arguments:
   - 5.0e-05
-  - 828
+  - 828  # sized for 3310 iters; the run used 3846, so the last ~530 steps ran at the floor
   - 1.0e-06
 max_seq_length: 4096
 mask_prompt: true

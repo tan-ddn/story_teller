@@ -181,6 +181,14 @@ def main() -> None:
             "report_to": None,
         }
     )
+    schedule = settings.get("lr_schedule")
+    if schedule and schedule.get("name") == "cosine_decay" and schedule["arguments"][1] == "auto":
+        # decay over the whole run: one step per weight update, after the warm-up
+        updates = math.ceil(settings["iters"] / settings.get("grad_accumulation_steps", 1))
+        decay = max(1, updates - schedule.get("warmup", 0))
+        settings["lr_schedule"] = schedule | {
+            "arguments": [*schedule["arguments"][:1], decay, *schedule["arguments"][2:]]
+        }
     offset, resume_file = 0, None
     if args.resume:
         offset, resume_file, schedule = _prepare_resume(
