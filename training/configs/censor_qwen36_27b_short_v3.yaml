@@ -1,4 +1,5 @@
-# Qwen3.6-27B Censor LoRA on dataset v3 (with teacher labels) and the short profile (no rubric in the prompt, texts <= ~512 tokens,
+# Qwen3.6-27B Censor LoRA on dataset v3 (with teacher labels) and the short profile (no rubric
+# in the prompt, texts <= ~512 tokens,
 # chunked at inference). Short sequences are what fits in memory on the Mac (probe: 33.6 GB at
 # ~640 tokens; 70+ GB at ~1,800). Derived with training.censor.plan.
 model: Qwen3.6-27B-4bit
