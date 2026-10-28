@@ -1,0 +1,31 @@
+# gemma-4-26b Censor LoRA on dataset v3 (v1 + Qwen3.6-teacher-labelled harmful-instruction
+# positives and matched negatives). 1 epoch, checkpoint every 400 steps for --resume. Same as
+# censor_gemma4_26b_a4b_v3.yaml (decay included) with seed 1, to measure run-to-run noise.
+model: gemma-4-26b-a4b-it-4bit
+adapter_name: censor-lora-v3-seed1-gemma4_26b_a4b
+fine_tune_type: lora
+num_layers: 16
+lora_parameters:
+  rank: 8
+  dropout: 0.0
+  scale: 20.0
+batch_size: 1
+grad_accumulation_steps: 4
+iters: 3846
+learning_rate: 5.0e-05
+lr_schedule:
+  name: cosine_decay
+  warmup: 30
+  arguments:
+  - 5.0e-05
+  - 828  # sized for 3310 iters; the run used 3846, so the last ~530 steps ran at the floor
+  - 1.0e-06
+max_seq_length: 4096
+mask_prompt: true
+grad_checkpoint: true
+steps_per_report: 40
+steps_per_eval: 1103
+val_batches: 60
+save_every: 400
+seed: 1
+dataset: data/processed/censor_sft_v3
