@@ -51,6 +51,7 @@ ACTIONS = ("allow", "warn", "block")
 # Gate: agreement with the judge, and blocks on scenes the judge finds acceptable.
 MIN_AGREEMENT = {"children": 0.75, "teen": 0.90}
 MAX_FALSE_BLOCK = {"children": 0.05, "teen": 0.02}
+MAX_ERROR_RATE = 0.02  # unreadable Censor answers; agreement is measured without them
 
 # Words that suggest a scene is near the children/teen line. Only used to pick scenes.
 CUES = re.compile(
@@ -159,9 +160,13 @@ def compare(
     judged: dict[str, JudgeVerdict | None], scored: dict[str, Scores | None]
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     """Per-rating agreement between the judge and Censor, and the disagreements."""
-    result: dict[str, Any] = {}
     disagreements = []
-    ids = [i for i in judged if judged[i] is not None and scored.get(i) is not None]
+    judged_ids = [i for i in judged if judged[i] is not None]
+    ids = [i for i in judged_ids if scored.get(i) is not None]
+    result: dict[str, Any] = {
+        "censor_errors": len(judged_ids) - len(ids),
+        "error_rate": round(1 - len(ids) / len(judged_ids), 4) if judged_ids else 0.0,
+    }
     for rating in RATINGS:
         pairs = []
         for sid in ids:
@@ -198,6 +203,8 @@ def compare(
 
 def gate(metrics: dict[str, Any]) -> list[str]:
     failures = []
+    if metrics.get("error_rate", 0.0) > MAX_ERROR_RATE:
+        failures.append(f"error_rate {metrics['error_rate']} > {MAX_ERROR_RATE}")
     for rating in RATINGS:
         m = metrics[rating]
         if m["agreement"] < MIN_AGREEMENT[rating]:

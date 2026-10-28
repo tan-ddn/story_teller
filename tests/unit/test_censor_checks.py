@@ -40,3 +40,4 @@ def test_fiction_gate() -> None:
     assert censor_fiction.gate(ok) == []
     worse = ok | {"teen": {"agreement": 0.85, "false_block": 0.05}}
     assert len(censor_fiction.gate(worse)) == 2
+    assert censor_fiction.gate(ok | {"error_rate": 0.265}) == ["error_rate 0.265 > 0.02"]
