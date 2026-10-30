@@ -49,7 +49,7 @@ python_version = "3.12"
 strict = true
 
 [[tool.mypy.overrides]]
-module = ["airflow.*", "mlx_lm.*", "mlx.*"]
+module = ["airflow.*", "mlx_lm.*", "mlx.*", "numpy.*"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]

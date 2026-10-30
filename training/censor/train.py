@@ -14,6 +14,7 @@ uv run python -m training.censor.train training/configs/censor_qwen3_30b_a3b_lor
 """
 
 import argparse
+import itertools
 import json
 import math
 import os
@@ -22,6 +23,7 @@ import subprocess  # nosec B404
 import threading
 import time
 import types
+from collections.abc import Callable, Iterator
 from pathlib import Path
 from typing import Any
 
@@ -139,6 +141,30 @@ def _prepare_resume(
     return min(step, total_iters), done[-1], schedule
 
 
+def _reproducible_order(
+    original: Callable[..., Iterator[Any]], reseed: Callable[[int], None], seed: int, skip: int
+) -> Callable[..., Iterator[Any]]:
+    """Wrap mlx-lm's iterate_batches so the training order follows the config's seed. mlx-lm
+    shuffles with NumPy's global generator, which train_model never seeds, so every run (and every
+    resume) drew a new order. Each epoch is reseeded with seed + epoch just before its shuffle, and
+    the first `skip` batches (already trained before a resume) are passed over, so a resumed run
+    continues the same order. Validation batches (loop=False) are left as they are."""
+
+    def iterate_batches(*args: Any, loop: bool = False, **kwargs: Any) -> Iterator[Any]:
+        if not loop:
+            yield from original(*args, **kwargs)
+            return
+        done = 0
+        for epoch in itertools.count():
+            reseed(seed + epoch)  # the shuffle is drawn at the first batch, right below
+            for batch in original(*args, **kwargs):
+                if done >= skip:
+                    yield batch
+                done += 1
+
+    return iterate_batches
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Censor LoRA fine-tune (MLX).")
     parser.add_argument("config", type=Path)
@@ -207,6 +233,12 @@ def main() -> None:
         if settings["iters"] <= 0:
             print("already trained to the last step", flush=True)
             return
+    import numpy as np
+    from mlx_lm.tuner import trainer
+
+    trainer.iterate_batches = _reproducible_order(
+        trainer.iterate_batches, np.random.seed, settings["seed"], offset
+    )
     margs = types.SimpleNamespace(**settings)
     manifest = json.loads((data_root / "manifest.json").read_text(encoding="utf-8"))
 
