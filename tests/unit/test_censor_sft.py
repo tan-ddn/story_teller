@@ -95,6 +95,23 @@ def test_mlx_worker_runs_every_job_on_one_thread() -> None:
     assert names == {"mlx"}
 
 
+def test_mlx_worker_stops_on_a_stuck_call(monkeypatch: pytest.MonkeyPatch) -> None:
+    import threading
+
+    from services import llm
+
+    def exit_(code: int) -> None:
+        raise SystemExit(code)
+
+    monkeypatch.setattr("services.llm.os._exit", exit_)
+    release = threading.Event()
+    worker = llm._MLXWorker()
+    with pytest.raises(SystemExit) as stopped:
+        worker.submit(release.wait, timeout=0.05)
+    release.set()
+    assert stopped.value.code == 4
+
+
 def test_epoch_checkpoints_are_split_and_ranked(tmp_path: Path) -> None:
     from training.censor import checkpoints
 

@@ -19,8 +19,6 @@ import json
 import math
 import os
 import re
-import subprocess  # nosec B404
-import threading
 import time
 import types
 from collections.abc import Callable, Iterator
@@ -33,10 +31,10 @@ from dotenv import load_dotenv
 from evaluation.censor_mlflow import tags
 from guardrails.censor import PROFILE_FILE
 from services.llm import MLX_ADAPTERS_DIR, MLX_MODELS_DIR
+from services.mlx_guard import memory_guard
 
 DATA = Path("data/processed/censor_sft")
 EXPERIMENT = "censor-train"
-MIN_FREE_PERCENT = 20  # stop training if the whole Mac falls below this much free memory
 SMOKE = {
     "iters": 20,
     "steps_per_report": 5,
@@ -69,47 +67,6 @@ def _thinking_off(tokenizer: Any) -> None:
         return render(*a, **(k | {"enable_thinking": False}))
 
     tokenizer.apply_chat_template = apply_chat_template
-
-
-def _system_free_percent() -> int | None:
-    """macOS's own free-memory level (0-100), as memory_pressure reports it."""
-    try:
-        out = subprocess.run(  # noqa: S603  # nosec B603
-            ["/usr/sbin/sysctl", "-n", "kern.memorystatus_level"],
-            capture_output=True,
-            text=True,
-            check=True,
-            timeout=2,
-        )
-        return int(out.stdout.strip())
-    except (OSError, ValueError, subprocess.SubprocessError):
-        return None
-
-
-def _memory_guard(max_gb: float, min_free_percent: int = MIN_FREE_PERCENT) -> None:
-    """Stop the process if MLX memory (active plus cache) passes max_gb, or if the whole Mac drops
-    below min_free_percent free. The Mac is shared and has no swap, and a model that does not fit
-    (Qwen3.6-27B reached 85-91 GB) must fail cleanly instead of starving other users."""
-    import mlx.core as mx
-
-    def stop(reason: str) -> None:
-        print(f"memory guard: {reason}, stopping", flush=True)
-        os._exit(3)
-
-    def watch() -> None:
-        tick = 0
-        while True:
-            used = (mx.get_active_memory() + mx.get_cache_memory()) / 1e9
-            if used > max_gb:
-                stop(f"MLX {used:.1f} GB > {max_gb} GB")
-            if tick % 10 == 0:  # the system check is slower, once a second
-                free = _system_free_percent()
-                if free is not None and free < min_free_percent:
-                    stop(f"system free memory {free}% < {min_free_percent}%")
-            tick += 1
-            time.sleep(0.1)
-
-    threading.Thread(target=watch, daemon=True).start()
 
 
 CKPT = re.compile(r"^(\d{7})_adapters\.safetensors$")  # mlx-lm's checkpoint names
@@ -280,7 +237,7 @@ def main() -> None:
         import mlx.core as mx
 
         mx.set_cache_limit(int(args.cache_limit_gb * 1e9))
-        _memory_guard(args.max_memory_gb)
+        memory_guard(args.max_memory_gb)
         adapter_dir.mkdir(parents=True, exist_ok=True)
         (adapter_dir / PROFILE_FILE).write_text(profile, encoding="utf-8")
         mlflow.set_tag("censor_profile", profile)

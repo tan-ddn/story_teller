@@ -21,6 +21,7 @@ import threading
 import urllib.request
 from collections.abc import Callable
 from concurrent.futures import Future
+from concurrent.futures import TimeoutError as FutureTimeout
 from pathlib import Path
 from typing import Any
 
@@ -34,6 +35,11 @@ OLLAMA_NUM_CTX = 16384  # rubric + a 1,500-word scene + reasoning fit comfortabl
 MLX_MODELS_DIR = "/Volumes/Untitled/Shared/models"
 MLX_ADAPTERS_DIR = "adapters"
 MLX_MAX_TOKENS = 1024
+# A stuck MLX call (seen 2026-10-30: the Mac froze and the eval waited for 3 days) stops the
+# process instead of waiting forever. Loading a model can take a while from the external drive.
+MLX_CALL_TIMEOUT_S = float(os.environ.get("MLX_CALL_TIMEOUT_S", 900))
+MLX_LOAD_TIMEOUT_S = float(os.environ.get("MLX_LOAD_TIMEOUT_S", 1800))
+MLX_EVAL_MAX_MEMORY_GB = float(os.environ.get("MLX_EVAL_MAX_MEMORY_GB", 70))
 
 # USD per 1M tokens (input, output). Thinking/reasoning tokens are billed as output.
 # Cached input is counted at the full input price, so Claude's cost is a slight overestimate.
@@ -218,10 +224,15 @@ class _MLXWorker:
             except BaseException as e:  # noqa: BLE001 - handed back to the caller
                 future.set_exception(e)
 
-    def submit[T](self, fn: Callable[[], T]) -> T:
+    def submit[T](self, fn: Callable[[], T], timeout: float = MLX_CALL_TIMEOUT_S) -> T:
         future: Future[T] = Future()
         self._jobs.put((fn, future))
-        return future.result()
+        try:
+            return future.result(timeout=timeout)
+        except FutureTimeout:
+            # The MLX thread cannot be interrupted, so the only clean way out is to stop.
+            print(f"MLX call took over {timeout:.0f} s, stopping", flush=True)
+            os._exit(4)
 
 
 _MLX_WORKER: _MLXWorker | None = None
@@ -234,6 +245,9 @@ def _mlx(model: str, schema: type[BaseModel] | None) -> Callable[[str, str], tup
 
     global _MLX_WORKER
     if _MLX_WORKER is None:
+        from services.mlx_guard import memory_guard
+
+        memory_guard(MLX_EVAL_MAX_MEMORY_GB)  # as in training: fail cleanly on a shared Mac
         _MLX_WORKER = _MLXWorker()
     worker = _MLX_WORKER
     name, _, adapter = model.removeprefix("mlx:").partition("+")
@@ -246,7 +260,7 @@ def _mlx(model: str, schema: type[BaseModel] | None) -> Callable[[str, str], tup
             _MLX_CACHE[model] = load(str(path), adapter_path=adapter_path)
         return _MLX_CACHE[model]
 
-    llm, tokenizer = worker.submit(load_once)
+    llm, tokenizer = worker.submit(load_once, timeout=MLX_LOAD_TIMEOUT_S)
     sampler = make_sampler(temp=0.0)
 
     def call_mlx(system: str, user: str) -> tuple[Any, int, int]:
