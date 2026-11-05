@@ -3,14 +3,15 @@
 `run` labels scenes with the same guidelines, schema and evidence retry as
 pipelines.labeling.silver, appending LabelRun lines to data/interim/baseline/<model>.jsonl
 (resumable). `report` prints validity and latency over every scene run, and P/R/F1 on the
-scenes that have a reference: the hand-labelled pilot by default, or any JSONL of
-{"scene_id", "extraction"} records such as a full silver run. A second, lenient score also counts
+scenes that have a reference: the selected Fable v3 silver dataset by default, or any JSONL of
+{"scene_id", "extraction"} records such as the hand-labelled pilot. A second, lenient score counts
 answers that failed the evidence check, with the share of their quotes that are verbatim.
 
 uv run python -m evaluation.ollama_baseline run --models qwen3:32b gemma3:27b
 uv run python -m evaluation.ollama_baseline run --models qwen3:32b --host http://100.123.117.116:11434
 uv run python -m evaluation.ollama_baseline run --models qwen3:8b --pilot --no-think --tag nothink
 uv run python -m evaluation.ollama_baseline report
+uv run python -m evaluation.ollama_baseline report --reference data/processed/silver_pilot.jsonl
 uv run python -m evaluation.ollama_baseline report --reference data/interim/silver/gpt-6.1-sol.jsonl
 uv run python -m evaluation.ollama_baseline log data/interim/baseline/qwen3_8b.think.jsonl \
     --param think=true --param num_ctx=16384      # one MLflow run per file (MLFLOW_TRACKING_URI)
@@ -29,6 +30,7 @@ from pathlib import Path
 from evaluation.extraction import CATEGORIES, Counts, total
 from evaluation.extraction import score as score_extraction
 from evaluation.silver_report import f1_row, load_runs, usage_summary
+from pipelines.labeling.dataset import DEFAULT_SILVER_DIR, load_silver_reference
 from pipelines.labeling.models import LabelRun
 from pipelines.labeling.silver import PILOT, SCENES, Call, label_scene
 from services.extractor.schema import SceneExtraction, check_evidence
@@ -93,13 +95,8 @@ def run_model(host: str, model: str, scenes: dict[str, str], args: argparse.Name
 
 
 def load_reference(path: Path) -> dict[str, SceneExtraction]:
-    """Read any JSONL of records with scene_id and extraction (SilverLabel or LabelRun)."""
-    reference = {}
-    for line in path.open(encoding="utf-8"):
-        record = json.loads(line)
-        if record.get("extraction"):
-            reference[record["scene_id"]] = SceneExtraction.model_validate(record["extraction"])
-    return reference
+    """Read a reference JSONL or a directory of Fable book files."""
+    return load_silver_reference(path)
 
 
 def quote_count(e: SceneExtraction) -> int:
@@ -207,10 +204,10 @@ def main() -> None:
     run.add_argument("--num-predict", type=int, help="cap output tokens, stopping runaways")
     run.add_argument("--no-think", action="store_true", help="disable reasoning (qwen3 etc.)")
     rep = sub.add_parser("report", help="score baseline runs")
-    rep.add_argument("--reference", type=Path, default=PILOT)
+    rep.add_argument("--reference", type=Path, default=DEFAULT_SILVER_DIR)
     log = sub.add_parser("log", help="log result files to MLflow, one run each")
     log.add_argument("paths", nargs="+", type=Path)
-    log.add_argument("--reference", type=Path, default=PILOT)
+    log.add_argument("--reference", type=Path, default=DEFAULT_SILVER_DIR)
     log.add_argument("--param", action="append", default=[], help="extra key=value run setting")
     args = parser.parse_args()
 

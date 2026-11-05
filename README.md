@@ -81,6 +81,24 @@ uv run dvc add data/raw/gutenberg data/processed && uv run dvc push
 No shared DVC remote is configured yet. Set your own before pushing or pulling data, e.g.
 `uv run dvc remote add --local -d storage /path/to/dvc-storage`.
 
+### Default silver labels
+
+The default Archivist silver reference is the selected **Fable v3** dataset in
+`data/interim/silver/fable-v3-default/`: 1,536 labeled scenes across 27 books, including the
+accepted manual corrections. The 20 missing scenes from *The Adventures of Sherlock Holmes*
+(book 1661, chapters 10–12) are excluded; they are listed in the dataset's `manifest.json`.
+The dataset is tracked by `data/interim/silver/fable-v3-default.dvc` and cached locally; its data
+files are Git-ignored. A shared DVC remote must be configured and populated before others can
+pull the snapshot. Silver labels are model-produced and have not all been semantically reviewed,
+so they are not a substitute for the human-labeled gold pilot.
+
+`uv run python -m evaluation.ollama_baseline report` and its `log` command use this directory
+by default. To score against the separate human pilot instead, pass
+`--reference data/processed/silver_pilot.jsonl`. Individual JSONL reference files remain
+supported with `--reference`. Future Archivist training-data builders should use
+`pipelines.labeling.dataset.DEFAULT_SILVER_DIR` as the silver input; no Archivist training-data
+builder is implemented yet.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).

@@ -5,6 +5,9 @@ __pycache__/
 mlruns/
 /data/raw/*
 /data/interim/*
+!/data/interim/silver/
+/data/interim/silver/*
+!/data/interim/silver/fable-v3-default.dvc
 /data/processed/*
 !/data/raw/*.dvc
 !/data/processed/*.dvc

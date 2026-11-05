@@ -1,0 +1,6 @@
+outs:
+- md5: 464973cf3e586cf0c0238454952edcb8.dir
+  size: 16244947
+  nfiles: 55
+  hash: md5
+  path: fable-v3-default
