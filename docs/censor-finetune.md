@@ -8,8 +8,8 @@ October–November 2026. LoRA fine-tunes of local models as the Censor, trained 
 
 - **Selected: gemma-4-26b-a4b-it (4-bit) + `censor-lora-v3-gemma4_26b_a4b`.** It is the only fine-tune that passes
   every gate, and it passes again with another seed (run B). Training config:
-  `training/configs/censor_gemma4_26b_a4b_v3.yaml`. `guardrails/censor.py` still defaults to qwen3.6:27b (Ollama);
-  switching the default to this adapter is a separate change.
+  `training/configs/censor_gemma4_26b_a4b_v3.yaml`. It is the default Censor model (`DEFAULT_MODEL` in
+  `guardrails/censor.py`).
 - **The deciding change was dataset v3.** Every fine-tune on the hand-labelled data alone learned to never set the
   harmful-instruction ban (gemma v1: 4% recall, Qwen3.6 short v1: 0–4%). v3 adds 523 teacher-labelled positives.
 - **The recipe is fragile in one way:** gemma runs that trained more at a meaningful learning rate (decay over the

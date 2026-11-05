@@ -89,7 +89,7 @@ The code uses plain names. Codenames are used in docs and the UI. The theme is t
 | `store/` | `GraphStore` interface over Postgres; pgvector for matching aliases to entities | Postgres, pgvector |
 | `writers_room/` | Brainstormer, Showrunner, Context Builder, Editor, style/voice check | LangGraph |
 | `security/` (cross-cutting) | AuthN/Z, row-level security, rate limits, audit log | OIDC, JWT, Postgres RLS |
-| `guardrails/` | Censor: rating classifier, hard bans, content warnings | Rubric-prompted local LLM (qwen3.6:27b via Ollama; fine-tuned gemma-4-26b adapter selected, see §17) + rules |
+| `guardrails/` | Censor: rating classifier, hard bans, content warnings | Rubric-prompted local LLM (fine-tuned gemma-4-26b LoRA adapter via MLX, see §17) + rules |
 | `services/llm.py` | One interface to LLMs: local Ollama models by default, API providers for reference runs only; one price table, Langfuse tracing | Ollama (Mac Studio), Anthropic/OpenAI/Google SDKs |
 | `web/` | Upload, Story Bible pages, timeline, flag review, approval gates | Minimal React or HTMX |
 | `monitoring/` | Dashboards, drift reports, alerts | Prometheus, Grafana, Evidently, Langfuse |
@@ -413,9 +413,9 @@ and never use user text for training without opt-in consent.
 - Censor fine-tune: gemma-4-26b-a4b-it (4-bit) with LoRA adapter `censor-lora-v3-gemma4_26b_a4b`, the only
   fine-tune that passes every Censor gate (on two seeds). Trained with MLX on dataset v3, the hand-labelled set plus
   Qwen3.6-labelled harmful-instruction samples from Aegis 2.0. Results for all runs: `docs/censor-finetune.md`.
+  It is the default Censor model (`DEFAULT_MODEL` in `guardrails/censor.py`), so it runs only where MLX does
+  (Apple Silicon, with the adapter and base model present).
 
 **Open**
 
 - Archivist base model: Qwen/Llama ~8B vs. DeBERTa for NER + LLM for relations/time.
-- Censor serving: `guardrails/censor.py` still defaults to qwen3.6:27b via Ollama; switching it to the
-  fine-tuned gemma adapter (served with MLX) is open.

@@ -16,7 +16,10 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 HERE = Path(__file__).parent
-DEFAULT_MODEL = "qwen3.6:27b"  # local, via Ollama; see services/llm.py
+# Fine-tuned gemma-4-26b (LoRA, dataset v3), the only Censor that passes every gate; see
+# docs/censor-finetune.md. Runs with MLX on Apple Silicon: the adapter must be in MLX_ADAPTERS_DIR
+# and the base model in MLX_MODELS_DIR (services/llm.py).
+DEFAULT_MODEL = "mlx:gemma-4-26b-a4b-it-4bit+censor-lora-v3-gemma4_26b_a4b"
 CATEGORIES = ("violence", "sexual", "profanity", "substance", "self_harm", "horror", "hate")
 Rating = Literal["children", "teen"]
 Score = Field(ge=0, le=3)
