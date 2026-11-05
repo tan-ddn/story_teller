@@ -89,7 +89,7 @@ The code uses plain names. Codenames are used in docs and the UI. The theme is t
 | `store/` | `GraphStore` interface over Postgres; pgvector for matching aliases to entities | Postgres, pgvector |
 | `writers_room/` | Brainstormer, Showrunner, Context Builder, Editor, style/voice check | LangGraph |
 | `security/` (cross-cutting) | AuthN/Z, row-level security, rate limits, audit log | OIDC, JWT, Postgres RLS |
-| `guardrails/` | Censor: rating classifier, hard bans, content warnings | Rubric-prompted local LLM (qwen3.6:27b via Ollama; to be fine-tuned) + rules |
+| `guardrails/` | Censor: rating classifier, hard bans, content warnings | Rubric-prompted local LLM (qwen3.6:27b via Ollama; fine-tuned gemma-4-26b adapter selected, see §17) + rules |
 | `services/llm.py` | One interface to LLMs: local Ollama models by default, API providers for reference runs only; one price table, Langfuse tracing | Ollama (Mac Studio), Anthropic/OpenAI/Google SDKs |
 | `web/` | Upload, Story Bible pages, timeline, flag review, approval gates | Minimal React or HTMX |
 | `monitoring/` | Dashboards, drift reports, alerts | Prometheus, Grafana, Evidently, Langfuse |
@@ -263,8 +263,8 @@ fine-tuned local model, and a paid API eval per push adds cost without catching 
 - **Fiction** (`evaluation/censor_fiction.py`): 200 Gutenberg scenes, three quarters picked for content near the
   children/teen line. An independent model (claude-opus-5) decided allow/warn/block per rating without seeing
   the rubric; its decisions are frozen in `evaluation/suites/censor_fiction_reference.jsonl`, so no API is
-  called. Censor must agree with them (children ≥ 75%, teen ≥ 90%) and rarely block what they accept
-  (children ≤ 5%, teen ≤ 2%).
+  called. Censor must agree with them (children ≥ 75%, teen ≥ 90%), rarely block what they accept
+  (children ≤ 5%, teen ≤ 2%) and give a readable answer for at least 98% of scenes.
 - **Hard bans** (`evaluation/censor_bans.py`): harmful-instruction samples from Aegis 2.0, handwritten attacks
   on named private people, and hard-ban samples wrapped in prompt-injection text. Recall ≥ 90% each, and no
   false hard-ban flags on fiction, public-figure criticism or safety advice.
@@ -407,15 +407,15 @@ and never use user text for training without opt-in consent.
 - Local models only (from 2026-10-16): all running, training and testing uses local LLMs served by Ollama on
   the Mac Studio. API models were used to design the Censor rubric (o3 as Censor, claude-opus-5 as fiction
   judge); their outputs are kept as data, but no new API calls are made.
-- Censor: an LLM applies a rubric, and versioned policies turn its scores into allow/warn/block. The default
-  is qwen3.6:27b, to be replaced by a fine-tuned local model. Evaluated locally on fiction against the frozen
-  judge reference, with public moderation benchmarks used only for the hard bans.
+- Censor: an LLM applies a rubric, and versioned policies turn its scores into allow/warn/block. Evaluated
+  locally on fiction against the frozen judge reference, with public moderation benchmarks used only for the hard
+  bans.
+- Censor fine-tune: gemma-4-26b-a4b-it (4-bit) with LoRA adapter `censor-lora-v3-gemma4_26b_a4b`, the only
+  fine-tune that passes every Censor gate (on two seeds). Trained with MLX on dataset v3, the hand-labelled set plus
+  Qwen3.6-labelled harmful-instruction samples from Aegis 2.0. Results for all runs: `docs/censor-finetune.md`.
 
 **Open**
 
 - Archivist base model: Qwen/Llama ~8B vs. DeBERTa for NER + LLM for relations/time.
-- Censor fine-tune: base model and training recipe. The dataset is ready (`pipelines/censor_sft/`): 2,466
-  hand-labelled samples (condensed Gutenberg windows and scenes, an Aegis 2.0 train-split sample, synthetic
-  real-person cases with Census-frequency names) plus injection-wrapped copies of the positives, split by book
-  or template, with every Censor eval sample excluded by ID and text hash. Only IDs, text hashes and labels
-  (quotes as character spans) are committed; texts are fetched and assembled at build time.
+- Censor serving: `guardrails/censor.py` still defaults to qwen3.6:27b via Ollama; switching it to the
+  fine-tuned gemma adapter (served with MLX) is open.
