@@ -1,0 +1,28 @@
+{
+  "title": "The Lantern in the Rain",
+  "premise": "A young repairer discovers a lantern that lights when someone needs help.",
+  "rating": "teen",
+  "chapters": [
+    {
+      "number": 1,
+      "title": "The Light in the Workshop",
+      "pov": "Mira",
+      "story_time": "a rainy autumn evening",
+      "beats": [
+        "Mira finds an unfamiliar lantern among the objects left for repair.",
+        "The lantern lights as a neighbor knocks, asking for help finding a missing dog.",
+        "Mira decides to follow the lantern into the rain."
+      ]
+    }
+  ],
+  "characters": [
+    {
+      "name": "Mira",
+      "attributes": {"occupation": "apprentice repairer"},
+      "arc": "Learns to trust her judgment when others need help."
+    }
+  ],
+  "places": [{"name": "Mira's workshop", "description": "A small repair shop in a rainy town."}],
+  "style": {"tense": "past", "pov_rules": "close third person", "tone": "warm and quietly mysterious"},
+  "approved": false
+}

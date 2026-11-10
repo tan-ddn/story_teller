@@ -34,7 +34,7 @@ OLLAMA_TIMEOUT = 1800.0  # local models on a shared machine can be slow
 OLLAMA_NUM_CTX = 16384  # rubric + a 1,500-word scene + reasoning fit comfortably
 MLX_MODELS_DIR = "/Volumes/Untitled/Shared/models"
 MLX_ADAPTERS_DIR = "adapters"
-MLX_MAX_TOKENS = 1024
+MLX_MAX_TOKENS = int(os.environ.get("MLX_MAX_TOKENS", 1024))
 # A stuck MLX call (seen 2026-10-30: the Mac froze and the eval waited for 3 days) stops the
 # process instead of waiting forever. Loading a model can take a while from the external drive.
 MLX_CALL_TIMEOUT_S = float(os.environ.get("MLX_CALL_TIMEOUT_S", 900))
@@ -271,7 +271,9 @@ def _mlx(model: str, schema: type[BaseModel] | None) -> Callable[[str, str], tup
             messages, add_generation_prompt=True, enable_thinking=False, tokenize=False
         )
         text = worker.submit(
-            lambda: generate(llm, tokenizer, prompt, max_tokens=MLX_MAX_TOKENS, sampler=sampler)
+            lambda: generate(
+                llm, tokenizer, prompt, max_tokens=MLX_MAX_TOKENS, sampler=sampler, verbose=False
+            )
         )
         tokens_in, tokens_out = len(tokenizer.encode(prompt)), len(tokenizer.encode(text))
         out = text if schema is None else parse_json_answer(text, schema)

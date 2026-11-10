@@ -1,0 +1,42 @@
+{
+  "title": "A Christmas Gift",
+  "premise": "On Christmas Eve, a young couple with very little money each sacrifice a treasured possession to buy the other a meaningful gift.",
+  "rating": "teen",
+  "chapters": [
+    {
+      "number": 1,
+      "title": "The Gifts",
+      "pov": "Della",
+      "story_time": "Christmas Eve, in an early twentieth-century city",
+      "beats": [
+        "Della counts her small savings in the couple's modest flat and worries that she cannot afford a worthy Christmas gift for Jim.",
+        "She decides to sell her treasured long hair and visits a hair buyer, who pays her twenty dollars.",
+        "Della buys a platinum chain for Jim's cherished gold pocket watch, then returns home, arranges her short hair, and worries about his reaction.",
+        "Jim arrives and is startled by her haircut; after reassuring her of his love, he gives her the beautiful combs she has admired.",
+        "Della gives Jim the watch chain. He reveals that he sold his watch to buy the combs. They recognize the love behind their sacrifices."
+      ]
+    }
+  ],
+  "characters": [
+    {
+      "name": "Della",
+      "attributes": {"hair": "long and brown before she sells it", "circumstances": "lives on a tight household budget"},
+      "arc": "Gives up a prized possession to express her love for Jim."
+    },
+    {
+      "name": "Jim",
+      "attributes": {"possession": "a treasured gold pocket watch inherited from his family", "relationship": "Della's husband"},
+      "arc": "Gives up his watch to buy Della the combs she loves."
+    }
+  ],
+  "places": [
+    {"name": "The couple's flat", "description": "A modest rented flat."},
+    {"name": "The hair buyer's shop", "description": "A shop where Della sells her hair."}
+  ],
+  "style": {
+    "tense": "past",
+    "pov_rules": "third-person narration centered on Della, with a warm and observant narrator",
+    "tone": "tender, gently humorous, and attentive to the couple's financial constraints"
+  },
+  "approved": false
+}

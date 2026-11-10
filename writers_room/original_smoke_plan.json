@@ -1,0 +1,27 @@
+{
+  "title": "The Last Weather Report",
+  "premise": "A retired weather observer must choose between protecting her quiet routine and helping a neighbor save a community garden from a sudden frost.",
+  "rating": "teen",
+  "chapters": [
+    {
+      "number": 1,
+      "title": "The Cold Comes Early",
+      "pov": "Ada",
+      "story_time": "one evening in early autumn",
+      "beats": [
+        "Ada closes her old weather station and notices a cloud pattern that suggests frost before morning, although the official forecast predicts a mild night.",
+        "Her neighbor Luis asks to borrow a ladder for the community garden. Ada nearly sends him away because the station equipment is being collected in the morning and she has not finished packing.",
+        "Ada realizes the late tomatoes and seedlings are at risk. She tells Luis about the frost, but he is skeptical because the official forecast says otherwise.",
+        "Ada chooses to bring out her packed thermometer and explain what she has observed. Luis agrees to help, and they improvise covers using materials already at the garden.",
+        "They finish after dark. Ada cannot know for certain whether the frost will arrive, but when Luis asks if she will check on the garden in the morning, she accepts."
+      ]
+    }
+  ],
+  "characters": [
+    {"name": "Ada", "attributes": {"occupation": "retired weather observer"}, "arc": "Moves from protecting her routine toward accepting a place in her community."},
+    {"name": "Luis", "attributes": {"occupation": "community garden volunteer"}, "arc": "Learns to consider Ada's local observations alongside the official forecast."}
+  ],
+  "places": [{"name": "The weather station", "description": "A small station near a community garden, scheduled for closure."}],
+  "style": {"tense": "past", "pov_rules": "close third person centered on Ada", "tone": "restrained, hopeful, and observant"},
+  "approved": true
+}
