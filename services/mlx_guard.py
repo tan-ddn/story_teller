@@ -2,6 +2,7 @@
 
 import os
 import subprocess  # nosec B404
+import sys
 import threading
 import time
 
@@ -31,7 +32,7 @@ def memory_guard(max_gb: float, min_free_percent: int = MIN_FREE_PERCENT) -> Non
     import mlx.core as mx
 
     def stop(reason: str) -> None:
-        print(f"memory guard: {reason}, stopping", flush=True)
+        print(f"memory guard: {reason}, stopping", file=sys.stderr, flush=True)
         os._exit(3)
 
     def watch() -> None:

@@ -9,9 +9,8 @@ outline. The plan is unapproved, so review it and set `approved` to `true` in a 
 
 The reference stays outside the writer prompt. The existing smoke command uses only the plan and
 the context builder, and produces a single draft. Treat the plan as a reconstruction of the story,
-not a recovered outline the author actually used. The smoke prompt includes selected beats and
-character attributes, but the current context builder does not include the plan's premise, places,
-character arcs, or world rules. Do not infer that all fields in the JSON reach the writer.
+not a recovered outline the author actually used. The context builder includes planned context
+within its token budget, so some lower-priority fields may be omitted when space is limited.
 
 After the run, read the complete generated draft and the original, then compare:
 

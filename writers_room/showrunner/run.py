@@ -44,11 +44,19 @@ from services.llm import TextCall, cost
 from writers_room.context.builder import Strategy, build, system_prompt
 from writers_room.editor.revise import revise
 from writers_room.models import ChapterPlan, StoryPlan
-from writers_room.ports import Archivist, Bible, Censor, Scripty
+from writers_room.ports import Archivist, Bible, Censor, Scripty, WorkerFailure
 
 CENSOR_WORKERS = 4  # parallel Censor calls per chapter
 
-Status = Literal["accepted", "censored", "flagged", "rejected_by_author", "over_budget"]
+Status = Literal[
+    "accepted",
+    "censored",
+    "flagged",
+    "rejected_by_author",
+    "over_budget",
+    "extraction_failed",
+    "writer_failed",
+]
 
 
 class NotApproved(Exception):
@@ -151,6 +159,14 @@ class Showrunner:
     def run(self) -> Outcome:
         """Write every chapter not yet written; stop at the first one that is not accepted."""
         self.out_dir.mkdir(parents=True, exist_ok=True)
+        recover = getattr(self.services.bible, "chapter_texts", None)
+        if recover is not None:
+            for number, text in recover().items():
+                path = self.chapter_path(number)
+                if path.exists() and path.read_text(encoding="utf-8") != text:
+                    raise ValueError(f"chapter {number} text conflicts with the Story Bible")
+                if not path.exists():
+                    path.write_text(text, encoding="utf-8")
         self.thread = uuid.uuid4().hex
         return self._invoke({"runs": []})
 
@@ -259,8 +275,18 @@ class Showrunner:
             self.settings.context_tokens,
             self.settings.strategy,
         )
-        text, t_in, t_out = self.call(run.writer)(system_prompt(self.plan), user)
+        try:
+            text, t_in, t_out = self.call(run.writer)(system_prompt(self.plan), user)
+        except Exception as exc:  # noqa: BLE001 - record failure and do not accept a chapter
+            run.status = "writer_failed"
+            detail = str(exc) if isinstance(exc, WorkerFailure) else type(exc).__name__
+            run.flags.append(f"Writer failed: {detail}")
+            return {"run": run, "text": "", "toned_down": False}
         self._spend(run, run.writer, t_in, t_out)
+        if not text.strip():
+            run.status = "writer_failed"
+            run.flags.append("Writer returned empty text")
+            return {"run": run, "text": "", "toned_down": False}
         return self._screen(run, text, toned_down=False)
 
     def revise(self, state: State) -> State:
@@ -276,7 +302,13 @@ class Showrunner:
         s = self.services
         known = [c.name for c in self.plan.characters]
         scenes = [piece.text for piece in split_scenes(state["text"])]
-        extractions = [s.archivist.extract(scene, known) for scene in scenes]
+        try:
+            extractions = [s.archivist.extract(scene, known) for scene in scenes]
+        except Exception as exc:  # noqa: BLE001 - stop and record the failed extraction
+            run.status = "extraction_failed"
+            detail = str(exc) if isinstance(exc, WorkerFailure) else type(exc).__name__
+            run.flags.append(f"Archivist failed: {detail}")
+            return {"run": run, "extractions": [], "blocking": []}
         flags = s.scripty.check(run.chapter, extractions)
         run.scenes = len(scenes)
         run.flags += [f.message for f in flags]
@@ -290,14 +322,25 @@ class Showrunner:
     def gate(self, state: State) -> State:
         run = _current(state)
         if self.settings.chapter_gate:
-            approved = interrupt({"chapter": run.chapter, "text": state["text"]})
+            approved = interrupt(
+                {
+                    "chapter": run.chapter,
+                    "text": state["text"],
+                    "extractions": [item.model_dump(mode="json") for item in state["extractions"]],
+                    "flags": run.flags,
+                }
+            )
             if not approved:
                 run.status = "rejected_by_author"
         return {"run": run}
 
     def commit(self, state: State) -> State:
         run = _current(state)
-        self.services.bible.commit(run.chapter, state["extractions"])
+        commit_chapter = getattr(self.services.bible, "commit_chapter", None)
+        if commit_chapter is None:
+            self.services.bible.commit(run.chapter, state["extractions"])
+        else:
+            commit_chapter(run.chapter, state["extractions"], state["text"])
         self.chapter_path(run.chapter).write_text(state["text"], encoding="utf-8")
         run.words = len(state["text"].split())
         run.status = "accepted"

@@ -9,18 +9,27 @@ from writers_room.smoke import draft
 
 
 def plan(approved: bool = True) -> StoryPlan:
-    return StoryPlan.model_validate({
-        "title": "A Test Story",
-        "premise": "Mira finds a lantern.",
-        "rating": "teen",
-        "chapters": [{
-            "number": 1, "title": "The Lantern", "pov": "Mira", "story_time": "evening",
-            "beats": ["Mira finds a lantern."],
-        }],
-        "characters": [{"name": "Mira", "attributes": {"occupation": "repairer"}, "arc": "helps"}],
-        "style": {"tense": "past", "pov_rules": "close third", "tone": "warm"},
-        "approved": approved,
-    })
+    return StoryPlan.model_validate(
+        {
+            "title": "A Test Story",
+            "premise": "Mira finds a lantern.",
+            "rating": "teen",
+            "chapters": [
+                {
+                    "number": 1,
+                    "title": "The Lantern",
+                    "pov": "Mira",
+                    "story_time": "evening",
+                    "beats": ["Mira finds a lantern."],
+                }
+            ],
+            "characters": [
+                {"name": "Mira", "attributes": {"occupation": "repairer"}, "arc": "helps"}
+            ],
+            "style": {"tense": "past", "pov_rules": "close third", "tone": "warm"},
+            "approved": approved,
+        }
+    )
 
 
 class Censor:
@@ -83,3 +92,35 @@ def test_low_memory_stops_before_calling_writer(
     with pytest.raises(RuntimeError, match="low memory"):
         draft(plan(), Censor(True), tmp_path / "output")
     assert not (tmp_path / "output").exists()
+
+
+def test_running_worker_stops_when_free_reserve_is_exhausted(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from writers_room.smoke import watch_free_reserve
+
+    calls = 0
+
+    def memory(reserve: float, headroom: float) -> float:
+        nonlocal calls
+        calls += 1
+        if calls > 1:
+            raise RuntimeError("low memory")
+        return 40
+
+    class ImmediateThread:
+        def __init__(self, *, target, daemon, name):
+            self.target = target
+
+        def start(self):
+            self.target()
+
+    def stop(code: int) -> None:
+        raise SystemExit(code)
+
+    monkeypatch.setattr("writers_room.smoke.require_memory", memory)
+    monkeypatch.setattr("writers_room.smoke.threading.Thread", ImmediateThread)
+    monkeypatch.setattr("writers_room.smoke.os._exit", stop)
+    with pytest.raises(SystemExit) as exc:
+        watch_free_reserve(24)
+    assert exc.value.code == 3

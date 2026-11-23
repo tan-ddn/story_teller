@@ -249,6 +249,31 @@ def split_chunks(text: str, max_chars: int) -> list[str]:
     return chunks or [text]
 
 
+def overlapping_windows(text: str, max_chars: int, overlap_chars: int) -> list[str]:
+    """Cover the original text with overlapping windows, preferring whitespace boundaries."""
+    if max_chars < 1 or not 0 <= overlap_chars < max_chars:
+        raise ValueError("window size must be positive and overlap smaller than the window")
+    if not text:
+        return [text]
+    windows: list[str] = []
+    start = 0
+    while start < len(text):
+        end = min(len(text), start + max_chars)
+        if end < len(text):
+            boundary = text.rfind(" ", start + max_chars // 2, end)
+            if boundary > start:
+                end = boundary + 1
+        windows.append(text[start:end])
+        if end == len(text):
+            break
+        next_start = max(start + 1, end - overlap_chars)
+        # Move left to a word boundary where possible without repeating an entire window.
+        while next_start > start + 1 and not text[next_start - 1].isspace():
+            next_start -= 1
+        start = next_start
+    return windows
+
+
 def combine(parts: list[Scores]) -> Scores:
     """The strictest reading over chunks: highest score per category, a ban if any chunk sets it,
     and each category's quote from the chunk that scored it highest."""

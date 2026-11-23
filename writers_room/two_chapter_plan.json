@@ -1,0 +1,23 @@
+{
+  "title": "The Last Weather Report",
+  "premise": "A retired weather observer helps her neighbors care for their community garden.",
+  "rating": "teen",
+  "chapters": [
+    {"number": 1, "title": "The Cold Comes Early", "pov": "Ada", "story_time": "early autumn evening", "beats": [
+      "Ada is packing the old weather station when Luis asks for help protecting the garden from a possible frost.",
+      "Despite her reluctance, Ada joins Luis and they cover the vulnerable plants with sheets."
+    ]},
+    {"number": 2, "title": "Morning", "pov": "Ada", "story_time": "the next morning", "beats": [
+      "Ada returns to the garden before Luis arrives and checks the covered plants.",
+      "Luis thanks Ada and invites her to help the volunteers keep a record of local weather observations.",
+      "Ada considers the offer and agrees to come back the following week."
+    ]}
+  ],
+  "characters": [
+    {"name": "Ada", "attributes": {"occupation": "retired weather observer"}, "arc": "Rejoins her community."},
+    {"name": "Luis", "attributes": {"occupation": "garden volunteer"}, "arc": "Welcomes Ada's experience."}
+  ],
+  "places": [{"name": "The garden", "description": "A neighborhood community garden."}],
+  "style": {"tense": "past", "pov_rules": "close third person", "tone": "warm and restrained"},
+  "approved": false
+}

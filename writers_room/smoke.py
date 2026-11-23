@@ -2,9 +2,11 @@
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
+import threading
 import time
 from pathlib import Path
 
@@ -40,6 +42,26 @@ def require_memory(reserve_gib: float, model_headroom_gib: float) -> float:
     return available
 
 
+def watch_free_reserve(reserve_gib: float) -> None:
+    """Stop this worker if free pages fall below the shared-machine reserve."""
+
+    def watch() -> None:
+        while True:
+            try:
+                require_memory(reserve_gib, 0)
+            except RuntimeError as exc:
+                detail = str(exc)
+                pattern = r"free memory [0-9.]+ GiB is below [0-9.]+ GiB required"
+                if not re.fullmatch(pattern, detail):
+                    detail = "cannot determine macOS free memory"
+                print(f"free-page guard: {detail}", file=sys.stderr, flush=True)
+                os._exit(3)
+            time.sleep(1)
+
+    require_memory(reserve_gib, 0)
+    threading.Thread(target=watch, daemon=True, name="free-memory-guard").start()
+
+
 def writer_in_child(system: str, prompt: str) -> tuple[str, int, int]:
     """Transfer unscreened prose in a pipe and release writer memory when the child exits."""
     result = subprocess.run(  # noqa: S603
@@ -58,6 +80,7 @@ def writer_worker() -> None:
     from services.mlx_guard import memory_guard
 
     memory_guard(max_gb=36, min_free_percent=30)
+    watch_free_reserve(24)
     request = json.load(sys.stdin)
     result = text_call(WRITER)(request["system"], request["prompt"])
     print(json.dumps(result))
@@ -94,7 +117,10 @@ class LazyCensor:
 
 
 def draft(
-    plan: StoryPlan, censor: Censor, out_dir: Path, reserve_gib: float = 24,
+    plan: StoryPlan,
+    censor: Censor,
+    out_dir: Path,
+    reserve_gib: float = 24,
     model_headroom_gib: float = 24,
 ) -> dict[str, object]:
     """Write chapter one once; persist prose only after every scene passes the Censor."""
@@ -160,6 +186,7 @@ def main() -> None:
 
     # Applies to this process only and stops it when shared-machine pressure is high.
     memory_guard(max_gb=36, min_free_percent=30)
+    watch_free_reserve(args.reserve_gib)
     result = draft(plan, LazyCensor(), args.out_dir, args.reserve_gib, args.model_headroom_gib)
     print(json.dumps(result, indent=2))
     if result["status"] != "draft":

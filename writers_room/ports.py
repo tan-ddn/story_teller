@@ -13,6 +13,14 @@ from services.extractor.schema import SceneExtraction
 from writers_room.models import Rating
 
 
+class WorkerFailure(RuntimeError):
+    """A local model worker failed; reason contains no prompt or model output."""
+
+    def __init__(self, phase: str, reason: str) -> None:
+        self.phase, self.reason = phase, reason
+        super().__init__(f"{phase}: {reason}")
+
+
 @dataclass(frozen=True)
 class Flag:
     """A continuity problem Scripty found in a new chapter."""

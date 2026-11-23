@@ -24,6 +24,8 @@ as facts. The sample plan is intentionally unapproved.
 - The process also runs the existing MLX monitor with a 36 GB allocation ceiling and a minimum
   macOS memory-pressure availability level of 30%. It checks periodically, so short spikes can
   exceed a threshold. The macOS availability level and free pages are different measurements.
+- Each worker checks free pages during inference and stops if they drop below 24 GiB. The parent
+  also monitors its configured reserve during Censor screening. This is periodic, not a hard cap.
 - The writer runs in a separate process and transfers unscreened prose through a pipe. Its process
   exits before the second memory check and Censor load, releasing its model memory without writing
   an unscreened draft to disk. Both processes have the same MLX monitor settings.

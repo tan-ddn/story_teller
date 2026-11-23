@@ -177,3 +177,23 @@ def test_quotes_for_bans_are_dropped_not_fatal() -> None:
         ],
     )
     assert s.operational_harm and [q.category for q in s.quotes] == ["violence"]
+
+
+def test_overlapping_windows_cover_input_and_preserve_boundaries() -> None:
+    from guardrails.censor import overlapping_windows
+
+    text = "alpha bravo charlie delta echo foxtrot golf hotel india juliet"
+    windows = overlapping_windows(text, 20, 5)
+    assert all(len(window) <= 20 for window in windows)
+    assert windows[0].startswith("alpha") and windows[-1].endswith("juliet")
+    covered = set()
+    search_from = 0
+    for window in windows:
+        start = text.index(window, search_from)
+        covered.update(range(start, start + len(window)))
+        search_from = start + 1
+    assert covered == set(range(len(text)))
+    assert all(
+        set(left.split()).intersection(right.split())
+        for left, right in zip(windows, windows[1:], strict=False)
+    )

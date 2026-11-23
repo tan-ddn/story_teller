@@ -71,14 +71,30 @@ def build(
         head += f"\nDialogue voices:\n{voices}\n"
     left = budget - tokens(head)
 
+    planned = [f"Premise: {plan.premise}"]
+    for name in names:
+        character = plan.character(name)
+        planned.append(f"{name}'s planned arc: {character.arc}")
+        planned.extend(f"{name}: {key} = {value}" for key, value in character.attributes.items())
+    planned.extend(f"Place: {place.name} — {place.description}" for place in plan.places)
+    planned.extend(f"World rule: {rule}" for rule in plan.world_rules)
+    selected: list[str] = []
+    for line in planned:
+        if tokens("\n".join([*selected, line])) <= max(0, left // 4):
+            selected.append(line)
+    if selected:
+        section = "\nPlanned story context:\n" + "\n".join(selected) + "\n"
+        head += section
+        left -= tokens(section)
+
     facts = ""
     if strategy == "bible_v1":
         lines = bible.facts_about(names)
         kept: list[str] = []
-        for line in lines:  # keep whole lines while they fit, earliest first
+        for line in reversed(lines):  # prioritize the most recently narrated facts
             if tokens("\n".join([*kept, line])) > left // 2:
                 break
-            kept.append(line)
+            kept.insert(0, line)
         if kept:
             facts = "\nStory Bible facts so far:\n" + "\n".join(f"- {x}" for x in kept) + "\n"
         left -= tokens(facts)

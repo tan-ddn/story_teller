@@ -166,6 +166,15 @@ def test_context_includes_named_characters_facts_and_previous_tail() -> None:
     assert prompt.rstrip().endswith("THE END\n</previous>")
 
 
+def test_context_includes_relevant_planned_story_details() -> None:
+    plan = make_plan()
+    plan.world_rules = ["Birds can speak."]
+    prompt = build(plan, plan.chapters[0], FakeBible(), "", budget=4000)
+    assert "A boy finds a burning feather." in prompt
+    assert "Kael: appearance = grey eyes" in prompt
+    assert "Birds can speak." in prompt
+
+
 def test_no_memory_strategy_leaves_out_bible() -> None:
     plan = make_plan()
     prompt = build(plan, plan.chapters[0], FakeBible(["Kael: eyes grey"]), "", 4000, "no_memory")
@@ -177,6 +186,14 @@ def test_context_respects_budget() -> None:
     bible = FakeBible([f"fact {i} " + "y" * 200 for i in range(100)])
     prompt = build(plan, plan.chapters[0], bible, "z" * 50_000, budget=1000)
     assert len(prompt) // 4 <= 1000
+
+
+def test_context_prioritizes_recent_bible_facts() -> None:
+    plan = make_plan()
+    bible = FakeBible(["old " + "x" * 200, "recent " + "y" * 200])
+    prompt = build(plan, plan.chapters[0], bible, "", budget=180)
+    assert "recent " in prompt
+    assert "old " not in prompt
 
 
 # --- showrunner --------------------------------------------------------------------------
@@ -225,6 +242,14 @@ def test_unapproved_plan_is_refused(tmp_path: Path) -> None:
         showrunner(tmp_path, call, plan=make_plan(approved=False))
 
 
+def test_empty_writer_output_is_not_accepted(tmp_path: Path) -> None:
+    call, _ = scripted("  ")
+    sr, bible, _ = showrunner(tmp_path, call, plan=make_plan(chapters=1))
+    [run] = sr.run().runs
+    assert run.status == "writer_failed"
+    assert bible.committed == [] and not (tmp_path / "ch01.md").exists()
+
+
 def test_clean_chapters_are_accepted_and_committed(tmp_path: Path) -> None:
     call, _ = scripted("A quiet morning.")
     sr, bible, _ = showrunner(tmp_path, call)
@@ -263,6 +288,20 @@ def test_persistent_flags_escalate_without_storing(tmp_path: Path) -> None:
     runs = sr.run().runs
     assert statuses(runs) == ["flagged"]  # stops at chapter 1
     assert runs[0].revisions == 2
+    assert bible.committed == [] and not (tmp_path / "ch01.md").exists()
+
+
+def test_failed_extraction_is_recorded_without_committing(tmp_path: Path) -> None:
+    class BrokenArchivist:
+        def extract(self, text: str, known: list[str]) -> SceneExtraction:
+            raise ValueError("model output was invalid")
+
+    call, _ = scripted("A quiet morning.")
+    sr, bible, _ = showrunner(tmp_path, call, plan=make_plan(chapters=1))
+    sr.services.archivist = BrokenArchivist()
+    [run] = sr.run().runs
+    assert run.status == "extraction_failed"
+    assert run.flags == ["Archivist failed: ValueError"]
     assert bible.committed == [] and not (tmp_path / "ch01.md").exists()
 
 
@@ -312,7 +351,9 @@ def test_chapter_gate_interrupts_and_resumes(tmp_path: Path) -> None:
     call, _ = scripted("A quiet morning.")
     sr, bible, _ = showrunner(tmp_path, call, gate=True)
     first = sr.run()
-    assert first.waiting_for == {"chapter": 1, "text": "A quiet morning."}
+    assert first.waiting_for is not None
+    assert first.waiting_for["chapter"] == 1 and first.waiting_for["text"] == "A quiet morning."
+    assert first.waiting_for["extractions"] and first.waiting_for["flags"] == []
     assert bible.committed == []
     second = sr.resume(True)
     assert second.waiting_for is not None and second.waiting_for["chapter"] == 2
